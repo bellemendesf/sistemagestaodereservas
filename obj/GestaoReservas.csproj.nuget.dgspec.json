@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Aluno\\sistemagestaodereservas\\sistemagestaodereservas\\GestaoReservas.csproj": {}
+    "C:\\Users\\Aluno\\sistemareservas\\sistemagestaodereservas\\GestaoReservas.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Aluno\\sistemagestaodereservas\\sistemagestaodereservas\\GestaoReservas.csproj": {
+    "C:\\Users\\Aluno\\sistemareservas\\sistemagestaodereservas\\GestaoReservas.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Aluno\\sistemagestaodereservas\\sistemagestaodereservas\\GestaoReservas.csproj",
+        "projectUniqueName": "C:\\Users\\Aluno\\sistemareservas\\sistemagestaodereservas\\GestaoReservas.csproj",
         "projectName": "GestaoReservas",
-        "projectPath": "C:\\Users\\Aluno\\sistemagestaodereservas\\sistemagestaodereservas\\GestaoReservas.csproj",
+        "projectPath": "C:\\Users\\Aluno\\sistemareservas\\sistemagestaodereservas\\GestaoReservas.csproj",
         "packagesPath": "C:\\Users\\Aluno\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Aluno\\sistemagestaodereservas\\sistemagestaodereservas\\obj\\",
+        "outputPath": "C:\\Users\\Aluno\\sistemareservas\\sistemagestaodereservas\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Aluno\\AppData\\Roaming\\NuGet\\NuGet.Config"
