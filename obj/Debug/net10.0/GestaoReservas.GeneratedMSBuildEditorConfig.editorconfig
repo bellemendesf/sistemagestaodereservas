@@ -23,6 +23,22 @@ build_property._RazorSourceGeneratorDebug =
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
+[C:/Users/Aluno/sistemareservas/sistemagestaodereservas/Views/Ambiente/index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW1iaWVudGVcaW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Aluno/sistemareservas/sistemagestaodereservas/Views/Cliente/index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZVxpbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Aluno/sistemareservas/sistemagestaodereservas/Views/Funcionario/index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRnVuY2lvbmFyaW9caW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Aluno/sistemareservas/sistemagestaodereservas/Views/Mesa/index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVzYVxpbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Aluno/sistemareservas/sistemagestaodereservas/Views/Reserva/Reserva.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YVxSZXNlcnZhLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
