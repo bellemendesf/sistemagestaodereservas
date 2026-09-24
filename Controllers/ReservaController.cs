@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using GestaoReservas.Models;
+namespace GestaoReservas.Models;
 
 public class ReservasController : Controller
 {
