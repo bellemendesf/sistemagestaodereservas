@@ -1,7 +1,54 @@
+@using GestaoReservas.Models
+@model IEnumerable<Reserva> //Para cada reserva que o Controller me enviou, mostre uma linha.
+
 @{
     ViewData["Title"] = "Reservas";
 }
 
 <h1>Reservas</h1>
 
-<p>Lista de reservas</p>
+<p>
+    <a asp-action="Create">Nova Reserva</a>
+</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Cliente</th>
+            <th>Mesa</th>
+            <th>Funcionário</th>
+            <th>Data e Hora</th>
+            <th>Pessoas</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var reserva in Model)
+        {
+            <tr>
+                <td>@reserva.Cliente</td>
+                <td>@reserva.MesaId</td>
+                <td>@reserva.FuncionarioID</td>
+                <td>@reserva.DataHora</td>
+                <td>@reserva.QtdPessoas</td>
+                <td>@reserva.Status</td>
+
+                <td>
+                    <a asp-action="Details" asp-route-id="@reserva.Id">
+                        Detalhes
+                    </a>
+
+                    <a asp-action="Edit" asp-route-id="@reserva.Id">
+                        Editar
+                    </a>
+
+                    <a asp-action="Delete" asp-route-id="@reserva.Id">
+                        Excluir
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

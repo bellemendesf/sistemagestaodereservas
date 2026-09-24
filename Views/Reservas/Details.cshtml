@@ -1,0 +1,17 @@
+@using GestaoReservas.Models
+@model Reserva
+
+@{
+    ViewData["Title"] = "Detalhes da Reserva";
+}
+
+<h1>Detalhes da Reserva</h1>
+
+<p>ID: @Model.Id</p>
+<p>Mesa: @Model.MesaId</p>
+<p>Funcionário: @Model.FuncionarioID</p>
+<p>Data e hora: @Model.DataHora</p>
+<p>Quantidade de pessoas: @Model.QtdPessoas</p>
+<p>Status: @Model.Status</p>
+
+<a asp-action="Index">Voltar</a>
