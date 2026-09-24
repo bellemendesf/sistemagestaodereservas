@@ -1,3 +1,5 @@
+namespace GestaoReservas.Models;
+
 public class Mesa
 {
     public int Id {get;set;}

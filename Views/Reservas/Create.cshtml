@@ -1,0 +1,38 @@
+@model Reserva
+
+@{
+    ViewData["Title"] = "Nova Reserva";
+}
+
+<h1>Nova Reserva</h1>
+
+<form asp-action="Create" method="post">
+
+    <div>
+        <label asp-for="MesaId"></label>
+        <input asp-for="MesaId" />
+    </div>
+
+    <div>
+        <label asp-for="FuncionarioID"></label>
+        <input asp-for="FuncionarioID" />
+    </div>
+
+    <div>
+        <label asp-for="DataHora"></label>
+        <input asp-for="DataHora" type="datetime-local" />
+    </div>
+
+    <div>
+        <label asp-for="QtdPessoas"></label>
+        <input asp-for="QtdPessoas" type="number" />
+    </div>
+
+    <div>
+        <label asp-for="Status"></label>
+        <input asp-for="Status" />
+    </div>
+
+    <button type="submit">Salvar</button>
+
+</form>

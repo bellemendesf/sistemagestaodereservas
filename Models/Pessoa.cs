@@ -1,3 +1,5 @@
+namespace GestaoReservas.Models;
+
 public class Pessoa
 {
     public int Id{get; set;}
