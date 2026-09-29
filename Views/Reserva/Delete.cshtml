@@ -1,0 +1,32 @@
+@model GestaoReservas.Models.Reserva
+
+@{
+    ViewData["Title"] = "Excluir Reserva";
+}
+
+<h1>Excluir Reserva</h1>
+
+<h3>Tem certeza que deseja excluir esta reserva?</h3>
+
+<div>
+    <p><strong>ID:</strong> @Model.Id</p>
+    <p><strong>Mesa:</strong> @Model.MesaId</p>
+    <p><strong>Funcionário:</strong> @Model.FuncionarioID</p>
+    <p><strong>Data e Hora:</strong> @Model.DataHora</p>
+    <p><strong>Pessoas:</strong> @Model.QtdPessoas</p>
+    <p><strong>Status:</strong> @Model.Status</p>
+</div>
+
+<form asp-action="Delete" method="post">
+
+    <input type="hidden" asp-for="Id" />
+
+    <button type="submit">
+        Confirmar exclusão
+    </button>
+
+    <a asp-action="Index">
+        Cancelar
+    </a>
+
+</form>

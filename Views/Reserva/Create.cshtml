@@ -1,0 +1,40 @@
+@model GestaoReservas.Models.Reserva
+
+@{
+    ViewData["Title"] = "Nova Reserva";
+}
+
+<h1>Nova Reserva</h1>
+
+<form asp-action="Create" method="post">
+
+    <div>
+        <label asp-for="MesaId">Mesa</label>
+        <input asp-for="MesaId" />
+    </div>
+
+    <div>
+        <label asp-for="FuncionarioID">Funcionário</label>
+        <input asp-for="FuncionarioID" />
+    </div>
+
+    <div>
+        <label asp-for="DataHora">Data e Hora</label>
+        <input asp-for="DataHora" type="datetime-local" />
+    </div>
+
+    <div>
+        <label asp-for="QtdPessoas">Quantidade de pessoas</label>
+        <input asp-for="QtdPessoas" type="number" />
+    </div>
+
+    <div>
+        <label asp-for="Status">Status</label>
+        <input asp-for="Status" />
+    </div>
+
+    <button type="submit">Salvar</button>
+
+</form>
+
+<a asp-action="Index">Voltar para reservas</a>
