@@ -1,4 +1,3 @@
-using GestaoReservas.Model;
 using Microsoft.AspNetCore.Mvc;  // Importa as classes do ASP.NET MVC (Controller, ActionResult, etc.)
 
 public class MesaController : Controller
@@ -53,7 +52,7 @@ public class MesaController : Controller
         // Chamado quando o usuário altera os dados e clica em "Salvar"
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Ambiente model)
+        public ActionResult Edit(Mesa model)
         {
             if (!ModelState.IsValid)          // Mesma validação do Create
                 return View(mesas);
