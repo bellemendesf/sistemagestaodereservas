@@ -1,4 +1,4 @@
-using GestaoReservas.Models;
+
 using Microsoft.AspNetCore.Mvc;    // Importa as classes do ASP.NET MVC (Controller, ActionResult, etc.)
 
 public class AmbienteController : Controller

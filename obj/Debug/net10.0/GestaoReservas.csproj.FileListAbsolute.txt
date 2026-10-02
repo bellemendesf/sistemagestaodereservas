@@ -1,0 +1,9 @@
+C:\Users\Nine\Projetos\sistemagestaodereservas\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\Users\Nine\Projetos\sistemagestaodereservas\obj\Debug\net10.0\GestaoReservas.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Nine\Projetos\sistemagestaodereservas\obj\Debug\net10.0\GestaoReservas.AssemblyInfoInputs.cache
+C:\Users\Nine\Projetos\sistemagestaodereservas\obj\Debug\net10.0\GestaoReservas.AssemblyInfo.cs
+C:\Users\Nine\Projetos\sistemagestaodereservas\obj\Debug\net10.0\GestaoReservas.csproj.CoreCompileInputs.cache
+C:\Users\Nine\Projetos\sistemagestaodereservas\obj\Debug\net10.0\GestaoReservas.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Nine\Projetos\sistemagestaodereservas\obj\Debug\net10.0\GestaoReservas.RazorAssemblyInfo.cache
+C:\Users\Nine\Projetos\sistemagestaodereservas\obj\Debug\net10.0\GestaoReservas.RazorAssemblyInfo.cs
+C:\Users\Nine\Projetos\sistemagestaodereservas\obj\Debug\net10.0\GestaoReservas.sourcelink.json
