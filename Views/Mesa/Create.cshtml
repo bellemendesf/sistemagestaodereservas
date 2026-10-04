@@ -1,0 +1,21 @@
+@model Mesa
+
+<form asp-action="Create" method="post">
+     <div>
+        <label asp-for="Id"></label>
+        <input asp-for="Id" />
+    </div>
+    <div>
+        <label asp-for="Numero"></label>
+        <input asp-for="Numero" />
+    </div>
+    <div>
+        <label asp-for="Status"></label>
+        <input asp-for="Status" />
+    </div>
+    <div>
+        <label asp-for="QtdLugares"></label>
+        <input asp-for="QtdLugares" />
+    </div>
+    <button type="submit">Salvar</button>
+</form>
