@@ -1,6 +1,8 @@
-public class Cliente: Pessoa
+using System.ComponentModel.DataAnnotations;
+
+// Especialização de Pessoa no DER: herda os dados comuns e acrescenta telefone.
+public class Cliente : Pessoa
 {
-    public required string Telefone {get;set;}
-    public required string Email {get;set;}
-    public required string Senha {get;set;}
+    [Required(ErrorMessage = "Informe o telefone.")]
+    public string Telefone { get; set; } = "";
 }

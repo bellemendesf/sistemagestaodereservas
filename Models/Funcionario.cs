@@ -1,6 +1,9 @@
-public class Funcionario: Pessoa
+using System.ComponentModel.DataAnnotations;
+
+// Especialização de Pessoa no DER: herda os dados comuns e acrescenta e-mail institucional.
+public class Funcionario : Pessoa
 {
-    public int Codigo {get;set;}
-    public required string Email {get;set;}
-    public required string Senha {get;set;}
+    [Required(ErrorMessage = "Informe o e-mail institucional.")]
+    [EmailAddress(ErrorMessage = "Informe um e-mail institucional válido.")]
+    public string EmailInstitucional { get; set; } = "";
 }

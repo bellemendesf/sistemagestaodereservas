@@ -1,0 +1,46 @@
+@model Funcionario
+@* View Edit de Funcionario: apresenta os campos do DER via model MVC.
+   As alterações passam pelo controller, que mantém uma lista em memória. *@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit - Funcionario</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container py-4">
+    <nav class="mb-4">
+        <a href="/Cliente/Index">Clientes</a> |
+        <a href="/Funcionario/Index">Funcionários</a>
+    </nav>
+    <h1>Editar Funcionario</h1>
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    <form action="/Funcionario/Edit/@Model.Id" method="POST">
+        @Html.AntiForgeryToken()
+        <div class="mb-3">
+            <label for="Nome" class="form-label">Nome</label>
+            <input id="Nome" name="Nome" type="text" value="@Model.Nome" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="Cpf" class="form-label">CPF</label>
+            <input id="Cpf" name="Cpf" type="text" value="@Model.Cpf" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="EmailPessoal" class="form-label">E-mail pessoal</label>
+            <input id="EmailPessoal" name="EmailPessoal" type="email" value="@Model.EmailPessoal" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="EmailInstitucional" class="form-label">E-mail institucional</label>
+            <input id="EmailInstitucional" name="EmailInstitucional" type="email" value="@Model.EmailInstitucional" class="form-control" required>
+        </div>
+        @* Nunca preenchemos a senha com o valor armazenado pelo controller. *@
+        <div class="mb-3">
+            <label for="Senha" class="form-label">Senha (deixe em branco para manter a atual)</label>
+            <input id="Senha" name="Senha" type="password" autocomplete="new-password" class="form-control" >
+        </div>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a href="/Funcionario/Index" class="btn btn-secondary">Voltar</a>
+    </form>
+</body>
+</html>
