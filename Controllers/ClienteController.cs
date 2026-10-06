@@ -12,7 +12,7 @@ public class ClienteController : Controller
 
     // Protege a lista quando duas requisições chegam ao mesmo tempo.
     private static object controle = new object();
-    private PasswordHasher<Pessoa> hasher = new PasswordHasher<Pessoa>();
+    //private PasswordHasher<Pessoa> hasher = new PasswordHasher<Pessoa>();
 
     // Envia os cadastros em memória para a página de listagem.
     public ActionResult Index()
@@ -32,7 +32,6 @@ public class ClienteController : Controller
 
     // Valida os campos do DER e cadastra na lista, atribuindo ID e hash da senha.
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public ActionResult Create(Cliente model)
     {
         lock (controle)
@@ -73,7 +72,7 @@ public class ClienteController : Controller
 
     // Usa o ID da rota para atualizar o registro e valida os campos enviados.
     [HttpPost]
-    [ValidateAntiForgeryToken]
+    
     public ActionResult Edit(int id, Cliente model)
     {
         lock (controle)

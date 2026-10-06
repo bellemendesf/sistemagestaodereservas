@@ -20,6 +20,14 @@ namespace GestaoReservas.Controllers
             return View(mesas);
         }
 
+        // Método que faltava
+        public ActionResult Details(int id)
+        {
+            Mesa mesa = BuscarMesaPorId(id);
+            if (mesa == null) return NotFound();
+            return View(mesa);
+        }
+
         public ActionResult Create()
         {
             return View();
@@ -85,4 +93,3 @@ namespace GestaoReservas.Controllers
         }
     }
 }
-             
