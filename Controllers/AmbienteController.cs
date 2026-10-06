@@ -8,7 +8,7 @@ namespace GestaoReservas.Controllers
         ActionResult Create();
         ActionResult Create(Ambiente model);
         ActionResult Delete(int id);
-        ActionResult Details(int id);   // adicionado também na interface
+        ActionResult Details(int id);  
         ActionResult Edit(int id);
         ActionResult Edit(Ambiente model);
         ActionResult Index();
@@ -16,7 +16,7 @@ namespace GestaoReservas.Controllers
 
     public class AmbienteController : Controller, IAmbienteController
     {
-        // "static" faz a lista durar entre as páginas (sem isso, ela reseta toda hora)
+        // "static" faz com que a lista seja armazenada na memória para todo o programa, não é necessário instanciar toda vez 
         private static List<Ambiente> ambientes = new List<Ambiente>
         {
             new Ambiente { Id = 1, Nome = "Externo", Capacidade = 3 },
@@ -29,7 +29,6 @@ namespace GestaoReservas.Controllers
             return View(ambientes);
         }
 
-        // Método que faltava
         public ActionResult Details(int id)
         {
             Ambiente ambiente = null;

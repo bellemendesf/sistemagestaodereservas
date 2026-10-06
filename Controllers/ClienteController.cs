@@ -12,14 +12,14 @@ public class ClienteController : Controller
 
     // Protege a lista quando duas requisições chegam ao mesmo tempo.
     private static object controle = new object();
-    //private PasswordHasher<Pessoa> hasher = new PasswordHasher<Pessoa>();
+    private PasswordHasher<Pessoa> hasher = new PasswordHasher<Pessoa>();
 
     // Envia os cadastros em memória para a página de listagem.
     public ActionResult Index()
     {
         lock (controle)
         {
-            return View(lista.ToList());
+            return View(lista);
         }
     }
 
@@ -133,7 +133,7 @@ public class ClienteController : Controller
     // Confirma a exclusão por POST; ActionName mantém o endereço /Cliente/Delete/id.
     [HttpPost]
     [ActionName("Delete")]
-    [ValidateAntiForgeryToken]
+   
     public ActionResult DeleteConfirmed(int id)
     {
         lock (controle)

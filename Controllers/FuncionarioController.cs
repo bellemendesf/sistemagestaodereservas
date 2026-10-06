@@ -32,7 +32,6 @@ public class FuncionarioController : Controller
 
     // Valida os campos do DER e cadastra na lista, atribuindo ID e hash da senha.
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public ActionResult Create(Funcionario model)
     {
         lock (controle)
@@ -73,7 +72,6 @@ public class FuncionarioController : Controller
 
     // Usa o ID da rota para atualizar o registro e valida os campos enviados.
     [HttpPost]
-    [ValidateAntiForgeryToken]
     public ActionResult Edit(int id, Funcionario model)
     {
         lock (controle)
@@ -134,7 +132,6 @@ public class FuncionarioController : Controller
     // Confirma a exclusão por POST; ActionName mantém o endereço /Funcionario/Delete/id.
     [HttpPost]
     [ActionName("Delete")]
-    [ValidateAntiForgeryToken]
     public ActionResult DeleteConfirmed(int id)
     {
         lock (controle)
