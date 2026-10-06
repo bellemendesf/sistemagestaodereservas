@@ -1,0 +1,33 @@
+@model Cliente
+@* View Delete de Cliente: apresenta os campos do DER via model MVC.
+   As alterações passam pelo controller, que mantém uma lista em memória. *@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete - Cliente</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container py-4">
+    <nav class="mb-4">
+        <a href="/Cliente/Index">Clientes</a> |
+        <a href="/Funcionario/Index">Funcionários</a>
+    </nav>
+    <h1>Excluir - Cliente</h1>
+    @* Senha e hash não são apresentados nas páginas de consulta. *@
+    <dl>
+        <dt>ID</dt><dd>@Model.Id</dd>
+        <dt>Nome</dt><dd>@Model.Nome</dd>
+        <dt>CPF</dt><dd>@Model.Cpf</dd>
+        <dt>E-mail pessoal</dt><dd>@Model.EmailPessoal</dd>
+        <dt>Telefone</dt><dd>@Model.Telefone</dd>
+    </dl>
+    <p>Deseja excluir este cadastro?</p>
+    <form action="/Cliente/Delete/@Model.Id" method="POST">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-danger">Confirmar exclusão</button>
+    </form>
+    <a href="/Cliente/Index" class="btn btn-secondary mt-2">Voltar</a>
+</body>
+</html>

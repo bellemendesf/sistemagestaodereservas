@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
+using GestaoReservas.Models;
 
 // Controller MVC: recebe os formulários e mantém o CRUD em uma lista estática.
 // Os models representam os campos do DER; esta versão não acessa o banco.
