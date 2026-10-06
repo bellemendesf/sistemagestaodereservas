@@ -8,6 +8,7 @@ namespace GestaoReservas.Controllers
         ActionResult Create();
         ActionResult Create(Ambiente model);
         ActionResult Delete(int id);
+        ActionResult Details(int id);   // adicionado também na interface
         ActionResult Edit(int id);
         ActionResult Edit(Ambiente model);
         ActionResult Index();
@@ -28,6 +29,21 @@ namespace GestaoReservas.Controllers
             return View(ambientes);
         }
 
+        // Método que faltava
+        public ActionResult Details(int id)
+        {
+            Ambiente ambiente = null;
+
+            foreach (Ambiente a in ambientes)
+            {
+                if (a.Id == id)
+                    ambiente = a;
+            }
+
+            if (ambiente == null) return NotFound();
+            return View(ambiente);
+        }
+
         public ActionResult Create()
         {
             return View();
@@ -36,7 +52,7 @@ namespace GestaoReservas.Controllers
         [HttpPost]
         public ActionResult Create(Ambiente model)
         {
-            model.Id = ambientes.Count + 1;   // gera um Id simples baseado no tamanho da lista
+            model.Id = ambientes.Count + 1;
             ambientes.Add(model);
             return RedirectToAction("Index");
         }
@@ -82,5 +98,5 @@ namespace GestaoReservas.Controllers
             if (ambiente == null) return NotFound();
             return View(ambiente);
         }
-   }
+    }
 }
