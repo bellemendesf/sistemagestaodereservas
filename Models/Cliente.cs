@@ -1,6 +1,6 @@
 namespace GestaoReservas.Models;
 public class Cliente: Pessoa
 {
-    public required string Telefone {get;set;}
+    public  string Telefone {get;set;}
  
 }

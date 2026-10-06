@@ -1,3 +1,38 @@
-<h1>Gestão de Reservas</h1>
+@{
+    ViewData["Title"] = "Tela inicial";   // Título da página inicial
+}
 
-<p>Bem-vindo ao sistema!</p>
+<h1>Sistema de Gestão de Reservas</h1>
+<p>Escolha qual página deseja ir:</p>
+
+<div class="d-flex flex-wrap gap-2">
+    @* ↑ "d-flex flex-wrap gap-2" são classes do Bootstrap para organizar os botões lado a lado,
+         quebrando linha automaticamente se não couber todos *@
+
+    <a asp-controller="Ambiente" asp-action="Index" class="btn btn-primary">
+        Ambientes
+    </a>
+    @* ↑ "asp-controller" diz PARA QUAL Controller ir, "asp-action" diz QUAL método (Action) chamar.
+         Isso gera um link para a URL /Ambiente, que cai no AmbienteController.Index() *@
+
+    <a asp-controller="Cliente" asp-action="Index" class="btn btn-primary">
+        Clientes
+    </a>
+    @* ↑ Vai para /Cliente → ClienteController.Index() *@
+
+    <a asp-controller="Funcionario" asp-action="Index" class="btn btn-primary">
+        Funcionários
+    </a>
+    @* ↑ Vai para /Funcionario → FuncionarioController.Index() *@
+
+    <a asp-controller="Mesa" asp-action="Index" class="btn btn-primary">
+        Mesas
+    </a>
+    @* ↑ Vai para /Mesa → MesaController.Index() *@
+
+    <a asp-controller="Reserva" asp-action="Index" class="btn btn-success">
+        Reservas
+    </a>
+    @* ↑ Vai para /Reserva → ReservaController.Index(). Cor diferente (btn-success) só para destacar,
+         já que Reserva é a funcionalidade principal do sistema *@
+</div>

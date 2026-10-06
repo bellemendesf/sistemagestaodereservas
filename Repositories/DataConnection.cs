@@ -1,21 +1,21 @@
-using Microsoft.Data.SqlClient;
+// using Microsoft.Data.SqlClient;
 
-public abstract class DataConnection
-{
-    protected SqlConnection conn;
+// public abstract class DataConnection
+// {
+//     protected SqlConnection conn;
 
-    public DataConnection()
-    {
-        string strConn = @"localhost\MSSQLSERVER04;
-        Integrated Security=True
-        Database=mesaReserva;
-        TrustServerCertificate=true";
-        conn = new SqlConnection(strConn);
-        conn.Open();
-    }
+//     public DataConnection()
+//     {
+//         string strConn = @"localhost\MSSQLSERVER04;
+//         Integrated Security=True
+//         Database=mesaReserva;
+//         TrustServerCertificate=true";
+//         conn = new SqlConnection(strConn);
+//         conn.Open();
+//     }
 
-    public void Dispose()
-    {
-        conn.Close();
-    }
-}
+//     public void Dispose()
+//     {
+//         conn.Close();
+//     }
+// }

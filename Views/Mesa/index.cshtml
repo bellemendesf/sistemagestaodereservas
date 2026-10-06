@@ -1,0 +1,50 @@
+@using GestaoReservas.Models
+@model List<GestaoReservas.Models.Mesa>
+
+@{
+    ViewData["Title"] = "Mesas";
+}
+
+<h1>Mesas</h1>
+
+<p>
+    <a asp-action="Create">Nova mesa</a>
+</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Número da mesa</th>
+            <th>Cadeiras</th>
+            <th>Status</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var mesa in Model)
+        {
+            <tr>
+                <td>@mesa.Id</td>
+                <td>@mesa.Numero</td>
+                <td>@mesa.QtdLugares</td>
+                <td>@mesa.Status</td>
+
+                <td>
+                    <a asp-action="Details" asp-route-id="@mesa.Id">
+                        Detalhes
+                    </a>
+
+                    <a asp-action="Edit" asp-route-id="@mesa.Id">
+                        Editar
+                    </a>
+
+                    <a asp-action="Delete" asp-route-id="@mesa.Id">
+                        Excluir
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,37 @@
+@model GestaoReservas.Models.Mesa
+
+@{
+    ViewData["Title"] = "Editar detalhes da mesa";
+}
+
+<h1>Editar Mesa</h1>
+
+<form asp-action="Edit" method="post">
+
+    <input type="hidden" asp-for="Id" />
+
+    <div>
+        <label asp-for="Id">Mesa</label>
+        <input asp-for="Id" />
+    </div>
+
+    <div>
+        <label asp-for="Numero">Número</label>
+        <input asp-for="Numero" />
+    </div>
+
+    <div>
+        <label asp-for="QtdLugares">Cadeiras</label>
+        <input asp-for="QtdLugares" type="number" />
+    </div>
+
+    <div>
+        <label asp-for="Status">Status</label>
+        <input asp-for="Status" />
+    </div>
+
+    <button type="submit">Salvar alterações</button>
+
+</form>
+
+<a asp-action="Index">Voltar</a>

@@ -1,0 +1,30 @@
+@model GestaoReservas.Models.Ambiente
+
+@{
+    ViewData["Title"] = "Excluir Área";
+}
+
+<h1>Excluir Área</h1>
+
+<h3>Tem certeza que deseja retirar este ambiente?</h3>
+
+<div>
+    <p><strong>ID:</strong> @Model.Id</p>
+    <p><strong>Número da mesa:</strong> @Model.Nome</p>
+    <p><strong>Quantidade de cadeiras:</strong> @Model.Status</p>
+    <p><strong>Status:</strong> @Model.Capacidade</p>
+</div>
+
+<form asp-action="Delete" method="post">
+
+    <input type="hidden" asp-for="Id" />
+
+    <button type="submit">
+        Confirmar exclusão
+    </button>
+
+    <a asp-action="Index">
+        Cancelar
+    </a>
+
+</form>
