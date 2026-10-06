@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "targets": {
     "net10.0": {}
   },
@@ -8,19 +8,19 @@
     "net10.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Nine\\.nuget\\packages\\": {}
+    "C:\\Users\\Luiz\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Nine\\Projetos\\sistemagestaodereservas\\GestaoReservas.csproj",
+      "projectUniqueName": "C:\\Users\\Luiz\\Desktop\\Trabalho Dezani\\sistemagestaodereservas\\GestaoReservas.csproj",
       "projectName": "GestaoReservas",
-      "projectPath": "C:\\Users\\Nine\\Projetos\\sistemagestaodereservas\\GestaoReservas.csproj",
-      "packagesPath": "C:\\Users\\Nine\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Nine\\Projetos\\sistemagestaodereservas\\obj\\",
+      "projectPath": "C:\\Users\\Luiz\\Desktop\\Trabalho Dezani\\sistemagestaodereservas\\GestaoReservas.csproj",
+      "packagesPath": "C:\\Users\\Luiz\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Luiz\\Desktop\\Trabalho Dezani\\sistemagestaodereservas\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Nine\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Luiz\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
@@ -30,6 +30,7 @@
       },
       "frameworks": {
         "net10.0": {
+          "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {}
         }
@@ -44,10 +45,11 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "10.0.400"
     },
     "frameworks": {
       "net10.0": {
+        "framework": "net10.0",
         "targetAlias": "net10.0",
         "imports": [
           "net461",
@@ -68,7 +70,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.401/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",
