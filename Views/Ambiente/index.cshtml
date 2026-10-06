@@ -1,36 +1,49 @@
-@model List<Ambiente>
+@using GestaoReservas.Models
+@model List<GestaoReservas.Models.Ambiente>
 
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-</head>
-<body class="container">
-    <table class="table">
-        @foreach(Ambiente a in Model)
-        {
+@{
+    ViewData["Title"] = "Ambientes";
+}
+
+<h1>Ambientes</h1>
+
+<p>
+    <a asp-action="Create">Nova área</a>
+</p>
+
+<table>
+    <thead>
         <tr>
-            <td>@a.Id</td>
-            <td>@a.Status</td>
-            <td>@a.Nome</td>
-            <td>@a.Capacidade</td>
-            <td>
-                <a class="btn btn-info btn-sm" href="/tarefa/update/@a.Id">Editar</a>
-                <a class="btn btn-danger btn-sm" href="/tarefa/delete/@a.Id">Apagar</a>
-                <a class="btn btn-info btn-sm" href="/tarefa/update/@a.Nome">Editar</a>
-                <a class="btn btn-danger btn-sm" href="/tarefa/delete/@a.Nome">Apagar</a>
-                <a class="btn btn-info btn-sm" href="/tarefa/update/@a.Status">Editar</a>
-                <a class="btn btn-danger btn-sm" href="/tarefa/delete/@a.Status">Apagar</a>
-                <a class="btn btn-info btn-sm" href="/tarefa/update/@a.Capacidade">Editar</a>
-                <a class="btn btn-danger btn-sm" href="/tarefa/delete/@a.Capacidade">Apagar</a>
-            </td>
+            <th>Id</th>
+            <th>Nome</th>
+            <th>Status</th>
+            <th>Capacidade</th>
         </tr>
-        }
-    </table>
+    </thead>
 
-    <a class="btn btn-primary" href="/tarefa/create">Adicionar</a>
-</body>
-</html>
+    <tbody>
+        @foreach (var ambiente in Model)
+        {
+            <tr>
+                <td>@ambiente.Id</td>
+                <td>@ambiente.Nome</td>
+                <td>@ambiente.Status</td>
+                <td>@ambiente.Capacidade</td>
+
+                <td>
+                    <a asp-action="Details" asp-route-id="@ambiente.Id">
+                        Detalhes
+                    </a>
+
+                    <a asp-action="Edit" asp-route-id="@ambiente.Id">
+                        Editar
+                    </a>
+
+                    <a asp-action="Delete" asp-route-id="@ambiente.Id">
+                        Excluir
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
