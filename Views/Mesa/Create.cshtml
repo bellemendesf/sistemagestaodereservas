@@ -1,21 +1,107 @@
-@model Mesa
+```cshtml
+@model GestaoReservas.Models.Mesa
 
-<form asp-action="Create" method="post">
-     <div>
-        <label asp-for="Id"></label>
-        <input asp-for="Id" />
-    </div>
-    <div>
-        <label asp-for="Numero"></label>
-        <input asp-for="Numero" type="number" />
-    </div>
-    <div>
-        <label asp-for="Status"></label>
-        <input asp-for="Status" />
-    </div>
-    <div>
-        <label asp-for="QtdLugares"></label>
-        <input asp-for="QtdLugares" type="number"/>
-    </div>
-    <button type="submit">Salvar</button>
-</form>
+@{
+    ViewData["Title"] = "Cadastrar Mesa";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Santa Massa</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/DetalhesEdicao.css" asp-append-version="true">
+</head>
+
+<body class="detalhes-edicao-page">
+    <main class="detalhes-edicao-container">
+
+        <a asp-action="Index" class="detalhes-edicao-voltar">
+            ← Voltar às mesas
+        </a>
+
+        <section class="detalhes-edicao-card">
+
+            <header class="detalhes-edicao-header">
+                <p class="detalhes-edicao-kicker">
+                    Santa Massa · Rio Preto
+                </p>
+
+                <h1>Cadastrar mesa</h1>
+
+                <p class="detalhes-edicao-descricao">
+                    Preencha os dados abaixo para adicionar uma nova mesa ao restaurante.
+                </p>
+            </header>
+
+            <div class="detalhes-edicao-conteudo">
+
+                <form asp-action="Create" method="post" class="detalhes-edicao-form">
+
+                    <div asp-validation-summary="ModelOnly"
+                         class="detalhes-edicao-erros">
+                    </div>
+
+                    <div class="detalhes-edicao-campo">
+                        <label asp-for="Numero">Número da mesa</label>
+                        <input asp-for="Numero"
+                               type="number"
+                               min="1"
+                               placeholder="Ex.: 4" />
+                        <span asp-validation-for="Numero"
+                              class="detalhes-edicao-erros"></span>
+                    </div>
+
+                    <div class="detalhes-edicao-campo">
+                        <label asp-for="QtdLugares">Quantidade de lugares</label>
+                        <input asp-for="QtdLugares"
+                               type="number"
+                               min="1"
+                               placeholder="Ex.: 4" />
+                        <span asp-validation-for="QtdLugares"
+                              class="detalhes-edicao-erros"></span>
+                    </div>
+
+                    <div class="detalhes-edicao-campo">
+                        <label asp-for="Status">Status da mesa</label>
+                        <select asp-for="Status">
+                            <option value="">Selecione o status</option>
+                            <option value="Livre">Livre</option>
+                            <option value="Reservada">Reservada</option>
+                            <option value="Ocupada">Ocupada</option>
+                        </select>
+                        <span asp-validation-for="Status"
+                              class="detalhes-edicao-erros"></span>
+                    </div>
+
+                    <div class="detalhes-edicao-acoes">
+                        <button type="submit"
+                                class="detalhes-edicao-botao detalhes-edicao-botao-principal">
+                            Cadastrar mesa
+                        </button>
+
+                        <a asp-action="Index"
+                           class="detalhes-edicao-botao detalhes-edicao-botao-secundario">
+                            Cancelar
+                        </a>
+                    </div>
+
+                </form>
+            </div>
+
+            <footer class="detalhes-edicao-rodape">
+                Santa Massa · Painel de gerenciamento
+            </footer>
+
+        </section>
+    </main>
+</body>
+</html>
+```

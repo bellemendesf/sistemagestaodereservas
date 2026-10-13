@@ -1,30 +1,149 @@
+```cshtml
 @model GestaoReservas.Models.Ambiente
 
 @{
-    ViewData["Title"] = "Excluir Área";
+    ViewData["Title"] = "Excluir Ambiente";
+    Layout = null;
 }
 
-<h1>Excluir Área</h1>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Santa Massa</title>
 
-<h3>Tem certeza que deseja retirar este ambiente?</h3>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<div>
-    <p><strong>ID:</strong> @Model.Id</p>
-    <p><strong>Número da mesa:</strong> @Model.Nome</p>
-    <p><strong>Quantidade de cadeiras:</strong> @Model.Status</p>
-    <p><strong>Status:</strong> @Model.Capacidade</p>
-</div>
+    <link rel="stylesheet" href="~/css/DetalhesEdicao.css" asp-append-version="true">
 
-<form asp-action="Delete" method="post">
+    <style>
+        .excluir-alerta {
+            padding: 16px 18px;
+            margin-bottom: 24px;
+            border: 1px solid #F0C5BE;
+            border-radius: 10px;
+            background: #FFF0ED;
+            color: #A12B20;
+            font-size: 14px;
+            line-height: 1.7;
+        }
 
-    <input type="hidden" asp-for="Id" />
+        .excluir-identificacao {
+            padding: 22px;
+            margin-bottom: 24px;
+            border: 1px solid #E9E1CF;
+            border-radius: 12px;
+            background: #FFFCF4;
+        }
 
-    <button type="submit">
-        Confirmar exclusão
-    </button>
+        .excluir-identificacao span {
+            display: block;
+            margin-bottom: 6px;
+            color: #77736A;
+            font-size: 12px;
+        }
 
-    <a asp-action="Index">
-        Cancelar
-    </a>
+        .excluir-identificacao strong {
+            font-family: "Josefin Sans", sans-serif;
+            font-size: 26px;
+        }
 
-</form>
+        .botao-excluir {
+            background: #B42318;
+            color: white;
+        }
+
+        .botao-excluir:hover {
+            background: #8F1D14;
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="detalhes-edicao-page">
+    <main class="detalhes-edicao-container">
+
+        <a asp-action="Index" class="detalhes-edicao-voltar">
+            ← Voltar aos ambientes
+        </a>
+
+        <section class="detalhes-edicao-card">
+
+            <header class="detalhes-edicao-header">
+                <p class="detalhes-edicao-kicker">
+                    Santa Massa · Rio Preto
+                </p>
+
+                <h1>Excluir ambiente</h1>
+
+                <p class="detalhes-edicao-descricao">
+                    Confira os dados antes de confirmar a exclusão.
+                </p>
+            </header>
+
+            <div class="detalhes-edicao-conteudo">
+
+                <div class="excluir-alerta">
+                    <strong>Atenção!</strong>
+                    Você está prestes a excluir este ambiente.
+                    Essa ação não poderá ser desfeita facilmente.
+                </div>
+
+                <div class="excluir-identificacao">
+                    <span>Nome do ambiente</span>
+                    <strong>@Model.Nome</strong>
+                </div>
+
+                <div class="detalhes-edicao-grid">
+                    <div class="detalhes-edicao-item">
+                        <span>Código do ambiente</span>
+                        <strong>#@Model.Id</strong>
+                    </div>
+
+                    <div class="detalhes-edicao-item">
+                        <span>Capacidade</span>
+                        <strong>@Model.Capacidade pessoas</strong>
+                    </div>
+
+                    <div class="detalhes-edicao-item">
+                        <span>Status</span>
+                        <strong>@(string.IsNullOrWhiteSpace(Model.Status) ? "Não informado" : Model.Status)</strong>
+                    </div>
+                </div>
+
+                <form asp-controller="Ambiente"
+                      asp-action="Delete"
+                      method="post"
+                      class="detalhes-edicao-form"
+                      style="margin-top: 26px;">
+
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="detalhes-edicao-acoes">
+                        <button type="submit"
+                                class="detalhes-edicao-botao botao-excluir">
+                            Confirmar exclusão
+                        </button>
+
+                        <a asp-controller="Ambiente"
+                           asp-action="Index"
+                           class="detalhes-edicao-botao detalhes-edicao-botao-secundario">
+                            Cancelar
+                        </a>
+                    </div>
+                </form>
+
+            </div>
+
+            <footer class="detalhes-edicao-rodape">
+                Santa Massa · Painel de gerenciamento
+            </footer>
+
+        </section>
+    </main>
+</body>
+</html>
+```

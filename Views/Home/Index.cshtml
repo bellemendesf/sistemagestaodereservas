@@ -1,38 +1,62 @@
 @{
-    ViewData["Title"] = "Tela inicial";   // Título da página inicial
+    Layout = null;
+    ViewData["Title"] = "Santa Massa Rio Preto";
 }
 
-<h1>Sistema de Gestão de Reservas</h1>
-<p>Escolha qual página deseja ir:</p>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
 
-<div class="d-flex flex-wrap gap-2">
-    @* ↑ "d-flex flex-wrap gap-2" são classes do Bootstrap para organizar os botões lado a lado,
-         quebrando linha automaticamente se não couber todos *@
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+          crossorigin="anonymous" />
+    <link rel="stylesheet" href="~/css/Home.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap"
+          rel="stylesheet" />
+</head>
+<body class="home">
+    <div class="home-glow" aria-hidden="true"></div>
 
-    <a asp-controller="Ambiente" asp-action="Index" class="btn btn-primary">
-        Ambientes
-    </a>
-    @* ↑ "asp-controller" diz PARA QUAL Controller ir, "asp-action" diz QUAL método (Action) chamar.
-         Isso gera um link para a URL /Ambiente, que cai no AmbienteController.Index() *@
+    <header class="home-top">
+      <img src="~/images/logosantamassa.jpg" alt="Logo do restaurante Santa Massa" class="home-logo" />
+        <span class="home-brand">Santa Massa Rio Preto</span>
+    </header>
 
-    <a asp-controller="Cliente" asp-action="Index" class="btn btn-primary">
-        Clientes
-    </a>
-    @* ↑ Vai para /Cliente → ClienteController.Index() *@
+<main class="home-hero">
+    <p class="home-kicker">
+        RESTAURANTE ITALIANO · SÃO JOSÉ DO RIO PRETO
+    </p>
 
-    <a asp-controller="Funcionario" asp-action="Index" class="btn btn-primary">
-        Funcionários
-    </a>
-    @* ↑ Vai para /Funcionario → FuncionarioController.Index() *@
+    <h1>Bem-vindo ao Santa Massa</h1>
 
-    <a asp-controller="Mesa" asp-action="Index" class="btn btn-primary">
-        Mesas
-    </a>
-    @* ↑ Vai para /Mesa → MesaController.Index() *@
+    <p class="home-lead">
+        Escolha como deseja acessar nosso sistema.
+    </p>
 
-    <a asp-controller="Reserva" asp-action="Index" class="btn btn-success">
-        Reservas
-    </a>
-    @* ↑ Vai para /Reserva → ReservaController.Index(). Cor diferente (btn-success) só para destacar,
-         já que Reserva é a funcionalidade principal do sistema *@
-</div>
+    <div class="home-actions">
+        <a asp-controller="AreaCliente"
+           asp-action="Index"
+           class="home-card">
+            <h2>Entrar como cliente</h2>
+            <p>Faça uma reserva e consulte as opções disponíveis.</p>
+            <span>Continuar →</span>
+        </a>
+
+        <a asp-controller="AreaRestaurante"
+           asp-action="Index"
+           class="home-card">
+            <h2>Entrar como funcionário</h2>
+            <p>Gerencie reservas, mesas e ambientes.</p>
+            <span>Acessar painel →</span>
+        </a>
+    </div>
+</main>
+
+</body>
+</html>

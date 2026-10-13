@@ -1,51 +1,297 @@
+```cshtml
 @using GestaoReservas.Models
-@model List<GestaoReservas.Models.Ambiente>
+@model IEnumerable<Ambiente>
 
 @{
     ViewData["Title"] = "Ambientes";
+    Layout = null;
+    var lista = Model?.ToList() ?? new List<Ambiente>();
 }
 
-<h1>Ambientes</h1>
-<p>
-    <a href="/Home/Index">Home</a> |
-</p>
-<p>
-    <a asp-action="Create">Nova área</a>
-</p>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Santa Massa</title>
 
-<table>
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Nome</th>
-            <th>Status</th>
-            <th>Capacidade</th>
-        </tr>
-    </thead>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <tbody>
-        @foreach (var ambiente in Model)
-        {
-            <tr>
-                <td>@ambiente.Id</td>
-                <td>@ambiente.Nome</td>
-                <td>@ambiente.Status</td>
-                <td>@ambiente.Capacidade</td>
+    <link rel="stylesheet" href="~/css/DetalhesEdicao.css" asp-append-version="true">
 
-                <td>
-                    <a asp-action="Details" asp-route-id="@ambiente.Id">
-                        Detalhes
-                    </a>
-
-                    <a asp-action="Edit" asp-route-id="@ambiente.Id">
-                        Editar
-                    </a>
-
-                    <a asp-action="Delete" asp-route-id="@ambiente.Id">
-                        Excluir
-                    </a>
-                </td>
-            </tr>
+    <style>
+        .ambientes-topo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
         }
-    </tbody>
-</table>
+
+        .ambientes-contador {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            padding: 7px 12px;
+            border-radius: 20px;
+            background: #FFF2A8;
+            color: #1F1F1F;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .ambientes-tabela-wrap {
+            overflow-x: auto;
+            width: 100%;
+        }
+
+        .ambientes-tabela {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .ambientes-tabela thead {
+            background: #FFFCF4;
+        }
+
+        .ambientes-tabela th {
+            padding: 15px 13px;
+            color: #77736A;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: .5px;
+            text-align: left;
+            text-transform: uppercase;
+            white-space: nowrap;
+            border-bottom: 1px solid #E9E1CF;
+        }
+
+        .ambientes-tabela td {
+            padding: 16px 13px;
+            border-bottom: 1px solid #F0EBDD;
+            vertical-align: middle;
+        }
+
+        .ambientes-tabela tbody tr:hover {
+            background: #FFFCF4;
+        }
+
+        .ambiente-nome {
+            font-weight: 600;
+        }
+
+        .ambiente-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            background: #E8F5E9;
+            color: #2E7D32;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .ambiente-acoes {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .ambiente-acoes a {
+            color: #2E7D32;
+            font-weight: 600;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .ambiente-acoes a:hover {
+            text-decoration: underline;
+        }
+
+        .ambiente-acoes .ambiente-excluir {
+            color: #B42318;
+        }
+
+        .ambientes-vazio {
+            padding: 35px 18px;
+            text-align: center;
+        }
+
+        .ambientes-vazio h2 {
+            margin: 0 0 10px;
+            font-family: "Josefin Sans", sans-serif;
+            font-size: 23px;
+        }
+
+        .ambientes-vazio p {
+            margin: 0 0 22px;
+            color: #77736A;
+            font-size: 13px;
+        }
+
+        .ambientes-botao-novo {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 12px 18px;
+            border-radius: 9px;
+            background: #2E7D32;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background .2s;
+        }
+
+        .ambientes-botao-novo:hover {
+            background: #256628;
+            color: white;
+        }
+
+        .ambientes-rodape {
+            padding: 17px 32px;
+            border-top: 1px solid #E9E1CF;
+            color: #77736A;
+            font-size: 12px;
+            text-align: center;
+        }
+
+            .ambientes-tabela {
+                min-width: 650px;
+            }
+        }
+    </style>
+</head>
+
+<body class="detalhes-edicao-page">
+    <main class="detalhes-edicao-container">
+
+        <a asp-controller="AreaRestaurante"
+           asp-action="Index"
+           class="detalhes-edicao-voltar">
+            ← Voltar à área do restaurante
+        </a>
+
+        <section class="detalhes-edicao-card">
+
+            <header class="detalhes-edicao-header">
+                <div class="ambientes-topo">
+                    <div>
+                        <p class="detalhes-edicao-kicker">
+                            Santa Massa · Rio Preto
+                        </p>
+
+                        <h1>Ambientes</h1>
+
+                        <p class="detalhes-edicao-descricao">
+                            Gerencie os espaços e a capacidade do restaurante.
+                        </p>
+                    </div>
+
+                    <span class="ambientes-contador">
+                        @lista.Count @(lista.Count == 1 ? "ambiente" : "ambientes")
+                    </span>
+                </div>
+            </header>
+
+            @if (!lista.Any())
+            {
+                <div class="ambientes-vazio">
+                    <h2>Nenhum ambiente cadastrado</h2>
+
+                    <p>
+                        Cadastre o primeiro ambiente para começar a organizar os espaços do restaurante.
+                    </p>
+
+                    <a asp-action="Create" class="ambientes-botao-novo">
+                        + Cadastrar ambiente
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="detalhes-edicao-conteudo">
+
+                    <div style="margin-bottom: 22px;">
+                        <a asp-action="Create" class="ambientes-botao-novo">
+                            + Cadastrar ambiente
+                        </a>
+                    </div>
+
+                    <div class="ambientes-tabela-wrap">
+                        <table class="ambientes-tabela">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome do ambiente</th>
+                                    <th>Capacidade</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var ambiente in lista)
+                                {
+                                    <tr>
+                                        <td>#@ambiente.Id</td>
+
+                                        <td class="ambiente-nome">
+                                            @ambiente.Nome
+                                        </td>
+
+                                        <td>
+                                            @ambiente.Capacidade
+                                            @(ambiente.Capacidade == 1 ? "pessoa" : "pessoas")
+                                        </td>
+
+                                        <td>
+                                            <span class="ambiente-status">
+                                                @(string.IsNullOrWhiteSpace(ambiente.Status)
+                                                    ? "Não informado"
+                                                    : ambiente.Status)
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <div class="ambiente-acoes">
+                                                <a asp-action="Details"
+                                                   asp-route-id="@ambiente.Id">
+                                                    Detalhes
+                                                </a>
+
+                                                <a asp-action="Edit"
+                                                   asp-route-id="@ambiente.Id">
+                                                    Editar
+                                                </a>
+
+                                                <a asp-action="Delete"
+                                                   asp-route-id="@ambiente.Id"
+                                                   class="ambiente-excluir">
+                                                    Excluir
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+
+            <footer class="ambientes-rodape">
+                Santa Massa · Painel de gerenciamento
+            </footer>
+
+        </section>
+    </main>
+</body>
+</html>
+```
