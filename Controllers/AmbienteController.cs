@@ -31,7 +31,7 @@ namespace GestaoReservas.Controllers
 
         public ActionResult Details(int id)
         {
-            Ambiente ambiente = null;
+            Ambiente? ambiente = null;
 
             foreach (Ambiente a in ambientes)
             {
@@ -58,7 +58,7 @@ namespace GestaoReservas.Controllers
 
         public ActionResult Edit(int id)
         {
-            Ambiente ambiente = null;
+            Ambiente? ambiente = null;
 
             foreach (Ambiente a in ambientes)
             {
@@ -70,23 +70,29 @@ namespace GestaoReservas.Controllers
             return View(ambiente);
         }
 
-        [HttpPost]
-        public ActionResult Edit(Ambiente model)
+     
+[HttpPost]
+[ValidateAntiForgeryToken]
+public ActionResult Edit(Ambiente model)
+{
+    foreach (Ambiente a in ambientes)
+    {
+        if (a.Id == model.Id)
         {
-            foreach (Ambiente a in ambientes)
-            {
-                if (a.Id == model.Id)
-                {
-                    a.Nome = model.Nome;
-                    a.Capacidade = model.Capacidade;
-                }
-            }
-            return RedirectToAction("Index");
+            a.Nome = model.Nome;
+            a.Capacidade = model.Capacidade;
+            a.Status = model.Status; // Atualiza o status também
+            break;
         }
+    }
+
+    return RedirectToAction("Index");
+}
+
 
         public ActionResult Delete(int id)
         {
-            Ambiente ambiente = null;
+            Ambiente? ambiente = null;
 
             foreach (Ambiente a in ambientes)
             {
@@ -97,5 +103,27 @@ namespace GestaoReservas.Controllers
             if (ambiente == null) return NotFound();
             return View(ambiente);
         }
+        [HttpPost]
+[ValidateAntiForgeryToken]
+public ActionResult Delete(Ambiente model)
+{
+    Ambiente? ambiente = null;
+
+    foreach (Ambiente a in ambientes)
+    {
+        if (a.Id == model.Id)
+        {
+            ambiente = a;
+            break;
+        }
+    }
+
+    if (ambiente == null)
+        return NotFound();
+
+    ambientes.Remove(ambiente);
+
+    return RedirectToAction("Index");
+}
     }
 }

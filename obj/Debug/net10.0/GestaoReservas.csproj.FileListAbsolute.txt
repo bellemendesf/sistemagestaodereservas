@@ -60,3 +60,14 @@ C:\Users\Nine\Projetos\sistemagestaodereservas\obj\Debug\net10.0\staticwebassets
 C:\Users\Nine\Projetos\sistemagestaodereservas\obj\Debug\net10.0\swae.build.ex.cache
 C:\Users\Nine\Projetos\sistemagestaodereservas\obj\Debug\net10.0\GestaoReservas.genruntimeconfig.cache
 C:\Users\Nine\Projetos\sistemagestaodereservas\obj\Debug\net10.0\ref\GestaoReservas.dll
+C:\Users\isabe\GestaoReservas\bin\Debug\net10.0\package-lock.json
+C:\Users\isabe\GestaoReservas\bin\Debug\net10.0\package.json
+C:\Users\isabe\GestaoReservas\bin\Debug\net10.0\GestaoReservas.staticwebassets.runtime.json
+C:\Users\isabe\GestaoReservas\obj\Debug\net10.0\compressed\pr8eg6lp0d-{0}-f9nnhzhvsa-f9nnhzhvsa.gz
+C:\Users\isabe\GestaoReservas\obj\Debug\net10.0\compressed\xzbdqd7h4n-{0}-q7tuxy21tg-q7tuxy21tg.gz
+C:\Users\isabe\GestaoReservas\obj\Debug\net10.0\compressed\fza2tx18x3-{0}-tf6fvfkcoc-tf6fvfkcoc.gz
+C:\Users\isabe\GestaoReservas\obj\Debug\net10.0\compressed\h3k9dx16br-{0}-yuq8dvuyfa-yuq8dvuyfa.gz
+C:\Users\isabe\GestaoReservas\obj\Debug\net10.0\compressed\rf9qzfzxke-{0}-6355chca18-6355chca18.gz
+C:\Users\isabe\GestaoReservas\obj\Debug\net10.0\compressed\m9e4yzt3av-{0}-0g07pw3kze-0g07pw3kze.gz
+C:\Users\isabe\GestaoReservas\obj\Debug\net10.0\compressed\s6ehuoy3pe-{0}-btfv669j3b-btfv669j3b.gz
+C:\Users\isabe\GestaoReservas\obj\Debug\net10.0\compressed\5t70dzijwg-{0}-44exwvnuu4-44exwvnuu4.gz

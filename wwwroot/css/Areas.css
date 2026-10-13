@@ -1,0 +1,147 @@
+
+:root {
+    --creme: #FFF8E1;
+    --creme-escuro: #F3E4B8;
+    --amarelo: #F4D000;
+    --preto: #1F1F1F;
+    --verde: #2E7D32;
+    --verde-hover: #256628;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body.area-page {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--creme);
+    color: var(--preto);
+    font-family: "Poppins", Arial, sans-serif;
+}
+
+.area-container {
+    width: min(1100px, 92%);
+    margin: 0 auto;
+    padding: 28px 0 24px;
+}
+
+.back-link {
+    color: var(--verde);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.back-link:hover {
+    color: var(--verde-hover);
+    text-decoration: underline;
+}
+
+.area-header {
+    text-align: center;
+    padding: 35px 0 30px;
+}
+
+.area-logo {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 12px;
+    border-radius: 12px;
+}
+
+.area-kicker {
+    color: var(--verde);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.area-header h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    margin-bottom: 12px;
+}
+
+.area-header > p:last-child {
+    color: #625D50;
+    margin-bottom: 0;
+}
+
+.area-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.area-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 220px;
+    padding: 25px;
+    border: 1px solid var(--creme-escuro);
+    border-radius: 18px;
+    background: #FFFCF4;
+    color: var(--preto);
+    text-decoration: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.area-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(31, 31, 31, 0.09);
+    border-color: var(--amarelo);
+    color: var(--preto);
+}
+
+.area-icon {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+    background: var(--amarelo);
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.area-card h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+.area-card p {
+    color: #625D50;
+    line-height: 1.6;
+    margin-bottom: 18px;
+}
+
+.card-link {
+    margin-top: auto;
+    color: var(--verde);
+    font-weight: 700;
+}
+
+.area-footer {
+    margin-top: 35px;
+    text-align: center;
+    color: #77705F;
+    font-size: 0.85rem;
+}
+
+@media (max-width: 650px) {
+    .area-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .area-header {
+        padding-top: 25px;
+    }
+
+    .area-card {
+        min-height: 190px;
+    }
+}

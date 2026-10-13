@@ -15,7 +15,17 @@ namespace GestaoReservas.Controllers
 
         public IActionResult Create()
         {
-            return View(new Reserva());
+            return View(new Reserva
+            {
+                Cliente = new Cliente
+                {
+                    Cpf = string.Empty,
+                    EmailPessoal = string.Empty,
+                    Senha = string.Empty
+                },
+                QtdPessoas = 2,
+                Status = "Pendente"
+            });
         }
 
         [HttpPost]
@@ -28,7 +38,7 @@ namespace GestaoReservas.Controllers
 
         public IActionResult Details(int id)
         {
-            Reserva reserva = null;
+            Reserva? reserva = null;
 
             foreach (Reserva r in reservas)
             {
@@ -42,7 +52,7 @@ namespace GestaoReservas.Controllers
 
         public IActionResult Edit(int id) // GET
         {
-            Reserva reserva = null;
+            Reserva? reserva = null;
 
             foreach (Reserva r in reservas)
             {
@@ -74,7 +84,7 @@ namespace GestaoReservas.Controllers
 
         public IActionResult Delete(int id) // GET
         {
-            Reserva reserva = null;
+            Reserva? reserva = null;
 
             foreach (Reserva r in reservas)
             {
@@ -89,7 +99,7 @@ namespace GestaoReservas.Controllers
         [HttpPost, ActionName("Delete")]
         public IActionResult DeleteConfirmed(int id) // POST
         {
-            Reserva reserva = null;
+            Reserva? reserva = null;
 
             foreach (Reserva r in reservas)
             {

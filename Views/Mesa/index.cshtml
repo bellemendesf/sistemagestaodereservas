@@ -2,51 +2,157 @@
 @model List<GestaoReservas.Models.Mesa>
 
 @{
+    Layout = null;
     ViewData["Title"] = "Mesas";
 }
 
-<h1>Mesas</h1>
-<p>
-    <a href="/Home/Index">Home</a> |
-</p>
-<p>
-    <a asp-action="Create">Nova mesa</a>
-</p>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<table>
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Número da mesa</th>
-            <th>Cadeiras</th>
-            <th>Status</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
+    <title>@ViewData["Title"] | Santa Massa</title>
 
-    <tbody>
-        @foreach (var mesa in Model)
-        {
-            <tr>
-                <td>@mesa.Id</td>
-                <td>@mesa.Numero</td>
-                <td>@mesa.QtdLugares</td>
-                <td>@mesa.Status</td>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet">
 
-                <td>
-                    <a asp-action="Details" asp-route-id="@mesa.Id">
-                        Detalhes
-                    </a>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-                    <a asp-action="Edit" asp-route-id="@mesa.Id">
-                        Editar
-                    </a>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap"
+          rel="stylesheet">
 
-                    <a asp-action="Delete" asp-route-id="@mesa.Id">
-                        Excluir
-                    </a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <link rel="stylesheet"
+          href="~/css/Mesas.css"
+          asp-append-version="true">
+</head>
+
+<body class="mesas-page">
+    <main class="mesas-container">
+
+        <a asp-controller="AreaRestaurante"
+           asp-action="Index"
+           class="mesas-voltar">
+            ← Voltar à Área do Restaurante
+        </a>
+
+        <section class="mesas-card">
+
+            <header class="mesas-header">
+                <div>
+                    <p class="mesas-kicker">Santa Massa · Rio Preto</p>
+                    <h1>Mesas cadastradas</h1>
+                    <p class="mesas-descricao">
+                        Consulte a capacidade e a disponibilidade das mesas.
+                    </p>
+                </div>
+
+                <a asp-controller="Mesa"
+                   asp-action="Create"
+                   class="btn-mesa-nova">
+                    + Nova mesa
+                </a>
+            </header>
+
+            <div class="mesas-conteudo">
+
+                @if (Model == null || Model.Count == 0)
+                {
+                    <div class="mesas-vazio">
+                        <h2>Nenhuma mesa cadastrada</h2>
+                        <p>Cadastre uma mesa para começar a organizar o restaurante.</p>
+
+                        <a asp-controller="Mesa"
+                           asp-action="Create"
+                           class="btn-mesa-nova">
+                            Cadastrar primeira mesa
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <p class="mesas-contagem">
+                        Total de mesas: <strong>@Model.Count</strong>
+                    </p>
+
+                    <div class="mesas-table-wrap">
+                        <table class="mesas-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Número da mesa</th>
+                                    <th>Lugares</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var mesa in Model)
+                                {
+                                    var status = mesa.Status?.Trim() ?? "";
+
+                                    var classeStatus = status.ToLowerInvariant() switch
+                                    {
+                                        "livre" => "status-livre",
+                                        "reservada" => "status-reservada",
+                                        "ocupada" => "status-ocupada",
+                                        _ => "status-outro"
+                                    };
+
+                                    <tr>
+                                        <td>@mesa.Id</td>
+
+                                        <td class="mesa-numero">
+                                            Mesa @mesa.Numero
+                                        </td>
+
+                                        <td>
+                                            @mesa.QtdLugares @(mesa.QtdLugares == 1 ? "lugar" : "lugares")
+                                        </td>
+
+                                        <td>
+                                            <span class="mesa-status @classeStatus">
+                                                @(string.IsNullOrWhiteSpace(status) ? "Não informado" : status)
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <div class="mesas-acoes">
+                                                <a asp-action="Details"
+                                                   asp-route-id="@mesa.Id"
+                                                   class="acao-detalhes">
+                                                    Detalhes
+                                                </a>
+
+                                                <a asp-action="Edit"
+                                                   asp-route-id="@mesa.Id"
+                                                   class="acao-editar">
+                                                    Editar
+                                                </a>
+
+                                                <a asp-action="Delete"
+                                                   asp-route-id="@mesa.Id"
+                                                   class="acao-excluir">
+                                                    Excluir
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+
+            </div>
+
+            <footer class="mesas-footer">
+                Santa Massa · Painel de gerenciamento
+            </footer>
+
+        </section>
+    </main>
+</body>
+</html>

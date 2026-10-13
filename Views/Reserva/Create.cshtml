@@ -1,38 +1,69 @@
 @model GestaoReservas.Models.Reserva
 
 @{
-    ViewData["Title"] = "Nova Reserva";
+    Layout = "~/Views/Shared/_ReservaLayout.cshtml";
+    ViewData["Title"] = "Nova reserva";
 }
 
-<h1>Nova Reserva</h1>
+<section class="panel">
+    <form asp-action="Create" method="post">
+        <div class="form-section">
+            <h2>Dados do cliente</h2>
+            <p>Quem vai ocupar a mesa.</p>
+            <div class="form-grid">
+                <div class="field">
+                    <label asp-for="Cliente.Nome">Nome</label>
+                    <input asp-for="Cliente.Nome" placeholder="Nome completo" />
+                </div>
+                <div class="field">
+                    <label asp-for="Cliente.Cpf">CPF</label>
+                    <input asp-for="Cliente.Cpf" placeholder="000.000.000-00" />
+                </div>
+                <div class="field">
+                    <label asp-for="Cliente.Telefone">Telefone</label>
+                    <input asp-for="Cliente.Telefone" type="tel" placeholder="(17) 90000-0000" />
+                </div>
+                <div class="field">
+                    <label asp-for="Cliente.EmailPessoal">E-mail</label>
+                    <input asp-for="Cliente.EmailPessoal" type="email" placeholder="cliente@email.com" />
+                </div>
+            </div>
+        </div>
 
-<form asp-action="Create" method="post">
+        <div class="form-section">
+            <h2>Detalhes da reserva</h2>
+            <p>Mesa, horário e quantidade de pessoas.</p>
+            <div class="form-grid">
+                <div class="field">
+                    <label asp-for="MesaId">Número da mesa</label>
+                    <input asp-for="MesaId" type="number" min="1" />
+                </div>
+                <div class="field">
+                    <label asp-for="FuncionarioID">Funcionário responsável</label>
+                    <input asp-for="FuncionarioID" type="number" min="1" />
+                </div>
+                <div class="field">
+                    <label asp-for="DataHora">Data e hora</label>
+                    <input type="datetime-local" name="DataHora" id="DataHora" />
+                </div>
+                <div class="field">
+                    <label asp-for="QtdPessoas">Quantidade de pessoas</label>
+                    <input asp-for="QtdPessoas" type="number" min="1" value="2" />
+                </div>
+                <div class="field full">
+                    <label asp-for="Status">Status</label>
+                    <select asp-for="Status">
+                        <option value="Pendente">Pendente</option>
+                        <option value="Confirmada">Confirmada</option>
+                        <option value="Cancelada">Cancelada</option>
+                    </select>
+                </div>
+            </div>
+        </div>
 
-    <div>
-        <label asp-for="MesaId"></label>
-        <input asp-for="MesaId" />
-    </div>
-
-    <div>
-        <label asp-for="FuncionarioID"></label>
-        <input asp-for="FuncionarioID" />
-    </div>
-
-    <div>
-        <label asp-for="DataHora"></label>
-        <input asp-for="DataHora" type="datetime-local" />
-    </div>
-
-    <div>
-        <label asp-for="QtdPessoas"></label>
-        <input asp-for="QtdPessoas" type="number" />
-    </div>
-
-    <div>
-        <label asp-for="Status"></label>
-        <input asp-for="Status" />
-    </div>
-
-    <button type="submit">Salvar</button>
-
-</form>
+        <div class="form-actions">
+            <button type="submit" class="btn-save">Salvar reserva</button>
+            <a asp-action="Index" class="btn-ghost">Cancelar</a>
+        </div>
+    </form>
+</section>
