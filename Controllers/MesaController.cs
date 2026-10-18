@@ -1,64 +1,73 @@
-using Microsoft.AspNetCore.Mvc;
 using GestaoReservas.Models;
+using Microsoft.AspNetCore.Mvc;
 
-public class MesaController : Controller
+namespace GestaoReservas.Controllers
 {
-    private IMesaRepository repository;
-
-    public MesaController(IMesaRepository repository)
+    public class MesaController : Controller
     {
-        this.repository = repository;
-    }
+        // Em vez da lista static, guarda uma referência ao repositório
+        private readonly IMesaRepository _repositorio;
 
-    public ActionResult Index()
-    {
-        // CORREÇÃO: as Views existentes usam "index.cshtml" em minúsculas;
-        // informa o nome exato para funcionar também em sistemas com distinção de maiúsculas.
-        return View("index", repository.Read());
-    }
+        // O ASP.NET Core injeta o repositório aqui automaticamente,
+        // graças ao "AddScoped" que registramos no Program.cs
+        public MesaController(IMesaRepository repositorio)
+        {
+            _repositorio = repositorio;
+        }
 
-    [HttpGet]
-    public ActionResult Create()
-    {
-        return View();
-    }
+        public ActionResult Index()
+        {
+            var mesas = _repositorio.Read();   // busca TODOS no banco, em vez de usar a lista fixa
+            return View(mesas);
+        }
 
-    [HttpPost]
-    public ActionResult Create(Mesa model)
-    {
-        repository.Create(model);
-        return RedirectToAction("Index");
-    }
+        public ActionResult Details(int id)
+        {
+            var mesa = _repositorio.Read(id);   // busca UM no banco, usando o foreach que você tinha
+            if (mesa == null) return NotFound();
+            return View(mesa);
+        }
 
-    [HttpGet]
-    public ActionResult Edit(int id)
-    {
-        return View(repository.Read(id));
-    }
+        public ActionResult Create()
+        {
+            return View();
+        }
 
-    [HttpPost]
-    public ActionResult Edit(int id, Mesa model)
-    {
-        repository.Update(model);
-        return RedirectToAction("Index");
-    }
+        [HttpPost]
+        public ActionResult Create(Mesa model)
+        {
+            _repositorio.Create(model);   // manda o repositório inserir no banco
+            return RedirectToAction("Index");
+        }
 
-    [HttpGet]
-    public ActionResult Details(int id)
-    {
-        return View(repository.Read(id));
-    }
+        public ActionResult Edit(int id)
+        {
+            var mesa = _repositorio.Read(id);
+            if (mesa == null) return NotFound();
+            return View(mesa);
+        }
 
-    [HttpGet]
-    public ActionResult Delete(int id)
-    {
-        return View(repository.Read(id));
-    }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(Mesa model)
+        {
+            _repositorio.Update(model);   // manda o repositório atualizar no banco
+            return RedirectToAction("Index");
+        }
 
-    [HttpPost]
-    public ActionResult Delete(Mesa model)
-    {
-        repository.Delete(model.Id);
-        return RedirectToAction("Index");
+        public ActionResult Delete(int id)
+        {
+            var mesa = _repositorio.Read(id);
+            if (mesa == null) return NotFound();
+            return View(mesa);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            _repositorio.Delete(id);   // manda o repositório apagar do banco
+            return RedirectToAction("Index");
+        }
     }
 }

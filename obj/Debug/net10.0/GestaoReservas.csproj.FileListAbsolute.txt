@@ -71,3 +71,4 @@ C:\Users\isabe\GestaoReservas\obj\Debug\net10.0\compressed\rf9qzfzxke-{0}-6355ch
 C:\Users\isabe\GestaoReservas\obj\Debug\net10.0\compressed\m9e4yzt3av-{0}-0g07pw3kze-0g07pw3kze.gz
 C:\Users\isabe\GestaoReservas\obj\Debug\net10.0\compressed\s6ehuoy3pe-{0}-btfv669j3b-btfv669j3b.gz
 C:\Users\isabe\GestaoReservas\obj\Debug\net10.0\compressed\5t70dzijwg-{0}-44exwvnuu4-44exwvnuu4.gz
+C:\Users\Nine\Projetos\sistemagestaodereservas\obj\Debug\net10.0\GestaoReservas.csproj.AssemblyReference.cache

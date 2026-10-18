@@ -4,7 +4,7 @@ public class Reserva
 {
     public int Id { get; set; }
     // CORREÇÃO: a View de criação acessa Cliente.Nome, Cliente.Cpf e outros campos.
-    public Cliente Cliente { get; set; } = new Cliente();
+    public int ClienteId { get; set; }
     public int MesaId { get; set; }
     public int FuncionarioID { get; set; }
     public DateTime DataHora { get; set; }

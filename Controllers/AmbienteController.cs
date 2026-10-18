@@ -1,64 +1,73 @@
-using Microsoft.AspNetCore.Mvc;
 using GestaoReservas.Models;
+using Microsoft.AspNetCore.Mvc;
 
-public class AmbienteController : Controller
+namespace GestaoReservas.Controllers
 {
-    private IAmbienteRepository repository;
-
-    public AmbienteController(IAmbienteRepository repository)
+    public class AmbienteController : Controller
     {
-        this.repository = repository;
-    }
+        // Em vez da lista static, guarda uma referência ao repositório
+        private readonly IAmbienteRepository _repositorio;
 
-    public ActionResult Index()
-    {
-        // CORREÇÃO: as Views existentes usam "index.cshtml" em minúsculas;
-        // informa o nome exato para funcionar também em sistemas com distinção de maiúsculas.
-        return View("index", repository.Read());
-    }
+        // O ASP.NET Core injeta o repositório aqui automaticamente,
+        // graças ao "AddScoped" que registramos no Program.cs
+        public AmbienteController(IAmbienteRepository repositorio)
+        {
+            _repositorio = repositorio;
+        }
 
-    [HttpGet]
-    public ActionResult Create()
-    {
-        return View();
-    }
+        public ActionResult Index()
+        {
+            var ambientes = _repositorio.Read();   // busca TODOS no banco, em vez de usar a lista fixa
+            return View(ambientes);
+        }
 
-    [HttpPost]
-    public ActionResult Create(Ambiente model)
-    {
-        repository.Create(model);
-        return RedirectToAction("Index");
-    }
+        public ActionResult Details(int id)
+        {
+            var ambiente = _repositorio.Read(id);   // busca UM no banco, usando o foreach que você tinha
+            if (ambiente == null) return NotFound();
+            return View(ambiente);
+        }
 
-    [HttpGet]
-    public ActionResult Edit(int id)
-    {
-        return View(repository.Read(id));
-    }
+        public ActionResult Create()
+        {
+            return View();
+        }
 
-    [HttpPost]
-    public ActionResult Edit(int id, Ambiente model)
-    {
-        repository.Update(model);
-        return RedirectToAction("Index");
-    }
+        [HttpPost]
+        public ActionResult Create(Ambiente model)
+        {
+            _repositorio.Create(model);   // manda o repositório inserir no banco
+            return RedirectToAction("Index");
+        }
 
-    [HttpGet]
-    public ActionResult Details(int id)
-    {
-        return View(repository.Read(id));
-    }
+        public ActionResult Edit(int id)
+        {
+            var ambiente = _repositorio.Read(id);
+            if (ambiente == null) return NotFound();
+            return View(ambiente);
+        }
 
-    [HttpGet]
-    public ActionResult Delete(int id)
-    {
-        return View(repository.Read(id));
-    }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(Ambiente model)
+        {
+            _repositorio.Update(model);   // manda o repositório atualizar no banco
+            return RedirectToAction("Index");
+        }
 
-    [HttpPost]
-    public ActionResult Delete(Ambiente model)
-    {
-        repository.Delete(model.Id);
-        return RedirectToAction("Index");
+        public ActionResult Delete(int id)
+        {
+            var ambiente = _repositorio.Read(id);
+            if (ambiente == null) return NotFound();
+            return View(ambiente);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            _repositorio.Delete(id);   // manda o repositório apagar do banco
+            return RedirectToAction("Index");
+        }
     }
 }
