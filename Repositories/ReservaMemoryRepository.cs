@@ -1,29 +1,16 @@
 using GestaoReservas.Models;
 
-// CORREÇÃO: reativa o Repository em memória, conforme TarefaMemoryRepository do professor.
 public class ReservaMemoryRepository : IReservaRepository
 {
     List<Reserva> lista = new List<Reserva>();
-    // CORREÇÃO: IDs distintos são necessários para as rotas Edit, Details e Delete das Views.
     int proximoId = 1;
 
     public void Create(Reserva reserva)
     {
-        // CORREÇÃO: atribui o identificador utilizado pelo CRUD antes de adicionar à lista.
         reserva.Id = proximoId++;
+        // CORREÇÃO: cliente não define o status inicial, mesmo que o formulário o envie.
+        reserva.Status = "Pendente";
         lista.Add(reserva);
-    }
-
-    public void Delete(int id)
-    {
-        foreach (var item in lista)
-        {
-            if (item.Id == id)
-            {
-                lista.Remove(item);
-                break;
-            }
-        }
     }
 
     public List<Reserva> Read()
@@ -39,6 +26,7 @@ public class ReservaMemoryRepository : IReservaRepository
             if (item.Id == id)
             {
                 resultado = item;
+                break;
             }
         }
         return resultado;
@@ -48,14 +36,45 @@ public class ReservaMemoryRepository : IReservaRepository
     {
         foreach (var item in lista)
         {
-            if (item.Id == reserva.Id)
+            if (item.Id == reserva.Id && item.Status != "Cancelada")
             {
-                // CORREÇÃO: atualiza somente os campos enviados pela View Edit, preservando o objeto Cliente.
+                // CORREÇÃO: cliente altera apenas dados da reserva; não altera status,
+                // funcionário responsável nem o Cliente associado.
                 item.MesaId = reserva.MesaId;
-                item.FuncionarioID = reserva.FuncionarioID;
                 item.DataHora = reserva.DataHora;
                 item.QtdPessoas = reserva.QtdPessoas;
-                item.Status = reserva.Status;
+                break;
+            }
+        }
+    }
+
+    public void UpdateStatus(int id, string status)
+    {
+        // CORREÇÃO: aceita apenas os estados conhecidos e não reativa reservas canceladas.
+        if (status != "Pendente" && status != "Confirmada" && status != "Cancelada")
+        {
+            return;
+        }
+
+        foreach (var item in lista)
+        {
+            if (item.Id == id && item.Status != "Cancelada")
+            {
+                item.Status = status;
+                break;
+            }
+        }
+    }
+
+    public void Delete(int id)
+    {
+        foreach (var item in lista)
+        {
+            if (item.Id == id)
+            {
+                // CORREÇÃO: exclusão lógica; mantém o histórico e apenas cancela a reserva.
+                item.Status = "Cancelada";
+                break;
             }
         }
     }
