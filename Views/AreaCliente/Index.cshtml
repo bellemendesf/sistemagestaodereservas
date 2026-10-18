@@ -1,0 +1,73 @@
+
+@{
+    ViewData["Title"] = "Área do Cliente";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Santa Massa</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+    <link rel="stylesheet" href="~/css/Areas.css" asp-append-version="true">
+</head>
+<body class="area-page">
+    <main class="area-container">
+        <a asp-controller="Home" asp-action="Index" class="back-link">
+            ← Voltar ao início
+        </a>
+
+        <header class="area-header">
+            <img src="~/images/logosantamassa.jpg"
+                 alt="Logo Santa Massa"
+                 class="area-logo">
+
+            <p class="area-kicker">SANTA MASSA · RIO PRETO</p>
+            <h1>Área do Cliente</h1>
+            <p>O que você deseja fazer hoje?</p>
+        </header>
+
+        <section class="area-grid">
+            <a asp-controller="Cliente"
+               asp-action="Create"
+               class="area-card">
+                <span class="area-icon">♙</span>
+                <h2>Cadastrar-se</h2>
+                <span class="card-link">Fazer cadastro</span>
+            </a>
+
+            <a asp-controller="Reserva"
+               asp-action="Create"
+               class="area-card">
+                <span class="area-icon">＋</span>
+                <h2>Fazer reserva</h2>
+                <span class="card-link">Nova reserva</span>
+            </a>
+
+            <a asp-controller="Reserva"
+               asp-action="Index"
+               class="area-card">
+                <span class="area-icon">▤</span>
+                <h2>Consultar reservas</h2>
+                <span class="card-link">Ver reservas</span>
+            </a>
+
+            <a asp-controller="Reserva"
+               asp-action="Index"
+               class="area-card">
+                <span class="area-icon">×</span>
+                <h2>Cancelar reserva</h2>
+                <span class="card-link">Gerenciar cancelamento</span>
+            </a>
+        </section>
+
+        <footer class="area-footer">
+            Santa Massa · Uma boa experiência começa com uma reserva.
+        </footer>
+    </main>
+</body>
+</html>

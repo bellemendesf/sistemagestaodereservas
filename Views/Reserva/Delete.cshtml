@@ -1,0 +1,203 @@
+
+@model GestaoReservas.Models.Reserva
+
+@{
+    ViewData["Title"] = "Excluir reserva";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Excluir reserva - Santa Massa</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="~/css/DetalhesEdicao.css"
+          asp-append-version="true">
+
+    <style>
+        .reserva-excluir-alerta {
+            padding: 14px 16px;
+            margin-bottom: 24px;
+            border: 1px solid #F2C7C3;
+            border-radius: 10px;
+            background: #FFF1F0;
+            color: #B42318;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .reserva-excluir-acoes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .reserva-excluir-botao {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 9px;
+            font-family: "Poppins", sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+        .reserva-excluir-confirmar {
+            background: #B42318;
+            color: #fff;
+        }
+
+        .reserva-excluir-confirmar:hover {
+            background: #8F1D14;
+        }
+
+        .reserva-excluir-cancelar {
+            background: #F3E4B8;
+            color: #1F1F1F;
+        }
+
+        .reserva-excluir-cancelar:hover {
+            background: #E9D59A;
+        }
+
+        .reserva-excluir-dado {
+            margin-bottom: 18px;
+        }
+
+        .reserva-excluir-dado dt {
+            margin-bottom: 5px;
+            color: #77736A;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .reserva-excluir-dado dd {
+            margin: 0;
+            color: #1F1F1F;
+            font-size: 14px;
+            font-weight: 500;
+            overflow-wrap: anywhere;
+        }
+
+        @@media (max-width: 480px) {
+            .reserva-excluir-acoes {
+                flex-direction: column;
+            }
+
+            .reserva-excluir-botao {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body class="detalhes-edicao-page">
+    <main class="detalhes-edicao-container">
+
+        <a asp-controller="Reserva"
+           asp-action="Index"
+           class="detalhes-edicao-voltar">
+            ← Voltar para reservas
+        </a>
+
+        <section class="detalhes-edicao-card">
+
+            <header class="detalhes-edicao-header">
+                <p class="detalhes-edicao-kicker">
+                    Santa Massa · Rio Preto
+                </p>
+
+                <h1>Excluir reserva</h1>
+
+                <p class="detalhes-edicao-descricao">
+                    Confira os dados antes de confirmar a exclusão.
+                </p>
+            </header>
+
+            <div class="detalhes-edicao-conteudo">
+
+                <div class="reserva-excluir-alerta">
+                    <strong>Atenção!</strong>
+                    Essa ação removerá a reserva do sistema e não poderá
+                    ser desfeita.
+                </div>
+
+                <dl>
+                    <div class="reserva-excluir-dado">
+                        <dt>Código da reserva</dt>
+                        <dd>#@Model.Id</dd>
+                    </div>
+
+                    <div class="reserva-excluir-dado">
+                        <dt>Mesa</dt>
+                        <dd>@Model.MesaId</dd>
+                    </div>
+
+                    <div class="reserva-excluir-dado">
+                        <dt>Funcionário responsável</dt>
+                        <dd>@Model.FuncionarioID</dd>
+                    </div>
+
+                    <div class="reserva-excluir-dado">
+                        <dt>Data e horário</dt>
+                        <dd>@Model.DataHora.ToString("dd/MM/yyyy 'às' HH:mm")</dd>
+                    </div>
+
+                    <div class="reserva-excluir-dado">
+                        <dt>Quantidade de pessoas</dt>
+                        <dd>@Model.QtdPessoas</dd>
+                    </div>
+
+                    <div class="reserva-excluir-dado">
+                        <dt>Status</dt>
+                        <dd>@Model.Status</dd>
+                    </div>
+                </dl>
+
+                <form asp-controller="Reserva"
+                      asp-action="Delete"
+                      method="post">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="reserva-excluir-acoes">
+                        <button type="submit"
+                                class="reserva-excluir-botao reserva-excluir-confirmar">
+                            Confirmar exclusão
+                        </button>
+
+                        <a asp-controller="Reserva"
+                           asp-action="Index"
+                           class="reserva-excluir-botao reserva-excluir-cancelar">
+                            Cancelar
+                        </a>
+                    </div>
+                </form>
+
+            </div>
+
+            <footer class="detalhes-edicao-rodape">
+                Santa Massa · Painel de gerenciamento
+            </footer>
+
+        </section>
+    </main>
+</body>
+</html>

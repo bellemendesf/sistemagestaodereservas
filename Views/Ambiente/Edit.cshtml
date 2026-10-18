@@ -1,0 +1,37 @@
+@model GestaoReservas.Models.Ambiente
+
+@{
+    ViewData["Title"] = "Editar detalhes do ambiente";
+}
+
+<h1>Editar Ambiente</h1>
+
+<form asp-action="Edit" method="post">
+
+    <input type="hidden" asp-for="Id" />
+
+    <div>
+        <label asp-for="Id">Id</label>
+        <input asp-for="Id" />
+    </div>
+
+    <div>
+        <label asp-for="Nome">Nome do ambiente</label>
+        <input asp-for="Nome" />
+    </div>
+
+    <div>
+        <label asp-for="Status">Status</label>
+        <input asp-for="Status" />
+    </div>
+
+    <div>
+        <label asp-for="Capacidade">Capacidade de pessoas</label>
+        <input asp-for="Capacidade" />
+    </div>
+
+    <button type="submit">Salvar alterações</button>
+
+</form>
+
+<a asp-action="Index">Voltar</a>

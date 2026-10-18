@@ -1,0 +1,72 @@
+@using GestaoReservas.Models
+@model IEnumerable<Reserva>
+
+@{
+    Layout = "~/Views/Shared/_ReservaLayout.cshtml";
+    ViewData["Title"] = "Reservas";
+    var lista = Model.ToList();
+}
+
+<section class="panel">
+    <div class="panel-head">
+        <h2>Reservas cadastradas</h2>
+        <span class="count">@(lista.Count) @(lista.Count == 1 ? "reserva" : "reservas")</span>
+    </div>
+
+    @if (!lista.Any())
+    {
+        <div class="empty">
+            <p>Ainda não há reservas. Crie a primeira para ver a listagem aqui.</p>
+            <a class="btn-save" asp-action="Create">Nova reserva</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-wrap">
+            <table class="reserva-table">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Mesa</th>
+                        <th>Funcionário</th>
+                        <th>Data e hora</th>
+                        <th>Pessoas</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var reserva in lista)
+                    {
+                        var status = reserva.Status ?? "";
+                        var badge = status.ToLowerInvariant() switch
+                        {
+                            "confirmada" => "badge-confirmada",
+                            "pendente" => "badge-pendente",
+                            "cancelada" => "badge-cancelada",
+                            _ => ""
+                        };
+
+                        <tr>
+                            <td data-label="Cliente">@(reserva.Cliente?.Nome ?? "—")</td>
+                            <td data-label="Mesa">@reserva.MesaId</td>
+                            <td data-label="Funcionário">@reserva.FuncionarioID</td>
+                            <td data-label="Data e hora">@reserva.DataHora.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td data-label="Pessoas">@reserva.QtdPessoas</td>
+                            <td data-label="Status">
+                                <span class="badge @badge">@(string.IsNullOrWhiteSpace(status) ? "—" : status)</span>
+                            </td>
+                            <td data-label="Ações">
+                                <div class="actions">
+                                    <a asp-action="Details" asp-route-id="@reserva.Id">Detalhes</a>
+                                    <a asp-action="Edit" asp-route-id="@reserva.Id">Editar</a>
+                                    <a asp-action="Delete" asp-route-id="@reserva.Id" class="is-danger">Excluir</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</section>
