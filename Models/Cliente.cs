@@ -1,6 +1,7 @@
 namespace GestaoReservas.Models;
-public class Cliente: Pessoa
+
+public class Cliente : Pessoa
 {
-    public  string Telefone {get;set;}
- 
+    // CORREÇÃO: inicializa a propriedade para evitar aviso de nulidade no .NET.
+    public string Telefone { get; set; } = "";
 }

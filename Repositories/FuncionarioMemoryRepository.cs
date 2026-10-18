@@ -1,72 +1,66 @@
-// using GestaoReservas.Models;
+using GestaoReservas.Models;
 
-// public class FuncionarioMemoryRepository : IFuncionarioRepository
-// {
-//     List<Funcionario> lista = new List<Funcionario>();
+// CORREÇÃO: reativa o Repository em memória, conforme TarefaMemoryRepository do professor.
+public class FuncionarioMemoryRepository : IFuncionarioRepository
+{
+    List<Funcionario> lista = new List<Funcionario>();
+    // CORREÇÃO: IDs distintos são necessários para as rotas Edit, Details e Delete das Views.
+    int proximoId = 1;
 
-//     public void Create(Funcionario Funcionario)
-//     {
-//         lista.Add(Funcionario);
-//     }
+    public void Create(Funcionario funcionario)
+    {
+        // CORREÇÃO: atribui o identificador utilizado pelo CRUD antes de adicionar à lista.
+        funcionario.Id = proximoId++;
+        lista.Add(funcionario);
+    }
 
-//     public void Create(Funcionario Funcionario)
-//     {
-//         throw new NotImplementedException();
-//     }
+    public void Delete(int id)
+    {
+        foreach (var item in lista)
+        {
+            if (item.Id == id)
+            {
+                lista.Remove(item);
+                break;
+            }
+        }
+    }
 
-//     public void Delete(int id)
-//     {
-//         foreach(var Funcionario in lista)
-//         {
-//             if(Funcionario.Id == id)
-//             {
-//                 lista.Remove(Funcionario);
-//                 break;
-//             }
-//         }
-//     }
+    public List<Funcionario> Read()
+    {
+        return lista;
+    }
 
-//     public List<Funcionario> Read()
-//     {
-//         return lista;
-//     }
+    public Funcionario Read(int id)
+    {
+        Funcionario resultado = null!;
+        foreach (var item in lista)
+        {
+            if (item.Id == id)
+            {
+                resultado = item;
+            }
+        }
+        return resultado;
+    }
 
-//     public Funcionario Read(int id)
-//     {
-//         Funcionario f = null;
-//         foreach(var Funcionario in lista)
-//         {
-//             if(Funcionario.Id == id)
-//             {
-//                 f = Funcionario;
-//             }
-//         }
-//         return f;
-//     }
-
-//     public void Update(Funcionario f)
-//     {
-//         foreach(var Funcionario in lista)
-//         {
-//             if(Funcionario.Id == f.Id)
-//             {
-//                 Funcionario.Email_inst = f.Email_inst;
-//             }
-//         }
-//     }
-
-//     public void Update(Funcionario Funcionario)
-//     {
-//         throw new NotImplementedException();
-//     }
-
-//     List<Funcionario> IFuncionarioRepository.Read()
-//     {
-//         throw new NotImplementedException();
-//     }
-
-//     Funcionario IFuncionarioRepository.Read(int id)
-//     {
-//         throw new NotImplementedException();
-//     }
-// }
+    public void Update(Funcionario funcionario)
+    {
+        foreach (var item in lista)
+        {
+            if (item.Id == funcionario.Id)
+            {
+                // CORREÇÃO: atualiza os dados de pessoa e o e-mail institucional editados.
+                item.Nome = funcionario.Nome;
+                item.Cpf = funcionario.Cpf;
+                item.EmailPessoal = funcionario.EmailPessoal;
+                item.EmailInstitucional = funcionario.EmailInstitucional;
+                // CORREÇÃO: não zera Codigo e conserva a senha se não foi informada nova senha.
+                if (funcionario.Senha != null && funcionario.Senha != "")
+                {
+                    item.Senha = funcionario.Senha;
+                }
+            }
+        }
+    }
+}

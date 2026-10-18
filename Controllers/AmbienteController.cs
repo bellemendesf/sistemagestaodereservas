@@ -1,129 +1,64 @@
-using GestaoReservas.Models;
 using Microsoft.AspNetCore.Mvc;
+using GestaoReservas.Models;
 
-namespace GestaoReservas.Controllers
+public class AmbienteController : Controller
 {
-    public interface IAmbienteController
+    private IAmbienteRepository repository;
+
+    public AmbienteController(IAmbienteRepository repository)
     {
-        ActionResult Create();
-        ActionResult Create(Ambiente model);
-        ActionResult Delete(int id);
-        ActionResult Details(int id);  
-        ActionResult Edit(int id);
-        ActionResult Edit(Ambiente model);
-        ActionResult Index();
+        this.repository = repository;
     }
 
-    public class AmbienteController : Controller, IAmbienteController
+    public ActionResult Index()
     {
-        // "static" faz com que a lista seja armazenada na memória para todo o programa, não é necessário instanciar toda vez 
-        private static List<Ambiente> ambientes = new List<Ambiente>
-        {
-            new Ambiente { Id = 1, Nome = "Externo", Capacidade = 3 },
-            new Ambiente { Id = 2, Nome = "Interno", Capacidade = 4 },
-            new Ambiente { Id = 3, Nome = "Sacada", Capacidade = 5 },
-        };
-
-        public ActionResult Index()
-        {
-            return View(ambientes);
-        }
-
-        public ActionResult Details(int id)
-        {
-            Ambiente? ambiente = null;
-
-            foreach (Ambiente a in ambientes)
-            {
-                if (a.Id == id)
-                    ambiente = a;
-            }
-
-            if (ambiente == null) return NotFound();
-            return View(ambiente);
-        }
-
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult Create(Ambiente model)
-        {
-            model.Id = ambientes.Count + 1;
-            ambientes.Add(model);
-            return RedirectToAction("Index");
-        }
-
-        public ActionResult Edit(int id)
-        {
-            Ambiente? ambiente = null;
-
-            foreach (Ambiente a in ambientes)
-            {
-                if (a.Id == id)
-                    ambiente = a;
-            }
-
-            if (ambiente == null) return NotFound();
-            return View(ambiente);
-        }
-
-     
-[HttpPost]
-[ValidateAntiForgeryToken]
-public ActionResult Edit(Ambiente model)
-{
-    foreach (Ambiente a in ambientes)
-    {
-        if (a.Id == model.Id)
-        {
-            a.Nome = model.Nome;
-            a.Capacidade = model.Capacidade;
-            a.Status = model.Status; // Atualiza o status também
-            break;
-        }
+        // CORREÇÃO: as Views existentes usam "index.cshtml" em minúsculas;
+        // informa o nome exato para funcionar também em sistemas com distinção de maiúsculas.
+        return View("index", repository.Read());
     }
 
-    return RedirectToAction("Index");
-}
-
-
-        public ActionResult Delete(int id)
-        {
-            Ambiente? ambiente = null;
-
-            foreach (Ambiente a in ambientes)
-            {
-                if (a.Id == id)
-                    ambiente = a;
-            }
-
-            if (ambiente == null) return NotFound();
-            return View(ambiente);
-        }
-        [HttpPost]
-[ValidateAntiForgeryToken]
-public ActionResult Delete(Ambiente model)
-{
-    Ambiente? ambiente = null;
-
-    foreach (Ambiente a in ambientes)
+    [HttpGet]
+    public ActionResult Create()
     {
-        if (a.Id == model.Id)
-        {
-            ambiente = a;
-            break;
-        }
+        return View();
     }
 
-    if (ambiente == null)
-        return NotFound();
+    [HttpPost]
+    public ActionResult Create(Ambiente model)
+    {
+        repository.Create(model);
+        return RedirectToAction("Index");
+    }
 
-    ambientes.Remove(ambiente);
+    [HttpGet]
+    public ActionResult Edit(int id)
+    {
+        return View(repository.Read(id));
+    }
 
-    return RedirectToAction("Index");
-}
+    [HttpPost]
+    public ActionResult Edit(int id, Ambiente model)
+    {
+        repository.Update(model);
+        return RedirectToAction("Index");
+    }
+
+    [HttpGet]
+    public ActionResult Details(int id)
+    {
+        return View(repository.Read(id));
+    }
+
+    [HttpGet]
+    public ActionResult Delete(int id)
+    {
+        return View(repository.Read(id));
+    }
+
+    [HttpPost]
+    public ActionResult Delete(Ambiente model)
+    {
+        repository.Delete(model.Id);
+        return RedirectToAction("Index");
     }
 }

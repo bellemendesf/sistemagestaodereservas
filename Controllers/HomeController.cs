@@ -1,13 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-//port: http://localhost:5004/
-namespace GestaoReservas.Controllers
+
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    public ActionResult Index()
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        return View();
     }
 }
-//asp-controller + asp-action: eles dizem para qual Controller e qual método (Action) o link deve levar

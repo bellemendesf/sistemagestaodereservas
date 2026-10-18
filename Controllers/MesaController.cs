@@ -1,95 +1,64 @@
-using GestaoReservas.Models;
 using Microsoft.AspNetCore.Mvc;
+using GestaoReservas.Models;
 
-namespace GestaoReservas.Controllers
+public class MesaController : Controller
 {
-    public class MesaController : Controller
+    private IMesaRepository repository;
+
+    public MesaController(IMesaRepository repository)
     {
-        // "static" faz a lista durar entre as páginas (sem isso, ela reseta toda hora)
-        private static List<Mesa> mesas = new List<Mesa>
-        {
-            new Mesa { Id = 1, Numero = 1, QtdLugares = 4, Status = "Livre" },
-            new Mesa { Id = 2, Numero = 2, QtdLugares = 4, Status = "Reservada" },
-            new Mesa { Id = 3, Numero = 3, QtdLugares = 4, Status = "Ocupada" },
-        };
+        this.repository = repository;
+    }
 
-        private static int proximoId = 4;   // controla o próximo Id a ser usado
+    public ActionResult Index()
+    {
+        // CORREÇÃO: as Views existentes usam "index.cshtml" em minúsculas;
+        // informa o nome exato para funcionar também em sistemas com distinção de maiúsculas.
+        return View("index", repository.Read());
+    }
 
-        public ActionResult Index()
-        {
-            return View(mesas);
-        }
+    [HttpGet]
+    public ActionResult Create()
+    {
+        return View();
+    }
 
-        // Método que faltava
-        public ActionResult Details(int id)
-        {
-            Mesa mesa = BuscarMesaPorId(id);
-            if (mesa == null) return NotFound();
-            return View(mesa);
-        }
+    [HttpPost]
+    public ActionResult Create(Mesa model)
+    {
+        repository.Create(model);
+        return RedirectToAction("Index");
+    }
 
-        public ActionResult Create()
-        {
-            return View();
-        }
+    [HttpGet]
+    public ActionResult Edit(int id)
+    {
+        return View(repository.Read(id));
+    }
 
-        [HttpPost]
-        public ActionResult Create(Mesa model)
-        {
-            model.Id = proximoId;
-            proximoId++;   // prepara o próximo número pra mesa seguinte
+    [HttpPost]
+    public ActionResult Edit(int id, Mesa model)
+    {
+        repository.Update(model);
+        return RedirectToAction("Index");
+    }
 
-            mesas.Add(model);
+    [HttpGet]
+    public ActionResult Details(int id)
+    {
+        return View(repository.Read(id));
+    }
 
-            return RedirectToAction("Index");
-        }
+    [HttpGet]
+    public ActionResult Delete(int id)
+    {
+        return View(repository.Read(id));
+    }
 
-        public ActionResult Edit(int id)
-        {
-            Mesa mesa = BuscarMesaPorId(id);
-            if (mesa == null) return NotFound();
-            return View(mesa);
-        }
-
-        [HttpPost]
-        public ActionResult Edit(Mesa model)
-        {
-            Mesa mesa = BuscarMesaPorId(model.Id);
-            if (mesa == null) return NotFound();
-
-            mesa.Numero = model.Numero;
-            mesa.QtdLugares = model.QtdLugares;
-            mesa.Status = model.Status;
-
-            return RedirectToAction("Index");
-        }
-
-        public ActionResult Delete(int id)
-        {
-            Mesa mesa = BuscarMesaPorId(id);
-            if (mesa == null) return NotFound();
-            return View(mesa);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        public ActionResult DeleteConfirmed(int id)
-        {
-            Mesa mesa = BuscarMesaPorId(id);
-            if (mesa == null) return NotFound();
-
-            mesas.Remove(mesa);
-            return RedirectToAction("Index");
-        }
-
-        // Método auxiliar: procura uma mesa pelo Id dentro da lista, "no braço"
-        private Mesa BuscarMesaPorId(int id)
-        {
-            foreach (Mesa mesa in mesas)
-            {
-                if (mesa.Id == id)
-                    return mesa;
-            }
-            return null;   // não encontrou nenhuma com esse id
-        }
+    [HttpPost]
+    public ActionResult Delete(Mesa model)
+    {
+        repository.Delete(model.Id);
+        return RedirectToAction("Index");
     }
 }

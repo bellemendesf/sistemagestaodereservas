@@ -1,116 +1,70 @@
 using Microsoft.AspNetCore.Mvc;
 using GestaoReservas.Models;
 
-namespace GestaoReservas.Controllers
+public class ReservaController : Controller
 {
-    public class ReservaController : Controller
+    private IReservaRepository repository;
+
+    public ReservaController(IReservaRepository repository)
     {
-        // "static" faz a lista durar entre as páginas (sem isso, ela reseta toda hora)
-        private static List<Reserva> reservas = new List<Reserva>();
+        this.repository = repository;
+    }
 
-        public IActionResult Index()
-        {
-            return View(reservas);
-        }
+    public ActionResult Index()
+    {
+        return View(repository.Read());
+    }
 
-        public IActionResult Create()
-        {
-            return View(new Reserva
-            {
-                Cliente = new Cliente
-                {
-                    Cpf = string.Empty,
-                    EmailPessoal = string.Empty,
-                    Senha = string.Empty
-                },
-                QtdPessoas = 2,
-                Status = "Pendente"
-            });
-        }
+    [HttpGet]
+    public ActionResult Create()
+    {
+        Reserva model = new Reserva();
+        model.Cliente = new Cliente();
+        model.Cliente.Cpf = "";
+        model.Cliente.EmailPessoal = "";
+        model.Cliente.Senha = "";
+        model.QtdPessoas = 2;
+        model.Status = "Pendente";
 
-        [HttpPost]
-        public IActionResult Create(Reserva reserva)
-        {
-            reserva.Id = reservas.Count + 1;
-            reservas.Add(reserva);
-            return RedirectToAction("Index");
-        }
+        return View(model);
+    }
 
-        public IActionResult Details(int id)
-        {
-            Reserva? reserva = null;
+    [HttpPost]
+    public ActionResult Create(Reserva model)
+    {
+        repository.Create(model);
+        return RedirectToAction("Index");
+    }
 
-            foreach (Reserva r in reservas)
-            {
-                if (r.Id == id)
-                    reserva = r;
-            }
+    [HttpGet]
+    public ActionResult Edit(int id)
+    {
+        return View(repository.Read(id));
+    }
 
-            if (reserva == null) return NotFound();
-            return View(reserva);
-        }
+    [HttpPost]
+    public ActionResult Edit(int id, Reserva model)
+    {
+        repository.Update(model);
+        return RedirectToAction("Index");
+    }
 
-        public IActionResult Edit(int id) // GET
-        {
-            Reserva? reserva = null;
+    [HttpGet]
+    public ActionResult Details(int id)
+    {
+        return View(repository.Read(id));
+    }
 
-            foreach (Reserva r in reservas)
-            {
-                if (r.Id == id)
-                    reserva = r;
-            }
+    [HttpGet]
+    public ActionResult Delete(int id)
+    {
+        return View(repository.Read(id));
+    }
 
-            if (reserva == null) return NotFound();
-            return View(reserva);
-        }
-
-        [HttpPost]
-        public IActionResult Edit(Reserva reserva) // POST
-        {
-            foreach (Reserva r in reservas)
-            {
-                if (r.Id == reserva.Id)
-                {
-                    r.Cliente = reserva.Cliente;       // estava faltando atualizar este campo
-                    r.MesaId = reserva.MesaId;
-                    r.FuncionarioID = reserva.FuncionarioID;
-                    r.DataHora = reserva.DataHora;
-                    r.QtdPessoas = reserva.QtdPessoas;
-                    r.Status = reserva.Status;
-                }
-            }
-            return RedirectToAction("Index");
-        }
-
-        public IActionResult Delete(int id) // GET
-        {
-            Reserva? reserva = null;
-
-            foreach (Reserva r in reservas)
-            {
-                if (r.Id == id)
-                    reserva = r;
-            }
-
-            if (reserva == null) return NotFound();
-            return View(reserva);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        public IActionResult DeleteConfirmed(int id) // POST
-        {
-            Reserva? reserva = null;
-
-            foreach (Reserva r in reservas)
-            {
-                if (r.Id == id)
-                    reserva = r;
-            }
-
-            if (reserva != null)
-                reservas.Remove(reserva);
-
-            return RedirectToAction("Index");
-        }
+    [HttpPost]
+    public ActionResult Delete(Reserva model)
+    {
+        repository.Delete(model.Id);
+        return RedirectToAction("Index");
     }
 }

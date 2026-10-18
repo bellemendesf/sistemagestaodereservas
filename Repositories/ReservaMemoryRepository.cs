@@ -1,50 +1,62 @@
-// public class ReservaMemoryRepository : IReservaRepository
-// {
-//     List<Reserva> lista = new List<Reserva>();
+using GestaoReservas.Models;
 
-//     public void Create(Reserva Reserva)
-//     {
-//         lista.Add(Reserva);
-//     }
+// CORREÇÃO: reativa o Repository em memória, conforme TarefaMemoryRepository do professor.
+public class ReservaMemoryRepository : IReservaRepository
+{
+    List<Reserva> lista = new List<Reserva>();
+    // CORREÇÃO: IDs distintos são necessários para as rotas Edit, Details e Delete das Views.
+    int proximoId = 1;
 
-//     public void Delete(int id)
-//     {
-//         foreach(var Reserva in lista)
-//         {
-//             if(Reserva.IdReserva == id)
-//             {
-//                 lista.Remove(Reserva);
-//                 break;
-//             }
-//         }
-//     }
+    public void Create(Reserva reserva)
+    {
+        // CORREÇÃO: atribui o identificador utilizado pelo CRUD antes de adicionar à lista.
+        reserva.Id = proximoId++;
+        lista.Add(reserva);
+    }
 
-//     public List<Reserva> Read()
-//     {
-//         return lista;
-//     }
+    public void Delete(int id)
+    {
+        foreach (var item in lista)
+        {
+            if (item.Id == id)
+            {
+                lista.Remove(item);
+                break;
+            }
+        }
+    }
 
-//     public Reserva Read(int id)
-//     {
-//         Reserva r = null;
-//         foreach(var Reserva in lista)
-//         {
-//             if(Reserva.IdReserva == id)
-//             {
-//                 r = Reserva;
-//             }
-//         }
-//         return r;
-//     }
+    public List<Reserva> Read()
+    {
+        return lista;
+    }
 
-//     public void Update(Reserva r)
-//     {
-//         foreach(var Reserva in lista)
-//         {
-//             if(Reserva.IdReserva == r.IdReserva)
-//             {
-//                 Reserva.Texto = r.Texto;
-//             }
-//         }
-//     }
-// }
+    public Reserva Read(int id)
+    {
+        Reserva resultado = null!;
+        foreach (var item in lista)
+        {
+            if (item.Id == id)
+            {
+                resultado = item;
+            }
+        }
+        return resultado;
+    }
+
+    public void Update(Reserva reserva)
+    {
+        foreach (var item in lista)
+        {
+            if (item.Id == reserva.Id)
+            {
+                // CORREÇÃO: atualiza somente os campos enviados pela View Edit, preservando o objeto Cliente.
+                item.MesaId = reserva.MesaId;
+                item.FuncionarioID = reserva.FuncionarioID;
+                item.DataHora = reserva.DataHora;
+                item.QtdPessoas = reserva.QtdPessoas;
+                item.Status = reserva.Status;
+            }
+        }
+    }
+}

@@ -1,14 +1,9 @@
-
 using Microsoft.AspNetCore.Mvc;
 
-namespace GestaoReservas.Controllers
+public class AreaRestauranteController : Controller
 {
-    public class AreaRestauranteController : Controller
+    public ActionResult Index()
     {
-        // Abre a página inicial da área do restaurante
-        public IActionResult Index()
-        {
-            return View();
-        }
+        return View();
     }
 }
