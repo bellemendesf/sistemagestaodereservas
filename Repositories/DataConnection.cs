@@ -6,7 +6,8 @@ public class DataConnection
 
     public DataConnection(IConfiguration configuration)
     {
-        string? connectionString = configuration.GetConnectionString("DefaultConnection");
+        string connectionString = configuration.GetConnectionString("DefaultConnection")
+            ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
         conn = new SqlConnection(connectionString);
     }
 }

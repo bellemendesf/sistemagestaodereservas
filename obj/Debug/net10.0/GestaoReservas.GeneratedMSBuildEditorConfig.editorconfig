@@ -12,133 +12,133 @@ build_property.EntryPointFilePath =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = GestaoReservas
 build_property.RootNamespace = GestaoReservas
-build_property.ProjectDir = C:\Users\isabe\GestaoReservas\
+build_property.ProjectDir = C:\Users\Luiz\Desktop\ReservasCrud\sistemagestaodereservas\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 10.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\isabe\GestaoReservas
+build_property.MSBuildProjectDirectory = C:\Users\Luiz\Desktop\ReservasCrud\sistemagestaodereservas
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/isabe/GestaoReservas/Views/Ambiente/Create.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Ambiente/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW1iaWVudGVcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Ambiente/Delete.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Ambiente/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW1iaWVudGVcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Ambiente/Details.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Ambiente/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW1iaWVudGVcRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Ambiente/Edit.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Ambiente/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW1iaWVudGVcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Ambiente/index.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Ambiente/index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQW1iaWVudGVcaW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/AreaCliente/Index.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/AreaCliente/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXJlYUNsaWVudGVcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/AreaRestaurante/Index.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/AreaRestaurante/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXJlYVJlc3RhdXJhbnRlXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Cliente/Create.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Cliente/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZVxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Cliente/Delete.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Cliente/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZVxEZWxldGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Cliente/Details.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Cliente/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZVxEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Cliente/Edit.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Cliente/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZVxFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Cliente/index.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Cliente/index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZVxpbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Funcionario/Create.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Funcionario/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRnVuY2lvbmFyaW9cQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Funcionario/Delete.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Funcionario/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRnVuY2lvbmFyaW9cRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Funcionario/Details.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Funcionario/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRnVuY2lvbmFyaW9cRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Funcionario/Edit.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Funcionario/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRnVuY2lvbmFyaW9cRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Funcionario/index.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Funcionario/index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRnVuY2lvbmFyaW9caW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Home/Index.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Mesa/Create.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Mesa/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVzYVxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Mesa/Delete.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Mesa/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVzYVxEZWxldGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Mesa/Details.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Mesa/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVzYVxEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Mesa/Edit.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Mesa/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVzYVxFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Mesa/index.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Mesa/index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVzYVxpbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Reserva/Create.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Reserva/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YVxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Reserva/Delete.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Reserva/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YVxEZWxldGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Reserva/Details.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Reserva/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YVxEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Reserva/Edit.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Reserva/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YVxFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Reserva/Index.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Reserva/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVzZXJ2YVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/Shared/_ReservaLayout.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/Shared/_ReservaLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9SZXNlcnZhTGF5b3V0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/isabe/GestaoReservas/Views/_ViewImports.cshtml]
+[C:/Users/Luiz/Desktop/ReservasCrud/sistemagestaodereservas/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
