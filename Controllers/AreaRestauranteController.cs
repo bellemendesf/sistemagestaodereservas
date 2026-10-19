@@ -1,3 +1,4 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using GestaoReservas.Models;
 
@@ -65,7 +66,14 @@ public class AreaRestauranteController : Controller
             return View("~/Views/Reserva/Edit.cshtml", reserva);
         }
 
-        repository.UpdateStatus(reservaId, model.Status);
+        try
+        {
+            repository.UpdateStatus(reservaId, model.Status);
+        }
+        catch (SqlException)
+        {
+            return BadRequest("Não foi possível gravar. Verifique os dados obrigatórios, registros duplicados, vínculos existentes e a conexão com o banco.");
+        }
         return RedirectToAction("Reservas");
     }
 

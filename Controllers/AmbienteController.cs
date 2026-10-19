@@ -1,3 +1,4 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using GestaoReservas.Models;
 
@@ -26,39 +27,68 @@ public class AmbienteController : Controller
     [HttpPost]
     public ActionResult Create(Ambiente model)
     {
-        repository.Create(model);
+        try
+        {
+            repository.Create(model);
+        }
+        catch (SqlException)
+        {
+            return BadRequest("Não foi possível gravar. Verifique os dados obrigatórios, registros duplicados, vínculos existentes e a conexão com o banco.");
+        }
         return RedirectToAction("Index");
     }
 
     [HttpGet]
     public ActionResult Edit(int id)
     {
-        return View(repository.Read(id));
+        Ambiente model = repository.Read(id);
+        if (model == null) return NotFound();
+        return View(model);
     }
 
     [HttpPost]
     public ActionResult Edit(int id, Ambiente model)
     {
-        repository.Update(model);
+        model.Id = id > 0 ? id : model.Id;
+        if (repository.Read(model.Id) == null) return NotFound();
+        try
+        {
+            repository.Update(model);
+        }
+        catch (SqlException)
+        {
+            return BadRequest("Não foi possível gravar. Verifique os dados obrigatórios, registros duplicados, vínculos existentes e a conexão com o banco.");
+        }
         return RedirectToAction("Index");
     }
 
     [HttpGet]
     public ActionResult Details(int id)
     {
-        return View(repository.Read(id));
+        Ambiente model = repository.Read(id);
+        if (model == null) return NotFound();
+        return View(model);
     }
 
     [HttpGet]
     public ActionResult Delete(int id)
     {
-        return View(repository.Read(id));
+        Ambiente model = repository.Read(id);
+        if (model == null) return NotFound();
+        return View(model);
     }
 
     [HttpPost]
     public ActionResult Delete(Ambiente model)
     {
-        repository.Delete(model.Id);
+        try
+        {
+            repository.Delete(model.Id);
+        }
+        catch (SqlException)
+        {
+            return BadRequest("Não foi possível gravar. Verifique os dados obrigatórios, registros duplicados, vínculos existentes e a conexão com o banco.");
+        }
         return RedirectToAction("Index");
     }
 }

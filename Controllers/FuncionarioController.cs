@@ -1,3 +1,4 @@
+using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 using GestaoReservas.Models;
 
@@ -27,14 +28,23 @@ public class FuncionarioController : Controller
     [HttpPost]
     public ActionResult Create(Funcionario model)
     {
-        repository.Create(model);
+        try
+        {
+            repository.Create(model);
+        }
+        catch (SqlException)
+        {
+            return BadRequest("Não foi possível gravar. Verifique os dados obrigatórios, registros duplicados, vínculos existentes e a conexão com o banco.");
+        }
         return RedirectToAction("Index");
     }
 
     [HttpGet]
     public ActionResult Edit(int id)
     {
-        return View(repository.Read(id));
+        Funcionario model = repository.Read(id);
+        if (model == null) return NotFound();
+        return View(model);
     }
 
     [HttpPost]
@@ -42,27 +52,46 @@ public class FuncionarioController : Controller
     {
         // CORREÇÃO: a View Edit não envia campo Id; recupera o identificador da rota.
         model.Id = id;
-        repository.Update(model);
+        if (repository.Read(model.Id) == null) return NotFound();
+        try
+        {
+            repository.Update(model);
+        }
+        catch (SqlException)
+        {
+            return BadRequest("Não foi possível gravar. Verifique os dados obrigatórios, registros duplicados, vínculos existentes e a conexão com o banco.");
+        }
         return RedirectToAction("Index");
     }
 
     [HttpGet]
     public ActionResult Details(int id)
     {
-        return View(repository.Read(id));
+        Funcionario model = repository.Read(id);
+        if (model == null) return NotFound();
+        return View(model);
     }
 
     [HttpGet]
     public ActionResult Delete(int id)
     {
-        return View(repository.Read(id));
+        Funcionario model = repository.Read(id);
+        if (model == null) return NotFound();
+        return View(model);
     }
 
-    [HttpPost]
-    // CORREÇÃO: o formulário Delete envia o ID pela URL, não como propriedade do model.
-    public ActionResult Delete(int id)
+    // UNIÃO: nome de ação de B evita a assinatura duplicada em A.
+    [HttpPost, ActionName("Delete")]
+    public ActionResult DeleteConfirmed(int id)
     {
-        repository.Delete(id);
+        try
+        {
+            repository.Delete(id);
+        }
+        catch (SqlException)
+        {
+            return BadRequest("Não foi possível gravar. Verifique os dados obrigatórios, registros duplicados, vínculos existentes e a conexão com o banco.");
+        }
         return RedirectToAction("Index");
     }
 }

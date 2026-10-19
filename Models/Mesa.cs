@@ -7,4 +7,6 @@ public class Mesa
     public int QtdLugares { get; set; }
     // CORREÇÃO: inicializa a propriedade para evitar aviso de nulidade no .NET.
     public string Status { get; set; } = "";
+
+    public int AmbienteId { get; set; }
 }

@@ -1,14 +1,14 @@
 var builder = WebApplication.CreateBuilder(args);
 
-// CORREÇÃO: registra as implementações em memória das interfaces utilizadas pelos Controllers,
-// seguindo o AddSingleton usado no projeto SistemaTarefas-main do professor.
-builder.Services.AddSingleton<IAmbienteRepository>(new AmbienteMemoryRepository());
-builder.Services.AddSingleton<IClienteRepository>(new ClienteMemoryRepository());
-builder.Services.AddSingleton<IFuncionarioRepository>(new FuncionarioMemoryRepository());
-builder.Services.AddSingleton<IMesaRepository>(new MesaMemoryRepository());
-builder.Services.AddSingleton<IReservaRepository>(new ReservaMemoryRepository());
-
 builder.Services.AddControllersWithViews();
+
+// UNIÃO: os Controllers da versão A utilizam os repositórios SQL da versão B.
+// AddScoped: uma nova instância (e conexão) a cada requisição — ideal para acesso a banco.
+builder.Services.AddScoped<IAmbienteRepository, AmbienteSqlRepository>();
+builder.Services.AddScoped<IClienteRepository, ClienteSqlRepository>();
+builder.Services.AddScoped<IFuncionarioRepository, FuncionarioSqlRepository>();
+builder.Services.AddScoped<IMesaRepository, MesaSqlRepository>();
+builder.Services.AddScoped<IReservaRepository, ReservaSqlRepository>();
 
 var app = builder.Build();
 
