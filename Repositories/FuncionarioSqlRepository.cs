@@ -70,9 +70,9 @@ public class FuncionarioSqlRepository : DataConnection, IFuncionarioRepository
         return funcionarios;
     }
 
-    public Funcionario Read(int id)
+    public Funcionario? Read(int id)
     {
-        Funcionario funcionario = null!;
+        Funcionario? funcionario = null;
 
         using (var cmd = new SqlCommand())
         {

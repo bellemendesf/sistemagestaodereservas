@@ -1,11 +1,15 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace GestaoReservas.Models;
 
 public class Mesa
 {
     public int Id { get; set; }
+    [Range(1, int.MaxValue, ErrorMessage = "Informe um número de mesa maior que zero.")]
     public int Numero { get; set; }
+    [Range(1, int.MaxValue, ErrorMessage = "Informe ao menos um lugar.")]
     public int QtdLugares { get; set; }
-    // CORREÇÃO: inicializa a propriedade para evitar aviso de nulidade no .NET.
+    [Required(ErrorMessage = "Informe o status."), StringLength(20)]
     public string Status { get; set; } = "";
 
     public int AmbienteId { get; set; }

@@ -171,3 +171,6 @@
         padding: 18px 16px 22px;
     }
 }
+@media (max-width: 760px) {
+    .reserva-table { min-width: 0; }
+}

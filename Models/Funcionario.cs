@@ -1,8 +1,10 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace GestaoReservas.Models;
 
 public class Funcionario : Pessoa
 {
     public int Codigo { get; set; }
-    // CORREÇÃO: inicializa a propriedade para evitar aviso de nulidade no .NET.
+    [Required(ErrorMessage = "Informe o e-mail institucional."), StringLength(50)]
     public string EmailInstitucional { get; set; } = "";
 }

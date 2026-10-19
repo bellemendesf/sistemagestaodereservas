@@ -65,9 +65,9 @@ public class PessoaSqlRepository : DataConnection, IPessoaRepository
         return pessoas;
     }
 
-    public Pessoa Read(int id)
+    public Pessoa? Read(int id)
     {
-        Pessoa pessoa = null!;
+        Pessoa? pessoa = null;
 
         using (var cmd = new SqlCommand())
         {

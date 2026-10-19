@@ -31,9 +31,9 @@ public class MesaMemoryRepository : IMesaRepository
         return lista;
     }
 
-    public Mesa Read(int id)
+    public Mesa? Read(int id)
     {
-        Mesa resultado = null!;
+        Mesa? resultado = null;
         foreach (var item in lista)
         {
             if (item.Id == id)

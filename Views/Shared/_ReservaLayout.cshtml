@@ -1,6 +1,7 @@
 @{
+    bool restaurante = string.Equals(ViewContext.RouteData.Values["controller"]?.ToString(), "AreaRestaurante", StringComparison.OrdinalIgnoreCase);
     var action = ViewContext.RouteData.Values["action"]?.ToString();
-    var isList = string.Equals(action, "Index", StringComparison.OrdinalIgnoreCase);
+    var isList = (string.Equals(action, "Index", StringComparison.OrdinalIgnoreCase) || string.Equals(action, "Reservas", StringComparison.OrdinalIgnoreCase));
     var isCreate = string.Equals(action, "Create", StringComparison.OrdinalIgnoreCase);
 }
 <!DOCTYPE html>
@@ -40,18 +41,21 @@
         <p class="page-lead">Confira as reservas já feitas ou registre uma nova mesa para o cliente.</p>
 
         <nav class="page-tabs" aria-label="Seções de reservas">
-            <a asp-controller="Reserva"
-               asp-action="Index"
+            <a asp-controller="@(restaurante ? "AreaRestaurante" : "Reserva")"
+               asp-action="@(restaurante ? "Reservas" : "Index")"
                class="page-tab @(isList ? "is-active" : null)"
                aria-current="@(isList ? "page" : null)">
                 Listagem
             </a>
+            @if (!restaurante)
+            {
             <a asp-controller="Reserva"
                asp-action="Create"
                class="page-tab @(isCreate ? "is-active" : null)"
                aria-current="@(isCreate ? "page" : null)">
                 Nova reserva
             </a>
+            }
         </nav>
 
         @RenderBody()

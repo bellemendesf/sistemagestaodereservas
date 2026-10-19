@@ -1,73 +1,75 @@
-using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using GestaoReservas.Models;
 
 public class FuncionarioController : Controller
 {
-    private IFuncionarioRepository repository;
+    private readonly IFuncionarioRepository repository;
 
     public FuncionarioController(IFuncionarioRepository repository)
     {
         this.repository = repository;
     }
 
-    public ActionResult Index()
-    {
-        // CORREÇÃO: as Views existentes usam "index.cshtml" em minúsculas;
-        // informa o nome exato para funcionar também em sistemas com distinção de maiúsculas.
-        return View("index", repository.Read());
-    }
+    public ActionResult Index() => View("index", repository.Read());
 
     [HttpGet]
-    public ActionResult Create()
-    {
-        Funcionario model = new Funcionario();
-        return View(model);
-    }
+    public ActionResult Create() => View(new Funcionario());
 
     [HttpPost]
     public ActionResult Create(Funcionario model)
     {
+        if (string.IsNullOrWhiteSpace(model.EmailPessoal))
+            ModelState.AddModelError(nameof(model.EmailPessoal), "Informe o e-mail pessoal.");
+        if (string.IsNullOrWhiteSpace(model.Senha))
+            ModelState.AddModelError(nameof(model.Senha), "Informe a senha.");
+        if (!ModelState.IsValid) return View(model);
         try
         {
             repository.Create(model);
+            return RedirectToAction(nameof(Index));
         }
         catch (SqlException)
         {
-            return BadRequest("Não foi possível gravar. Verifique os dados obrigatórios, registros duplicados, vínculos existentes e a conexão com o banco.");
+            ModelState.AddModelError("", "Não foi possível cadastrar. Verifique os dados, duplicidades e a conexão com o banco.");
+            return View(model);
         }
-        return RedirectToAction("Index");
     }
 
     [HttpGet]
-    public ActionResult Edit(int id)
+    public ActionResult Edit([FromRoute] int id)
     {
-        Funcionario model = repository.Read(id);
+        var model = repository.Read(id);
         if (model == null) return NotFound();
         return View(model);
     }
 
     [HttpPost]
-    public ActionResult Edit(int id, Funcionario model)
+    public ActionResult Edit([FromRoute] int id, Funcionario model)
     {
-        // CORREÇÃO: a View Edit não envia campo Id; recupera o identificador da rota.
+        // A rota identifica o registro; não permita trocar a identidade pelo formulário.
         model.Id = id;
-        if (repository.Read(model.Id) == null) return NotFound();
+        ModelState.Remove(nameof(model.Id));
+        if (repository.Read(id) == null) return NotFound();
+        if (string.IsNullOrWhiteSpace(model.EmailPessoal))
+            ModelState.AddModelError(nameof(model.EmailPessoal), "Informe o e-mail pessoal.");
+        if (!ModelState.IsValid) return View(model);
         try
         {
             repository.Update(model);
+            return RedirectToAction(nameof(Index));
         }
         catch (SqlException)
         {
-            return BadRequest("Não foi possível gravar. Verifique os dados obrigatórios, registros duplicados, vínculos existentes e a conexão com o banco.");
+            ModelState.AddModelError("", "Não foi possível salvar. Verifique os dados, duplicidades e vínculos existentes.");
+            return View(model);
         }
-        return RedirectToAction("Index");
     }
 
     [HttpGet]
     public ActionResult Details(int id)
     {
-        Funcionario model = repository.Read(id);
+        var model = repository.Read(id);
         if (model == null) return NotFound();
         return View(model);
     }
@@ -75,23 +77,25 @@ public class FuncionarioController : Controller
     [HttpGet]
     public ActionResult Delete(int id)
     {
-        Funcionario model = repository.Read(id);
+        var model = repository.Read(id);
         if (model == null) return NotFound();
         return View(model);
     }
 
-    // UNIÃO: nome de ação de B evita a assinatura duplicada em A.
     [HttpPost, ActionName("Delete")]
-    public ActionResult DeleteConfirmed(int id)
+    public ActionResult DeleteConfirmed([FromRoute] int id)
     {
+        var model = repository.Read(id);
+        if (model == null) return NotFound();
         try
         {
             repository.Delete(id);
+            return RedirectToAction(nameof(Index));
         }
         catch (SqlException)
         {
-            return BadRequest("Não foi possível gravar. Verifique os dados obrigatórios, registros duplicados, vínculos existentes e a conexão com o banco.");
+            ModelState.AddModelError("", "Não foi possível excluir. O cadastro pode estar vinculado a outros registros; verifique também a conexão.");
+            return View("Delete", model);
         }
-        return RedirectToAction("Index");
     }
 }

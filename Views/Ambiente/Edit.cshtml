@@ -6,14 +6,12 @@
 
 <h1>Editar Ambiente</h1>
 
-<form asp-action="Edit" method="post">
+<form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
     <input type="hidden" asp-for="Id" />
 
-    <div>
-        <label asp-for="Id">Id</label>
-        <input asp-for="Id" />
-    </div>
+
 
     <div>
         <label asp-for="Nome">Nome do ambiente</label>

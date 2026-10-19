@@ -65,9 +65,9 @@ public class MesaSqlRepository : DataConnection, IMesaRepository
         return mesas;
     }
 
-    public Mesa Read(int id)
+    public Mesa? Read(int id)
     {
-        Mesa mesa = null!;
+        Mesa? mesa = null;
 
         using (var cmd = new SqlCommand())
         {

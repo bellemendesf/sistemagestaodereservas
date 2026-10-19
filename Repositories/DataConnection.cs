@@ -1,13 +1,19 @@
 using Microsoft.Data.SqlClient;
 
-public class DataConnection
+public abstract class DataConnection : IDisposable
 {
-    protected SqlConnection conn;
+    protected readonly SqlConnection conn;
 
-    public DataConnection(IConfiguration configuration)
+    protected DataConnection(IConfiguration configuration)
     {
         string connectionString = configuration.GetConnectionString("DefaultConnection")
-            ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
+            ?? throw new InvalidOperationException("Configure ConnectionStrings:DefaultConnection em appsettings.json.");
         conn = new SqlConnection(connectionString);
+    }
+
+    public void Dispose()
+    {
+        conn.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

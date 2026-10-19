@@ -100,9 +100,9 @@ public class ReservaSqlRepository : DataConnection, IReservaRepository
         return reservas;
     }
 
-    public Reserva Read(int id)
+    public Reserva? Read(int id)
     {
-        Reserva reserva = null!;
+        Reserva? reserva = null;
 
         using (var cmd = new SqlCommand())
         {

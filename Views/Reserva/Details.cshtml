@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Detalhes da Reserva";
     Layout = null;
+    string voltar = string.Equals(ViewContext.RouteData.Values["controller"]?.ToString(), "AreaRestaurante", StringComparison.OrdinalIgnoreCase) ? "Reservas" : "Index";
 }
 
 <!DOCTYPE html>
@@ -21,7 +22,7 @@
 </head>
 <body class="detalhes-edicao-page">
     <main class="detalhes-edicao-container">
-        <a asp-action="Index" class="detalhes-edicao-voltar">← Voltar às reservas</a>
+        <a asp-action="@voltar" class="detalhes-edicao-voltar">← Voltar às reservas</a>
 
         <section class="detalhes-edicao-card">
             <header class="detalhes-edicao-header">
@@ -71,7 +72,7 @@
                         Editar reserva
                     </a>
 
-                    <a asp-action="Index"
+                    <a asp-action="@voltar"
                        class="detalhes-edicao-botao detalhes-edicao-botao-secundario">
                         Voltar à listagem
                     </a>

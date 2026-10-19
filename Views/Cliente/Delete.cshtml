@@ -1,6 +1,6 @@
 @model Cliente
 @* View Delete de Cliente: apresenta os campos do DER via model MVC.
-   As alterações passam pelo controller, que mantém uma lista em memória. *@
+   As alterações passam pelo controller e pela interface do repositório. *@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -25,6 +25,7 @@
     </dl>
     <p>Deseja excluir este cadastro?</p>
     <form action="/Cliente/Delete/@Model.Id" method="POST">
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
         @Html.AntiForgeryToken()
         <button type="submit" class="btn btn-danger">Confirmar exclusão</button>
     </form>

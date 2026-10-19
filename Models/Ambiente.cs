@@ -1,10 +1,14 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace GestaoReservas.Models;
 
 public class Ambiente
 {
     public int Id { get; set; }
-    // CORREÇÃO: inicializa campos obrigatórios para evitar avisos de nulidade no .NET.
+    [Required(ErrorMessage = "Informe o nome."), StringLength(50)]
     public string Nome { get; set; } = "";
+    [StringLength(20)]
     public string Status { get; set; } = "";
+    [Range(1, int.MaxValue, ErrorMessage = "A capacidade deve ser maior que zero.")]
     public int Capacidade { get; set; }
 }

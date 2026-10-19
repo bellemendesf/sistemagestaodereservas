@@ -31,9 +31,9 @@ public class FuncionarioMemoryRepository : IFuncionarioRepository
         return lista;
     }
 
-    public Funcionario Read(int id)
+    public Funcionario? Read(int id)
     {
-        Funcionario resultado = null!;
+        Funcionario? resultado = null;
         foreach (var item in lista)
         {
             if (item.Id == id)

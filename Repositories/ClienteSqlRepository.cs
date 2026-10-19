@@ -70,9 +70,9 @@ public class ClienteSqlRepository : DataConnection, IClienteRepository
         return clientes;
     }
 
-    public Cliente Read(int id)
+    public Cliente? Read(int id)
     {
-        Cliente cliente = null!;
+        Cliente? cliente = null;
 
         using (var cmd = new SqlCommand())
         {

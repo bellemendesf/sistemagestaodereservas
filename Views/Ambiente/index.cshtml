@@ -1,4 +1,3 @@
-```cshtml
 @using GestaoReservas.Models
 @model IEnumerable<Ambiente>
 
@@ -162,9 +161,8 @@
             text-align: center;
         }
 
-            .ambientes-tabela {
-                min-width: 650px;
-            }
+        @@media (max-width: 650px) {
+            .ambientes-tabela { min-width: 650px; }
         }
     </style>
 </head>
@@ -294,4 +292,3 @@
     </main>
 </body>
 </html>
-```

@@ -62,9 +62,9 @@ public class AmbienteSqlRepository : DataConnection, IAmbienteRepository
         return ambientes;
     }
 
-    public Ambiente Read(int id)
+    public Ambiente? Read(int id)
     {
-        Ambiente ambiente = null!;
+        Ambiente? ambiente = null;
 
         using (var cmd = new SqlCommand())
         {
