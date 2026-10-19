@@ -1,7 +1,9 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace GestaoReservas.Models;
 
 public class Cliente : Pessoa
 {
-    // CORREÇÃO: inicializa a propriedade para evitar aviso de nulidade no .NET.
+    [Required(ErrorMessage = "Informe o telefone."), StringLength(20)]
     public string Telefone { get; set; } = "";
 }

@@ -18,9 +18,9 @@ public class ReservaMemoryRepository : IReservaRepository
         return lista;
     }
 
-    public Reserva Read(int id)
+    public Reserva? Read(int id)
     {
-        Reserva resultado = null!;
+        Reserva? resultado = null;
         foreach (var item in lista)
         {
             if (item.Id == id)

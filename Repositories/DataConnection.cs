@@ -1,21 +1,19 @@
-// using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
-// public abstract class DataConnection
-// {
-//     protected SqlConnection conn;
+public abstract class DataConnection : IDisposable
+{
+    protected readonly SqlConnection conn;
 
-//     public DataConnection()
-//     {
-//         string strConn = @"localhost\MSSQLSERVER04;
-//         Integrated Security=True
-//         Database=mesaReserva;
-//         TrustServerCertificate=true";
-//         conn = new SqlConnection(strConn);
-//         conn.Open();
-//     }
+    protected DataConnection(IConfiguration configuration)
+    {
+        string connectionString = configuration.GetConnectionString("DefaultConnection")
+            ?? throw new InvalidOperationException("Configure ConnectionStrings:DefaultConnection em appsettings.json.");
+        conn = new SqlConnection(connectionString);
+    }
 
-//     public void Dispose()
-//     {
-//         conn.Close();
-//     }
-// }
+    public void Dispose()
+    {
+        conn.Dispose();
+        GC.SuppressFinalize(this);
+    }
+}

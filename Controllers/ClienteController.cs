@@ -1,68 +1,101 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using GestaoReservas.Models;
 
 public class ClienteController : Controller
 {
-    private IClienteRepository repository;
+    private readonly IClienteRepository repository;
 
     public ClienteController(IClienteRepository repository)
     {
         this.repository = repository;
     }
 
-    public ActionResult Index()
-    {
-        // CORREÇÃO: as Views existentes usam "index.cshtml" em minúsculas;
-        // informa o nome exato para funcionar também em sistemas com distinção de maiúsculas.
-        return View("index", repository.Read());
-    }
+    public ActionResult Index() => View("index", repository.Read());
 
     [HttpGet]
-    public ActionResult Create()
-    {
-        Cliente model = new Cliente();
-        return View(model);
-    }
+    public ActionResult Create() => View(new Cliente());
 
     [HttpPost]
     public ActionResult Create(Cliente model)
     {
-        repository.Create(model);
-        return RedirectToAction("Index");
+        if (string.IsNullOrWhiteSpace(model.EmailPessoal))
+            ModelState.AddModelError(nameof(model.EmailPessoal), "Informe o e-mail pessoal.");
+        if (string.IsNullOrWhiteSpace(model.Senha))
+            ModelState.AddModelError(nameof(model.Senha), "Informe a senha.");
+        if (!ModelState.IsValid) return View(model);
+        try
+        {
+            repository.Create(model);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (SqlException)
+        {
+            ModelState.AddModelError("", "Não foi possível cadastrar. Verifique os dados, duplicidades e a conexão com o banco.");
+            return View(model);
+        }
     }
 
     [HttpGet]
-    public ActionResult Edit(int id)
+    public ActionResult Edit([FromRoute] int id)
     {
-        return View(repository.Read(id));
+        var model = repository.Read(id);
+        if (model == null) return NotFound();
+        return View(model);
     }
 
     [HttpPost]
-    public ActionResult Edit(int id, Cliente model)
+    public ActionResult Edit([FromRoute] int id, Cliente model)
     {
-        // CORREÇÃO: a View Edit não envia campo Id; recupera o identificador da rota.
+        // A rota identifica o registro; não permita trocar a identidade pelo formulário.
         model.Id = id;
-        repository.Update(model);
-        return RedirectToAction("Index");
+        ModelState.Remove(nameof(model.Id));
+        if (repository.Read(id) == null) return NotFound();
+        if (string.IsNullOrWhiteSpace(model.EmailPessoal))
+            ModelState.AddModelError(nameof(model.EmailPessoal), "Informe o e-mail pessoal.");
+        if (!ModelState.IsValid) return View(model);
+        try
+        {
+            repository.Update(model);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (SqlException)
+        {
+            ModelState.AddModelError("", "Não foi possível salvar. Verifique os dados, duplicidades e vínculos existentes.");
+            return View(model);
+        }
     }
 
     [HttpGet]
     public ActionResult Details(int id)
     {
-        return View(repository.Read(id));
+        var model = repository.Read(id);
+        if (model == null) return NotFound();
+        return View(model);
     }
 
     [HttpGet]
     public ActionResult Delete(int id)
     {
-        return View(repository.Read(id));
+        var model = repository.Read(id);
+        if (model == null) return NotFound();
+        return View(model);
     }
 
-    [HttpPost]
-    // CORREÇÃO: o formulário Delete envia o ID pela URL, não como propriedade do model.
-    public ActionResult Delete(int id)
+    [HttpPost, ActionName("Delete")]
+    public ActionResult DeleteConfirmed([FromRoute] int id)
     {
-        repository.Delete(id);
-        return RedirectToAction("Index");
+        var model = repository.Read(id);
+        if (model == null) return NotFound();
+        try
+        {
+            repository.Delete(id);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (SqlException)
+        {
+            ModelState.AddModelError("", "Não foi possível excluir. O cadastro pode estar vinculado a outros registros; verifique também a conexão.");
+            return View("Delete", model);
+        }
     }
 }

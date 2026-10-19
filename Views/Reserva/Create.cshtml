@@ -7,6 +7,7 @@
 
 <section class="panel">
     <form asp-action="Create" method="post">
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
         <div class="form-section">
             <h2>Dados do cliente</h2>
             <p>Quem vai ocupar a mesa.</p>
@@ -44,19 +45,15 @@
                 </div>
                 <div class="field">
                     <label asp-for="DataHora">Data e hora</label>
-                    <input type="datetime-local" name="DataHora" id="DataHora" />
+                    <input asp-for="DataHora" type="datetime-local" value="@(Model.DataHora == default ? "" : Model.DataHora.ToString("yyyy-MM-ddTHH:mm"))" />
                 </div>
                 <div class="field">
                     <label asp-for="QtdPessoas">Quantidade de pessoas</label>
-                    <input asp-for="QtdPessoas" type="number" min="1" value="2" />
+                    <input asp-for="QtdPessoas" type="number" min="1" />
                 </div>
                 <div class="field full">
                     <label asp-for="Status">Status</label>
-                    <select asp-for="Status">
-                        <option value="Pendente">Pendente</option>
-                        <option value="Confirmada">Confirmada</option>
-                        <option value="Cancelada">Cancelada</option>
-                    </select>
+                    <input value="Pendente" readonly />
                 </div>
             </div>
         </div>

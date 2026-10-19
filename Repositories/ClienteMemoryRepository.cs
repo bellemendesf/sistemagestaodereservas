@@ -31,9 +31,9 @@ public class ClienteMemoryRepository : IClienteRepository
         return lista;
     }
 
-    public Cliente Read(int id)
+    public Cliente? Read(int id)
     {
-        Cliente resultado = null!;
+        Cliente? resultado = null;
         foreach (var item in lista)
         {
             if (item.Id == id)

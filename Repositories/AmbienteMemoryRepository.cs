@@ -31,9 +31,9 @@ public class AmbienteMemoryRepository : IAmbienteRepository
         return lista;
     }
 
-    public Ambiente Read(int id)
+    public Ambiente? Read(int id)
     {
-        Ambiente resultado = null!;
+        Ambiente? resultado = null;
         foreach (var item in lista)
         {
             if (item.Id == id)

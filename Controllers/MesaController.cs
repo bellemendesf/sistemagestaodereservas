@@ -1,64 +1,95 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using GestaoReservas.Models;
 
 public class MesaController : Controller
 {
-    private IMesaRepository repository;
+    private readonly IMesaRepository repository;
 
     public MesaController(IMesaRepository repository)
     {
         this.repository = repository;
     }
 
-    public ActionResult Index()
-    {
-        // CORREÇÃO: as Views existentes usam "index.cshtml" em minúsculas;
-        // informa o nome exato para funcionar também em sistemas com distinção de maiúsculas.
-        return View("index", repository.Read());
-    }
+    public ActionResult Index() => View("index", repository.Read());
 
     [HttpGet]
-    public ActionResult Create()
-    {
-        return View();
-    }
+    public ActionResult Create() => View(new Mesa());
 
     [HttpPost]
     public ActionResult Create(Mesa model)
     {
-        repository.Create(model);
-        return RedirectToAction("Index");
+        if (!ModelState.IsValid) return View(model);
+        try
+        {
+            repository.Create(model);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (SqlException)
+        {
+            ModelState.AddModelError("", "Não foi possível cadastrar. Verifique os dados, duplicidades e a conexão com o banco.");
+            return View(model);
+        }
     }
 
     [HttpGet]
-    public ActionResult Edit(int id)
+    public ActionResult Edit([FromRoute] int id)
     {
-        return View(repository.Read(id));
+        var model = repository.Read(id);
+        if (model == null) return NotFound();
+        return View(model);
     }
 
     [HttpPost]
-    public ActionResult Edit(int id, Mesa model)
+    public ActionResult Edit([FromRoute] int id, Mesa model)
     {
-        repository.Update(model);
-        return RedirectToAction("Index");
+        // A rota identifica o registro; não permita trocar a identidade pelo formulário.
+        model.Id = id;
+        ModelState.Remove(nameof(model.Id));
+        if (repository.Read(id) == null) return NotFound();
+        if (!ModelState.IsValid) return View(model);
+        try
+        {
+            repository.Update(model);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (SqlException)
+        {
+            ModelState.AddModelError("", "Não foi possível salvar. Verifique os dados, duplicidades e vínculos existentes.");
+            return View(model);
+        }
     }
 
     [HttpGet]
     public ActionResult Details(int id)
     {
-        return View(repository.Read(id));
+        var model = repository.Read(id);
+        if (model == null) return NotFound();
+        return View(model);
     }
 
     [HttpGet]
     public ActionResult Delete(int id)
     {
-        return View(repository.Read(id));
+        var model = repository.Read(id);
+        if (model == null) return NotFound();
+        return View(model);
     }
 
-    [HttpPost]
-    public ActionResult Delete(Mesa model)
+    [HttpPost, ActionName("Delete")]
+    public ActionResult DeleteConfirmed([FromRoute] int id)
     {
-        repository.Delete(model.Id);
-        return RedirectToAction("Index");
+        var model = repository.Read(id);
+        if (model == null) return NotFound();
+        try
+        {
+            repository.Delete(id);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (SqlException)
+        {
+            ModelState.AddModelError("", "Não foi possível excluir. O cadastro pode estar vinculado a outros registros; verifique também a conexão.");
+            return View("Delete", model);
+        }
     }
 }

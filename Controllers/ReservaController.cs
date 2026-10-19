@@ -1,88 +1,114 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using GestaoReservas.Models;
 
 public class ReservaController : Controller
 {
-    private IReservaRepository repository;
+    private readonly IReservaRepository repository;
 
     public ReservaController(IReservaRepository repository)
     {
         this.repository = repository;
     }
 
-    public ActionResult Index()
-    {
-        return View(repository.Read());
-    }
+    public ActionResult Index() => View(repository.Read());
 
     [HttpGet]
-    public ActionResult Create()
-    {
-        Reserva model = new Reserva();
-        model.Cliente = new Cliente();
-        model.Cliente.Cpf = "";
-        model.Cliente.EmailPessoal = "";
-        model.Cliente.Senha = "";
-        model.QtdPessoas = 2;
-        model.Status = "Pendente";
-        return View(model);
-    }
+    public ActionResult Create() => View(new Reserva { QtdPessoas = 2, Status = "Pendente" });
 
     [HttpPost]
     public ActionResult Create(Reserva model)
     {
-        // CORREÇÃO: o status inicial é fixo, independentemente do valor enviado pela View.
         model.Status = "Pendente";
-        repository.Create(model);
-        return RedirectToAction("Index");
+        ModelState.Remove(nameof(model.Status));
+        if (model.Cliente == null)
+            ModelState.AddModelError(nameof(model.Cliente), "Informe os dados do cliente.");
+        if (model.DataHora == default)
+            ModelState.AddModelError(nameof(model.DataHora), "Informe a data e hora.");
+        if (!ModelState.IsValid) return View(model);
+        try
+        {
+            repository.Create(model);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (SqlException)
+        {
+            ModelState.AddModelError("", "Não foi possível cadastrar. Verifique CPF, telefone, mesa e funcionário cadastrados e a conexão com o banco.");
+            return View(model);
+        }
     }
 
     [HttpGet]
-    public ActionResult Edit(int id)
+    public ActionResult Edit([FromRoute] int id)
     {
-        Reserva reserva = repository.Read(id);
+        var reserva = repository.Read(id);
         if (reserva == null) return NotFound();
         if (reserva.Status == "Cancelada") return BadRequest("Reserva cancelada não pode ser editada.");
         return View(reserva);
     }
 
     [HttpPost]
-    public ActionResult Edit(int id, Reserva model)
+    public ActionResult Edit([FromRoute] int id, Reserva model)
     {
-        // CORREÇÃO: lê o ID da rota ou do campo oculto enviado pela View Edit.
-        model.Id = id > 0 ? id : model.Id;
-        Reserva reserva = repository.Read(model.Id);
-        if (reserva == null) return NotFound();
-        if (reserva.Status == "Cancelada") return BadRequest("Reserva cancelada não pode ser editada.");
+        var original = repository.Read(id);
+        if (original == null) return NotFound();
+        if (original.Status == "Cancelada") return BadRequest("Reserva cancelada não pode ser editada.");
 
-        // CORREÇÃO: o Repository preserva o Status e o FuncionarioID originais.
-        repository.Update(model);
-        return RedirectToAction("Index");
+        model.Id = id;
+        model.Cliente = original.Cliente;
+        model.ClienteId = original.ClienteId;
+        model.FuncionarioID = original.FuncionarioID;
+        model.Status = original.Status;
+        // Esses dados não fazem parte da edição pelo cliente.
+        foreach (var key in ModelState.Keys.Where(k =>
+            k == "Id" || k == "Cliente" || k.StartsWith("Cliente.") ||
+            k == "ClienteId" || k == "FuncionarioID" || k == "Status").ToList())
+            ModelState.Remove(key);
+        if (model.DataHora == default)
+            ModelState.AddModelError(nameof(model.DataHora), "Informe a data e hora.");
+        if (!ModelState.IsValid) return View(model);
+        try
+        {
+            repository.Update(model);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (SqlException)
+        {
+            ModelState.AddModelError("", "Não foi possível salvar. Verifique a mesa informada e a conexão com o banco.");
+            return View(model);
+        }
     }
 
     [HttpGet]
     public ActionResult Details(int id)
     {
-        Reserva reserva = repository.Read(id);
-        if (reserva == null) return NotFound();
-        return View(reserva);
+        var model = repository.Read(id);
+        if (model == null) return NotFound();
+        return View(model);
     }
 
     [HttpGet]
     public ActionResult Delete(int id)
     {
-        Reserva reserva = repository.Read(id);
-        if (reserva == null) return NotFound();
-        // CORREÇÃO: mantém a View original, mas o POST fará cancelamento lógico.
-        return View(reserva);
+        var model = repository.Read(id);
+        if (model == null) return NotFound();
+        return View(model);
     }
 
-    [HttpPost]
-    public ActionResult Delete(Reserva model)
+    [HttpPost, ActionName("Delete")]
+    public ActionResult DeleteConfirmed([FromRoute] int id)
     {
-        if (repository.Read(model.Id) == null) return NotFound();
-        // CORREÇÃO: o método Delete do Repository apenas muda o status para Cancelada.
-        repository.Delete(model.Id);
-        return RedirectToAction("Index");
+        var model = repository.Read(id);
+        if (model == null) return NotFound();
+        try
+        {
+            repository.Delete(id); // Cancelamento lógico: preserva o histórico.
+            return RedirectToAction(nameof(Index));
+        }
+        catch (SqlException)
+        {
+            ModelState.AddModelError("", "Não foi possível cancelar. Verifique a conexão com o banco.");
+            return View("Delete", model);
+        }
     }
 }

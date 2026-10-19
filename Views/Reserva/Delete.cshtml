@@ -2,7 +2,7 @@
 @model GestaoReservas.Models.Reserva
 
 @{
-    ViewData["Title"] = "Excluir reserva";
+    ViewData["Title"] = "Cancelar reserva";
     Layout = null;
 }
 
@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Excluir reserva - Santa Massa</title>
+    <title>Cancelar reserva - Santa Massa</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -122,10 +122,10 @@
                     Santa Massa · Rio Preto
                 </p>
 
-                <h1>Excluir reserva</h1>
+                <h1>Cancelar reserva</h1>
 
                 <p class="detalhes-edicao-descricao">
-                    Confira os dados antes de confirmar a exclusão.
+                    Confira os dados antes de confirmar a cancelamento.
                 </p>
             </header>
 
@@ -133,8 +133,7 @@
 
                 <div class="reserva-excluir-alerta">
                     <strong>Atenção!</strong>
-                    Essa ação removerá a reserva do sistema e não poderá
-                    ser desfeita.
+                    Essa ação marcará a reserva como cancelada, preservando seu histórico. Não será possível reativá-la.
                 </div>
 
                 <dl>
@@ -170,8 +169,9 @@
                 </dl>
 
                 <form asp-controller="Reserva"
-                      asp-action="Delete"
+                      asp-action="Delete" asp-route-id="@Model.Id"
                       method="post">
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
                     @Html.AntiForgeryToken()
 
@@ -180,7 +180,7 @@
                     <div class="reserva-excluir-acoes">
                         <button type="submit"
                                 class="reserva-excluir-botao reserva-excluir-confirmar">
-                            Confirmar exclusão
+                            Confirmar cancelamento
                         </button>
 
                         <a asp-controller="Reserva"
