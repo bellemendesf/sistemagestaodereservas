@@ -1,26 +1,26 @@
 using GestaoReservas.Models;
 
+// CORREÇÃO: reativa o Repository em memória, conforme TarefaMemoryRepository do professor.
 public class FuncionarioMemoryRepository : IFuncionarioRepository
 {
     List<Funcionario> lista = new List<Funcionario>();
+    // CORREÇÃO: IDs distintos são necessários para as rotas Edit, Details e Delete das Views.
+    int proximoId = 1;
 
-    public void Create(Funcionario Funcionario)
+    public void Create(Funcionario funcionario)
     {
-        lista.Add(Funcionario);
-    }
-
-    public void Create(Funcionario Funcionario)
-    {
-        throw new NotImplementedException();
+        // CORREÇÃO: atribui o identificador utilizado pelo CRUD antes de adicionar à lista.
+        funcionario.Id = proximoId++;
+        lista.Add(funcionario);
     }
 
     public void Delete(int id)
     {
-        foreach(var Funcionario in lista)
+        foreach (var item in lista)
         {
-            if(Funcionario.Id == id)
+            if (item.Id == id)
             {
-                lista.Remove(Funcionario);
+                lista.Remove(item);
                 break;
             }
         }
@@ -31,42 +31,36 @@ public class FuncionarioMemoryRepository : IFuncionarioRepository
         return lista;
     }
 
-    public Funcionario Read(int id)
+    public Funcionario? Read(int id)
     {
-        Funcionario f = null;
-        foreach(var Funcionario in lista)
+        Funcionario? resultado = null;
+        foreach (var item in lista)
         {
-            if(Funcionario.Id == id)
+            if (item.Id == id)
             {
-                f = Funcionario;
+                resultado = item;
             }
         }
-        return f;
+        return resultado;
     }
 
-    public void Update(Funcionario f)
+    public void Update(Funcionario funcionario)
     {
-        foreach(var Funcionario in lista)
+        foreach (var item in lista)
         {
-            if(Funcionario.Id == f.Id)
+            if (item.Id == funcionario.Id)
             {
-                Funcionario.Email_inst = f.Email_inst;
+                // CORREÇÃO: atualiza os dados de pessoa e o e-mail institucional editados.
+                item.Nome = funcionario.Nome;
+                item.Cpf = funcionario.Cpf;
+                item.EmailPessoal = funcionario.EmailPessoal;
+                item.EmailInstitucional = funcionario.EmailInstitucional;
+                // CORREÇÃO: não zera Codigo e conserva a senha se não foi informada nova senha.
+                if (funcionario.Senha != null && funcionario.Senha != "")
+                {
+                    item.Senha = funcionario.Senha;
+                }
             }
         }
-    }
-
-    public void Update(Funcionario Funcionario)
-    {
-        throw new NotImplementedException();
-    }
-
-    List<Funcionario> IFuncionarioRepository.Read()
-    {
-        throw new NotImplementedException();
-    }
-
-    Funcionario IFuncionarioRepository.Read(int id)
-    {
-        throw new NotImplementedException();
     }
 }

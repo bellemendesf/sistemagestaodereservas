@@ -1,0 +1,15 @@
+@using GestaoReservas.Models
+@model Ambiente
+
+@{
+    ViewData["Title"] = "Informações do ambiente";
+}
+
+<h1>Detalhes do Ambiente</h1>
+
+  <p><strong>ID:</strong> @Model.Id</p>
+    <p><strong>Nome:</strong> @Model.Nome</p>
+    <p><strong>Status:</strong> @Model.Status</p>
+    <p><strong>Capacidade:</strong> @Model.Capacidade</p>
+
+<a asp-action="Index">Voltar</a>

@@ -3,46 +3,145 @@ using Microsoft.Data.SqlClient;
 
 public class MesaSqlRepository : DataConnection, IMesaRepository
 {
-    public void Create(Mesa Mesa)
-    {
-        throw new NotImplementedException();
-    }
+    public MesaSqlRepository(IConfiguration configuration) : base(configuration) { }
 
-    public void Delete(int id)
+    public void Create(Mesa mesa)
     {
-        throw new NotImplementedException();
+        // UNIÃO: nr identifica a mesa; a View de A não informa AmbienteId.
+        using (var cmd = new SqlCommand())
+        {
+            cmd.Connection = conn;
+            cmd.CommandText = @"INSERT INTO mesas (nr, qtd_lugares, status, codigo_ambientes) VALUES (@Numero, @QtdLugares, @Status, NULLIF(@AmbienteId, 0));";
+            cmd.Parameters.AddWithValue("@Numero", mesa.Numero);
+            cmd.Parameters.AddWithValue("@QtdLugares", mesa.QtdLugares);
+            cmd.Parameters.AddWithValue("@Status", mesa.Status);
+            cmd.Parameters.AddWithValue("@AmbienteId", mesa.AmbienteId);
+
+            conn.Open();
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
     }
 
     public List<Mesa> Read()
     {
-        SqlCommand cmd = new SqlCommand();
-        cmd.CommandText = "SELECT * FROM Mesas";
-        cmd.Connection = conn;
+        var mesas = new List<Mesa>();
 
-        List<Mesa> Mesas = new List<Mesa>();
-
-        SqlDataReader reader = cmd.ExecuteReader();
-
-        while(reader.Read())
+        using (var cmd = new SqlCommand())
         {
-            Mesa m = new Mesa();
-            m.IdMesa = reader.GetInt32(0);
-            m.Texto = reader.GetString(1);
-            m.Concluida = reader.GetBoolean(2);
+            cmd.Connection = conn;
+            cmd.CommandText = @"SELECT nr, qtd_lugares, status, COALESCE(codigo_ambientes, 0) FROM mesas";
 
-            Mesas.Add(m);
+            conn.Open();
+            try
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        mesas.Add(new Mesa
+                        {
+                            Id = reader.GetInt32(0),
+                            Numero = reader.GetInt32(0),
+                            QtdLugares = reader.GetInt32(1),
+                            Status = reader.GetString(2),
+                            AmbienteId = reader.GetInt32(3)
+                        });
+                    }
+                }
+            }
+            finally
+            {
+                conn.Close();
+            }
         }
 
-        return Mesas;
+        return mesas;
     }
 
-    public Mesa Read(int id)
+    public Mesa? Read(int id)
     {
-        throw new NotImplementedException();
+        Mesa? mesa = null;
+
+        using (var cmd = new SqlCommand())
+        {
+            cmd.Connection = conn;
+            cmd.CommandText = @"SELECT nr, qtd_lugares, status, COALESCE(codigo_ambientes, 0) FROM mesas WHERE nr = @Id";
+            cmd.Parameters.AddWithValue("@Id", id);
+
+            conn.Open();
+            try
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        mesa = new Mesa
+                        {
+                            Id = reader.GetInt32(0),
+                            Numero = reader.GetInt32(0),
+                            QtdLugares = reader.GetInt32(1),
+                            Status = reader.GetString(2),
+                            AmbienteId = reader.GetInt32(3)
+                        };
+                    }
+                }
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        return mesa;
     }
 
-    public void Update(Mesa Mesa)
+    public void Update(Mesa mesa)
     {
-        throw new NotImplementedException();
+        using (var cmd = new SqlCommand())
+        {
+            cmd.Connection = conn;
+            cmd.CommandText = @"UPDATE mesas SET nr = @Numero, qtd_lugares = @QtdLugares, status = @Status WHERE nr = @Id;";
+            cmd.Parameters.AddWithValue("@Numero", mesa.Numero);
+            cmd.Parameters.AddWithValue("@QtdLugares", mesa.QtdLugares);
+            cmd.Parameters.AddWithValue("@Status", mesa.Status);
+            cmd.Parameters.AddWithValue("@Id", mesa.Id);
+
+            conn.Open();
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+    }
+
+    public void Delete(int id)
+    {
+        using (var cmd = new SqlCommand())
+        {
+            cmd.Connection = conn;
+            cmd.CommandText = @"DELETE FROM mesas WHERE nr = @Id;";
+            cmd.Parameters.AddWithValue("@Id", id);
+
+            conn.Open();
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
     }
 }

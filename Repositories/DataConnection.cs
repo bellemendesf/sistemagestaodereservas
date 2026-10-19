@@ -1,21 +1,19 @@
 using Microsoft.Data.SqlClient;
 
-public abstract class DataConnection
+public abstract class DataConnection : IDisposable
 {
-    protected SqlConnection conn;
+    protected readonly SqlConnection conn;
 
-    public DataConnection()
+    protected DataConnection(IConfiguration configuration)
     {
-        string strConn = @"localhost\MSSQLSERVER04;
-        Integrated Security=True
-        Database=mesaReserva;
-        TrustServerCertificate=true";
-        conn = new SqlConnection(strConn);
-        conn.Open();
+        string connectionString = configuration.GetConnectionString("DefaultConnection")
+            ?? throw new InvalidOperationException("Configure ConnectionStrings:DefaultConnection em appsettings.json.");
+        conn = new SqlConnection(connectionString);
     }
 
     public void Dispose()
     {
-        conn.Close();
+        conn.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

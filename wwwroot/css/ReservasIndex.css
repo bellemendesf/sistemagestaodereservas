@@ -1,0 +1,176 @@
+/* Painel principal */
+.panel {
+    overflow: hidden;
+    border: 1px solid #F3E4B8;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 18px 50px rgba(66, 52, 18, 0.08);
+    color: #1F1F1F;
+    font-family: "Poppins", sans-serif;
+}
+.reserva-logo {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    display: block;
+}
+.panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 28px 30px;
+    border-bottom: 1px solid #F0EADB;
+}
+
+.panel-head h2 {
+    margin: 0;
+    font-family: "Josefin Sans", sans-serif;
+    font-size: clamp(1.7rem, 4vw, 2.2rem);
+    font-weight: 700;
+}
+
+.count {
+    padding: 8px 13px;
+    border-radius: 999px;
+    background: #FBF3D9;
+    color: #66551D;
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.empty {
+    padding: 45px 24px;
+    text-align: center;
+}
+
+.empty p {
+    margin-bottom: 22px;
+    color: #706B5E;
+    font-size: 0.92rem;
+}
+
+.btn-save {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 12px 20px;
+    border: 1px solid #2E7D32;
+    border-radius: 10px;
+    background: #2E7D32;
+    color: #FFFFFF;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.btn-save:hover {
+    transform: translateY(-1px);
+    background: #256628;
+    color: #FFFFFF;
+}
+
+.table-wrap {
+    overflow-x: auto;
+    padding: 24px 28px 30px;
+}
+
+.reserva-table {
+    width: 100%;
+    min-width: 850px;
+    border: 1px solid #EEE8DA;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 12px;
+    font-family: "Poppins", sans-serif;
+}
+
+.reserva-table thead th {
+    padding: 16px;
+    border-bottom: 1px solid #EAE3D3;
+    background: #FBF6E9;
+    color: #514B3D;
+    font-size: 0.76rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.reserva-table tbody td {
+    padding: 16px;
+    border-bottom: 1px solid #F0ECE3;
+    color: #454238;
+    font-size: 0.83rem;
+    vertical-align: middle;
+}
+
+.reserva-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.reserva-table tbody tr:hover {
+    background: #FFFCF4;
+}
+
+/* Etiquetas de status */
+.badge {
+    display: inline-block;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.badge-confirmada {
+    background: #E4F4E5;
+    color: #256628;
+}
+
+.badge-pendente {
+    background: #FFF0C2;
+    color: #775600;
+}
+
+.badge-cancelada {
+    background: #FCE4E2;
+    color: #A52E28;
+}
+
+/* Ações */
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    white-space: nowrap;
+}
+
+.actions a {
+    color: #2E7D32;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.actions a:hover {
+    text-decoration: underline;
+}
+
+.actions a.is-danger {
+    color: #B23A32;
+}
+
+@media (max-width: 600px) {
+    .panel-head {
+        padding: 22px 20px;
+    }
+
+    .table-wrap {
+        padding: 18px 16px 22px;
+    }
+}
+@media (max-width: 760px) {
+    .reserva-table { min-width: 0; }
+}

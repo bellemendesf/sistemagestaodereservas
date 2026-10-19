@@ -1,21 +1,26 @@
 using GestaoReservas.Models;
 
+// CORREÇÃO: reativa o Repository em memória, conforme TarefaMemoryRepository do professor.
 public class MesaMemoryRepository : IMesaRepository
 {
     List<Mesa> lista = new List<Mesa>();
+    // CORREÇÃO: IDs distintos são necessários para as rotas Edit, Details e Delete das Views.
+    int proximoId = 1;
 
-    public void Create(Mesa Mesa)
+    public void Create(Mesa mesa)
     {
-        lista.Add(Mesa);
+        // CORREÇÃO: atribui o identificador utilizado pelo CRUD antes de adicionar à lista.
+        mesa.Id = proximoId++;
+        lista.Add(mesa);
     }
 
     public void Delete(int id)
     {
-        foreach(var Mesa in lista)
+        foreach (var item in lista)
         {
-            if(Mesa.IdMesa == id)
+            if (item.Id == id)
             {
-                lista.Remove(Mesa);
+                lista.Remove(item);
                 break;
             }
         }
@@ -26,26 +31,29 @@ public class MesaMemoryRepository : IMesaRepository
         return lista;
     }
 
-    public Mesa Read(int id)
+    public Mesa? Read(int id)
     {
-        Mesa m = null;
-        foreach(var Mesa in lista)
+        Mesa? resultado = null;
+        foreach (var item in lista)
         {
-            if(Mesa.IdMesa == id)
+            if (item.Id == id)
             {
-                m = Mesa;
+                resultado = item;
             }
         }
-        return m;
+        return resultado;
     }
 
-    public void Update(Mesa m)
+    public void Update(Mesa mesa)
     {
-        foreach(var Mesa in lista)
+        foreach (var item in lista)
         {
-            if(Mesa.IdMesa == m.IdMesa)
+            if (item.Id == mesa.Id)
             {
-                Mesa.Texto = m.Texto;
+                // CORREÇÃO: atualiza número, quantidade de lugares e status enviados pelo formulário.
+                item.Numero = mesa.Numero;
+                item.QtdLugares = mesa.QtdLugares;
+                item.Status = mesa.Status;
             }
         }
     }

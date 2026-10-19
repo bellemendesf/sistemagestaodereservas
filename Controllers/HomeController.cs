@@ -1,12 +1,16 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace GestaoReservas.Controllers
+public class HomeController : Controller
 {
-    public class HomeController : Controller
+    [Microsoft.AspNetCore.Mvc.IgnoreAntiforgeryToken]
+    public ActionResult Error()
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+        Response.StatusCode = 500;
+        return View();
+    }
+
+    public ActionResult Index()
+    {
+        return View();
     }
 }

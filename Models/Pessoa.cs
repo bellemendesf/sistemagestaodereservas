@@ -1,10 +1,16 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace GestaoReservas.Models;
 
 public class Pessoa
 {
-    public int Id{get; set;}
-    public required string Nome {get;set;}
-    public required string Cpf {get;set;}
-    public required string EmailPessoal {get;set;}
-    public required string Senha {get;set;}
+    public int Id { get; set; }
+    [Required(ErrorMessage = "Informe o nome."), StringLength(50)]
+    public string Nome { get; set; } = "";
+    [Required(ErrorMessage = "Informe o CPF."), StringLength(20)]
+    public string Cpf { get; set; } = "";
+    [StringLength(100)]
+    public string EmailPessoal { get; set; } = "";
+    [StringLength(30)]
+    public string Senha { get; set; } = "";
 }

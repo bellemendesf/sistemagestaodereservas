@@ -1,21 +1,26 @@
 using GestaoReservas.Models;
 
+// CORREÇÃO: reativa o Repository em memória, conforme TarefaMemoryRepository do professor.
 public class ClienteMemoryRepository : IClienteRepository
 {
     List<Cliente> lista = new List<Cliente>();
+    // CORREÇÃO: IDs distintos são necessários para as rotas Edit, Details e Delete das Views.
+    int proximoId = 1;
 
-    public void Create(Cliente Cliente)
+    public void Create(Cliente cliente)
     {
-        lista.Add(Cliente);
+        // CORREÇÃO: atribui o identificador utilizado pelo CRUD antes de adicionar à lista.
+        cliente.Id = proximoId++;
+        lista.Add(cliente);
     }
 
     public void Delete(int id)
     {
-        foreach(var Cliente in lista)
+        foreach (var item in lista)
         {
-            if(Cliente.Id == id)
+            if (item.Id == id)
             {
-                lista.Remove(Cliente);
+                lista.Remove(item);
                 break;
             }
         }
@@ -26,26 +31,35 @@ public class ClienteMemoryRepository : IClienteRepository
         return lista;
     }
 
-    public Cliente Read(int id)
+    public Cliente? Read(int id)
     {
-        Cliente c = null;
-        foreach(var Cliente in lista)
+        Cliente? resultado = null;
+        foreach (var item in lista)
         {
-            if(Cliente.Id == id)
+            if (item.Id == id)
             {
-                c = Cliente;
+                resultado = item;
             }
         }
-        return c;
+        return resultado;
     }
 
-    public void Update(Cliente c)
+    public void Update(Cliente cliente)
     {
-        foreach(var Cliente in lista)
+        foreach (var item in lista)
         {
-            if(Cliente.Id == c.Id)
+            if (item.Id == cliente.Id)
             {
-                Cliente.Telefone = c.Telefone;
+                // CORREÇÃO: atualiza nome, CPF, e-mail e telefone que a View de edição envia.
+                item.Nome = cliente.Nome;
+                item.Cpf = cliente.Cpf;
+                item.EmailPessoal = cliente.EmailPessoal;
+                item.Telefone = cliente.Telefone;
+                // CORREÇÃO: a View Edit permite senha em branco; conserva a senha atual nesse caso.
+                if (cliente.Senha != null && cliente.Senha != "")
+                {
+                    item.Senha = cliente.Senha;
+                }
             }
         }
     }
