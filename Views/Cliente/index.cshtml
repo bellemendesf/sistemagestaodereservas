@@ -1,46 +1,394 @@
-@model List<Cliente>
-@* View Index de Cliente: apresenta os campos do DER via model MVC.
-   As alterações passam pelo controller e pela interface do repositório. *@
+
+@model List<GestaoReservas.Models.Cliente>
+
+@{
+    ViewData["Title"] = "Clientes";
+    Layout = null;
+    var lista = Model ?? new List<GestaoReservas.Models.Cliente>();
+}
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index - Cliente</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="container py-4">
-    <nav class="mb-4">
-        <a href="/Cliente/Index">Clientes</a> |
-        <a href="/Funcionario/Index">Funcionários</a> |
-        <a href="/Home/Index">Home</a>
-    </nav>
-    <h1>Clientes</h1>
-    <a href="/Cliente/Create" class="btn btn-primary mb-3">Novo cadastro</a>
-    @if (Model.Count == 0)
-    {
-        <p>Nenhum registro cadastrado.</p>
+    <title>@ViewData["Title"]</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/DetalhesEdicao.css" asp-append-version="true">
+
+    <style>
+        .clientes-topo {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        .clientes-contador {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 35px;
+            padding: 7px 14px;
+            border: 1px solid #756442;
+            border-radius: 20px;
+            background: #302C23;
+            color: #E8D5A5;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .clientes-acoes-topo {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 22px;
+        }
+
+        .clientes-botao-novo {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 11px 19px;
+            border: 1px solid #D3B779;
+            border-radius: 8px;
+            background: #D3B779;
+            color: #1F1F1D;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all .2s ease;
+        }
+
+        .clientes-botao-novo:hover {
+            transform: translateY(-1px);
+            border-color: #E8D5A5;
+            background: #E8D5A5;
+            color: #1F1F1D;
+        }
+
+        .clientes-tabela-wrap {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid #49443A;
+            border-radius: 10px;
+        }
+
+        .clientes-tabela {
+            width: 100%;
+            min-width: 850px;
+            border-collapse: collapse;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
+        }
+
+        .clientes-tabela thead {
+            background: #302E28;
+        }
+
+        .clientes-tabela th {
+            padding: 16px 15px;
+            color: #C8C0B1;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-align: left;
+            text-transform: uppercase;
+            white-space: nowrap;
+            border-bottom: 1px solid #49443A;
+        }
+
+        .clientes-tabela td {
+            padding: 16px 15px;
+            color: #F7F3EA;
+            border-bottom: 1px solid #3A3831;
+            vertical-align: middle;
+        }
+
+        .clientes-tabela tbody tr {
+            background: #24231F;
+            transition: background .2s ease;
+        }
+
+    .clientes-tabela {
+        width: 100%;
+        min-width: 0;
+        table-layout: fixed;
+        border-collapse: collapse;
+        font-family: 'Poppins', sans-serif;
+        font-size: 12px;
     }
-    else
-    {
-        <div class="table-responsive">
-        <table class="table table-striped">
-            <thead><tr><th>ID</th><th>Nome</th><th>CPF</th><th>E-mail pessoal</th><th>Telefone</th><th>Ações</th></tr></thead>
-            <tbody>
-            @foreach (Cliente item in Model)
-            {
-                <tr>
-                    <td>@item.Id</td><td>@item.Nome</td><td>@item.Cpf</td><td>@item.EmailPessoal</td><td>@item.Telefone</td>
-                    <td>
-                        <a href="/Cliente/Edit/@item.Id">Editar</a> |
-                        <a href="/Cliente/Details/@item.Id">Detalhes</a> |
-                        <a href="/Cliente/Delete/@item.Id">Excluir</a>
-                    </td>
-                </tr>
+
+    .clientes-tabela th,
+    .clientes-tabela td {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .clientes-tabela-wrap {
+    width: 100%;
+    overflow-x: hidden;
+    border: 1px solid #49443A;
+    border-radius: 10px;
+}
+
+        .cliente-id {
+            color: #A9A294 !important;
+            white-space: nowrap;
+        }
+
+        .cliente-nome {
+            color: #E8D5A5 !important;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .cliente-email {
+            overflow-wrap: anywhere;
+        }
+
+        .cliente-acoes {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .cliente-acoes a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 31px;
+            padding: 6px 10px;
+            border: 1px solid #49443A;
+            border-radius: 6px;
+            background: #302E28;
+            color: #E8D5A5;
+            font-size: 10px;
+            font-weight: 500;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: all .2s ease;
+        }
+
+        .cliente-acoes a:hover {
+            border-color: #D3B779;
+            background: #3A352A;
+            color: #FFFFFF;
+        }
+
+        .cliente-acoes a.cliente-excluir {
+            border-color: #633C37;
+            background: #332421;
+            color: #E7A09A;
+        }
+
+        .cliente-acoes a.cliente-excluir:hover {
+            border-color: #B85D53;
+            background: #432925;
+            color: #FFD3CE;
+        }
+
+        .clientes-vazio {
+            padding: 55px 24px;
+            text-align: center;
+        }
+
+        .clientes-vazio-icone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 20px;
+            border: 1px solid #625640;
+            border-radius: 16px;
+            background: #302C23;
+            color: #D3B779;
+            font-family: 'Josefin Sans', sans-serif;
+            font-size: 25px;
+        }
+
+        .clientes-vazio h2 {
+            margin: 0 0 12px;
+            color: #F7F3EA;
+            font-family: 'Josefin Sans', sans-serif;
+            font-size: 25px;
+            font-weight: 600;
+        }
+
+        .clientes-vazio p {
+            max-width: 440px;
+            margin: 0 auto 25px;
+            color: #C8C0B1;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .clientes-rodape {
+            padding: 17px 25px;
+            border-top: 1px solid #49443A;
+            color: #A9A294;
+            font-size: 10px;
+            text-align: center;
+            letter-spacing: .3px;
+        }
+
+        @@media (max-width: 650px) {
+            .clientes-topo {
+                align-items: flex-start;
             }
-            </tbody>
-        </table>
-        </div>
-    }
+
+            .clientes-acoes-topo {
+                justify-content: stretch;
+            }
+
+            .clientes-botao-novo {
+                width: 100%;
+            }
+
+            .clientes-vazio {
+                padding: 40px 20px;
+            }
+        }
+
+    
+
+    </style>
+</head>
+
+<body class="detalhes-edicao-page">
+    <main class="detalhes-edicao-container">
+
+        <section class="detalhes-edicao-card">
+
+            <header class="detalhes-edicao-header">
+                <div class="clientes-topo">
+                    <div>
+                        <p class="detalhes-edicao-kicker">
+                            Santa Massa - Rio Preto
+                        </p>
+
+                        <h1>Clientes</h1>
+
+                        <p class="detalhes-edicao-descricao">
+                            Consulte e gerencie os cadastros dos clientes do restaurante.
+                        </p>
+                    </div>
+
+                    <span class="clientes-contador">
+                        @lista.Count @(lista.Count == 1 ? "cliente cadastrado" : "clientes cadastrados")
+                    </span>
+                </div>
+            </header>
+
+            <div class="detalhes-edicao-conteudo">
+
+                @if (lista.Count == 0)
+                {
+                    <div class="clientes-vazio">
+                        <div class="clientes-vazio-icone">+</div>
+
+                        <h2>Nenhum cliente cadastrado</h2>
+
+                        <p>
+                            Cadastre o primeiro cliente para começar a organizar
+                            os registros do restaurante.
+                        </p>
+
+                        <a asp-controller="Cliente"
+                           asp-action="Create"
+                           class="clientes-botao-novo">
+                            + Novo cadastro
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="clientes-acoes-topo">
+                        <a asp-controller="Cliente"
+                           asp-action="Create"
+                           class="clientes-botao-novo">
+                            + Novo cadastro
+                        </a>
+                    </div>
+
+                    <div class="clientes-tabela-wrap">
+                        <table class="clientes-tabela">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>CPF</th>
+                                    <th>E-mail pessoal</th>
+                                    <th>Telefone</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (Cliente item in lista)
+                                {
+                                    <tr>
+                                        <td class="cliente-id">
+                                            #@item.Id
+                                        </td>
+
+                                        <td class="cliente-nome">
+                                            @item.Nome
+                                        </td>
+
+                                        <td>@item.Cpf</td>
+
+                                        <td class="cliente-email">
+                                            @item.EmailPessoal
+                                        </td>
+
+                                        <td>@item.Telefone</td>
+
+                                        <td>
+                                            <div class="cliente-acoes">
+                                                <a asp-controller="Cliente"
+                                                   asp-action="Edit"
+                                                   asp-route-id="@item.Id">
+                                                    Editar
+                                                </a>
+
+                                                <a asp-controller="Cliente"
+                                                   asp-action="Details"
+                                                   asp-route-id="@item.Id">
+                                                    Detalhes
+                                                </a>
+
+                                                <a asp-controller="Cliente"
+                                                   asp-action="Delete"
+                                                   asp-route-id="@item.Id"
+                                                   class="cliente-excluir">
+                                                    Excluir
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+
+            </div>
+
+            <footer class="clientes-rodape">
+                Santa Massa - Painel de gerenciamento
+            </footer>
+
+        </section>
+    </main>
 </body>
 </html>

@@ -1,6 +1,6 @@
 using GestaoReservas.Models;
 
-// CORREÇÃO: reativa o Repository em memória, conforme TarefaMemoryRepository do professor.
+// CORREÇÃO: reativa o Repository em memória.
 public class AmbienteMemoryRepository : IAmbienteRepository
 {
     List<Ambiente> lista = new List<Ambiente>();

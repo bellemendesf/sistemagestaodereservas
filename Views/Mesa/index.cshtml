@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>@ViewData["Title"] | Santa Massa</title>
+    <title>@ViewData["Title"]</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
           rel="stylesheet">
@@ -82,6 +82,7 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Número da mesa</th>
+                                    <th>Ambiente</th>
                                     <th>Lugares</th>
                                     <th>Status</th>
                                     <th>Ações</th>
@@ -107,7 +108,7 @@
                                         <td class="mesa-numero">
                                             Mesa @mesa.Numero
                                         </td>
-
+                                        <td>@mesa.AmbienteNome</td>
                                         <td>
                                             @mesa.QtdLugares @(mesa.QtdLugares == 1 ? "lugar" : "lugares")
                                         </td>

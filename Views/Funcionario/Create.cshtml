@@ -1,3 +1,4 @@
+
 @model Funcionario
 
 @{
@@ -11,14 +12,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>@ViewData["Title"] | Santa Massa</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-          rel="stylesheet">
+    <title>@ViewData["Title"]</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap"
           rel="stylesheet">
 
@@ -26,126 +23,102 @@
 </head>
 
 <body class="cadastro-page">
-
     <main class="cadastro-container">
 
-        <nav class="cadastro-nav">
-            <a asp-controller="Home" asp-action="Index">
-                ← Página inicial
-            </a>
-
-            <div>
-                <a asp-controller="Cliente" asp-action="Index">Clientes</a>
-                <span class="text-secondary"> · </span>
-                <a asp-controller="Funcionario" asp-action="Index">
-                    Funcionários
-                </a>
-            </div>
-        </nav>
+        <a class="cadastro-voltar-topo"
+           asp-controller="AreaRestaurante"
+           asp-action="Index">
+            ← Voltar ao painel
+        </a>
 
         <section class="cadastro-card">
 
-            <p class="cadastro-subtitulo">Santa Massa · Área administrativa</p>
+            <header class="cadastro-header">
+                <img src="~/images/logosantamassa.jpg"
+                     alt="Santa Massa"
+                     class="cadastro-logo">
 
-            <h1>Novo funcionário</h1>
+                <p class="cadastro-subtitulo">SANTA MASSA · EQUIPE</p>
 
-            <p class="cadastro-descricao">
-                Preencha os dados para cadastrar um funcionário
-                no sistema do restaurante.
-            </p>
+                <h1>Novo funcionário</h1>
 
-            @Html.ValidationSummary(
-                false,
-                "",
-                new { @class = "cadastro-erros" }
-            )
+                <p class="cadastro-descricao">
+                    Preencha os dados do funcionário para realizar o cadastro.
+                </p>
+            </header>
 
-            <form action="/Funcionario/Create"
-                  method="POST"
+            @Html.ValidationSummary(false, "", new { @class = "cadastro-erros" })
+
+            <form asp-controller="Funcionario"
+                  asp-action="Create"
+                  method="post"
                   class="cadastro-form">
 
                 @Html.AntiForgeryToken()
 
-                <div class="mb-3">
-                    <label for="Nome" class="form-label">Nome completo</label>
+                <div class="campo-cadastro">
+                    <label for="Nome">Nome completo</label>
                     <input id="Nome"
                            name="Nome"
                            type="text"
-                           value="@Model.Nome"
-                           class="form-control"
-                           placeholder="Digite o nome completo"
+                           value="@Model?.Nome"
+                           placeholder="Nome completo"
                            autocomplete="name"
                            required>
                 </div>
 
-                <div class="mb-3">
-                    <label for="Cpf" class="form-label">CPF</label>
+                <div class="campo-cadastro">
+                    <label for="Cpf">CPF</label>
                     <input id="Cpf"
                            name="Cpf"
                            type="text"
-                           value="@Model.Cpf"
-                           class="form-control"
+                           value="@Model?.Cpf"
                            placeholder="Digite o CPF"
                            autocomplete="off"
                            required>
                 </div>
 
-                <div class="mb-3">
-                    <label for="EmailPessoal" class="form-label">
-                        E-mail pessoal
-                    </label>
-                    <input id="EmailPessoal"
-                           name="EmailPessoal"
-                           type="email"
-                           value="@Model.EmailPessoal"
-                           class="form-control"
-                           placeholder="voce@exemplo.com"
-                           autocomplete="email"
-                           required>
-                </div>
-
-                <div class="mb-3">
-                    <label for="EmailInstitucional" class="form-label">
-                        E-mail institucional
-                    </label>
+                <div class="campo-cadastro">
+                    <label for="EmailInstitucional">E-mail institucional</label>
                     <input id="EmailInstitucional"
                            name="EmailInstitucional"
                            type="email"
-                           value="@Model.EmailInstitucional"
-                           class="form-control"
-                           placeholder="Digite o e-mail institucional"
-                           autocomplete="off"
+                           value="@Model?.EmailInstitucional"
+                           placeholder="nome@santamassa.com.br"
+                           autocomplete="email"
+                           maxlength="50"
                            required>
                 </div>
 
-                <div class="mb-3">
-                    <label for="Senha" class="form-label">Senha</label>
+                <div class="campo-cadastro">
+                    <label for="Senha">Senha</label>
                     <input id="Senha"
                            name="Senha"
                            type="password"
-                           class="form-control"
                            placeholder="Crie uma senha"
                            autocomplete="new-password"
                            required>
                 </div>
 
                 <div class="cadastro-botoes">
-                    <button type="submit"
-                            class="btn-cadastro btn-cadastro-salvar">
+                    <button type="submit" class="btn-cadastro-salvar">
                         Cadastrar funcionário
                     </button>
 
-                    <a asp-controller="Home"
+                    <a asp-controller="AreaRestaurante"
                        asp-action="Index"
-                       class="btn-cadastro btn-cadastro-voltar">
-                        Voltar
+                       class="btn-cadastro-voltar">
+                        Cancelar
                     </a>
                 </div>
 
             </form>
         </section>
 
-    </main>
+        <footer class="cadastro-rodape">
+            Santa Massa · Rio Preto
+        </footer>
 
+    </main>
 </body>
 </html>

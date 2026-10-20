@@ -33,7 +33,7 @@ public class ReservaController : Controller
         }
         catch (SqlException)
         {
-            ModelState.AddModelError("", "Não foi possível cadastrar. Verifique CPF, telefone, mesa e funcionário cadastrados e a conexão com o banco.");
+            ModelState.AddModelError("", "Não foi possível cadastrar. Verifique CPF, telefone, e mesa cadastrados e a conexão com o banco.");
             return View(model);
         }
     }
@@ -57,12 +57,11 @@ public class ReservaController : Controller
         model.Id = id;
         model.Cliente = original.Cliente;
         model.ClienteId = original.ClienteId;
-        model.FuncionarioID = original.FuncionarioID;
         model.Status = original.Status;
         // Esses dados não fazem parte da edição pelo cliente.
         foreach (var key in ModelState.Keys.Where(k =>
             k == "Id" || k == "Cliente" || k.StartsWith("Cliente.") ||
-            k == "ClienteId" || k == "FuncionarioID" || k == "Status").ToList())
+            k == "ClienteId" || k == "Status").ToList())
             ModelState.Remove(key);
         if (model.DataHora == default)
             ModelState.AddModelError(nameof(model.DataHora), "Informe a data e hora.");

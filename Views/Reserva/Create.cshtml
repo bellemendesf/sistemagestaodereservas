@@ -39,10 +39,7 @@
                     <label asp-for="MesaId">Número da mesa</label>
                     <input asp-for="MesaId" type="number" min="1" />
                 </div>
-                <div class="field">
-                    <label asp-for="FuncionarioID">Funcionário responsável</label>
-                    <input asp-for="FuncionarioID" type="number" min="1" />
-                </div>
+        
                 <div class="field">
                     <label asp-for="DataHora">Data e hora</label>
                     <input asp-for="DataHora" type="datetime-local" value="@(Model.DataHora == default ? "" : Model.DataHora.ToString("yyyy-MM-ddTHH:mm"))" />

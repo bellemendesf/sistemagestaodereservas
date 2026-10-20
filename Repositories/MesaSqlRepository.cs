@@ -29,42 +29,53 @@ public class MesaSqlRepository : DataConnection, IMesaRepository
         }
     }
 
-    public List<Mesa> Read()
+public List<Mesa> Read()
+{
+    var mesas = new List<Mesa>();
+
+    using (var cmd = new SqlCommand())
     {
-        var mesas = new List<Mesa>();
+        cmd.Connection = conn;
+        cmd.CommandText = @"
+            SELECT
+                m.nr,
+                m.qtd_lugares,
+                m.status,
+                COALESCE(m.codigo_ambientes, 0),
+                COALESCE(a.nome, 'Sem ambiente')
+            FROM mesas m
+            LEFT JOIN ambientes a
+                ON m.codigo_ambientes = a.codigo
+            ORDER BY m.nr;";
 
-        using (var cmd = new SqlCommand())
+        conn.Open();
+
+        try
         {
-            cmd.Connection = conn;
-            cmd.CommandText = @"SELECT nr, qtd_lugares, status, COALESCE(codigo_ambientes, 0) FROM mesas";
-
-            conn.Open();
-            try
+            using (SqlDataReader reader = cmd.ExecuteReader())
             {
-                using (SqlDataReader reader = cmd.ExecuteReader())
+                while (reader.Read())
                 {
-                    while (reader.Read())
+                    mesas.Add(new Mesa
                     {
-                        mesas.Add(new Mesa
-                        {
-                            Id = reader.GetInt32(0),
-                            Numero = reader.GetInt32(0),
-                            QtdLugares = reader.GetInt32(1),
-                            Status = reader.GetString(2),
-                            AmbienteId = reader.GetInt32(3)
-                        });
-                    }
+                        Id = reader.GetInt32(0),
+                        Numero = reader.GetInt32(0),
+                        QtdLugares = reader.GetInt32(1),
+                        Status = reader.GetString(2),
+                        AmbienteId = reader.GetInt32(3),
+                        AmbienteNome = reader.GetString(4)
+                    });
                 }
             }
-            finally
-            {
-                conn.Close();
-            }
         }
-
-        return mesas;
+        finally
+        {
+            conn.Close();
+        }
     }
 
+    return mesas;
+}
     public Mesa? Read(int id)
     {
         Mesa? mesa = null;
@@ -102,28 +113,37 @@ public class MesaSqlRepository : DataConnection, IMesaRepository
         return mesa;
     }
 
-    public void Update(Mesa mesa)
+   public void Update(Mesa mesa)
+{
+    using (var cmd = new SqlCommand())
     {
-        using (var cmd = new SqlCommand())
-        {
-            cmd.Connection = conn;
-            cmd.CommandText = @"UPDATE mesas SET nr = @Numero, qtd_lugares = @QtdLugares, status = @Status WHERE nr = @Id;";
-            cmd.Parameters.AddWithValue("@Numero", mesa.Numero);
-            cmd.Parameters.AddWithValue("@QtdLugares", mesa.QtdLugares);
-            cmd.Parameters.AddWithValue("@Status", mesa.Status);
-            cmd.Parameters.AddWithValue("@Id", mesa.Id);
+        cmd.Connection = conn;
+        cmd.CommandText = @"
+            UPDATE mesas
+            SET nr = @Numero,
+                qtd_lugares = @QtdLugares,
+                status = @Status,
+                codigo_ambientes = @AmbienteId
+            WHERE nr = @Id;";
 
-            conn.Open();
-            try
-            {
-                cmd.ExecuteNonQuery();
-            }
-            finally
-            {
-                conn.Close();
-            }
+        cmd.Parameters.AddWithValue("@Numero", mesa.Numero);
+        cmd.Parameters.AddWithValue("@QtdLugares", mesa.QtdLugares);
+        cmd.Parameters.AddWithValue("@Status", mesa.Status);
+        cmd.Parameters.AddWithValue("@AmbienteId", mesa.AmbienteId);
+        cmd.Parameters.AddWithValue("@Id", mesa.Id);
+
+        conn.Open();
+
+        try
+        {
+            cmd.ExecuteNonQuery();
+        }
+        finally
+        {
+            conn.Close();
         }
     }
+}
 
     public void Delete(int id)
     {

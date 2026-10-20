@@ -9,15 +9,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>@ViewData["Title"] - Santa Massa</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap"
+          rel="stylesheet">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
           rel="stylesheet">
-    <link rel="stylesheet" href="~/css/Areas.css" asp-append-version="true">
+
+    <link rel="stylesheet"
+          href="~/css/Areas.css"
+          asp-append-version="true">
 </head>
+
 <body class="area-page">
     <main class="area-container">
-        <a asp-controller="Home" asp-action="Index" class="back-link">
+
+        <a asp-controller="Home"
+           asp-action="Index"
+           class="back-link">
             ← Voltar ao início
         </a>
 
@@ -26,48 +40,72 @@
                  alt="Logo Santa Massa"
                  class="area-logo">
 
-            <p class="area-kicker">SANTA MASSA · RIO PRETO</p>
+            <p class="area-kicker">
+                SANTA MASSA · RIO PRETO
+            </p>
+
             <h1>Área do Cliente</h1>
-            <p>O que você deseja fazer hoje?</p>
+
+            <p>Como podemos ajudar você?</p>
         </header>
 
-        <section class="area-grid">
+        <section class="area-grid"
+                 aria-label="Opções do cliente">
+
             <a asp-controller="Cliente"
                asp-action="Create"
                class="area-card">
-                <span class="area-icon">♙</span>
-                <h2>Cadastrar-se</h2>
+
+                <div>
+                    <h2>Meu cadastro</h2>
+                    <p>Cadastre seus dados para utilizar o sistema.</p>
+                </div>
+
                 <span class="card-link">Fazer cadastro</span>
             </a>
 
             <a asp-controller="Reserva"
                asp-action="Create"
                class="area-card">
-                <span class="area-icon">＋</span>
-                <h2>Fazer reserva</h2>
+
+                <div>
+                    <h2>Fazer uma reserva</h2>
+                    <p>Organize sua próxima visita ao restaurante.</p>
+                </div>
+
                 <span class="card-link">Nova reserva</span>
             </a>
 
             <a asp-controller="Reserva"
                asp-action="Index"
                class="area-card">
-                <span class="area-icon">▤</span>
-                <h2>Consultar reservas</h2>
-                <span class="card-link">Ver reservas</span>
+
+                <div>
+                    <h2>Minhas reservas</h2>
+                    <p>Consulte as reservas disponíveis no sistema.</p>
+                </div>
+
+                <span class="card-link">Consultar</span>
             </a>
 
             <a asp-controller="Reserva"
                asp-action="Index"
                class="area-card">
-                <span class="area-icon">×</span>
-                <h2>Cancelar reserva</h2>
-                <span class="card-link">Gerenciar cancelamento</span>
+
+                <div>
+                    <h2>Cancelar uma reserva</h2>
+                    <p>Acesse suas reservas para verificar as opções de cancelamento.</p>
+                </div>
+
+                <span class="card-link">Ver reservas</span>
             </a>
+
         </section>
 
         <footer class="area-footer">
-            Santa Massa · Uma boa experiência começa com uma reserva.
+            Santa Massa · São José do Rio Preto
         </footer>
+
     </main>
 </body>
 </html>

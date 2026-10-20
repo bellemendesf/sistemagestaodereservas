@@ -1,3 +1,4 @@
+
 @using GestaoReservas.Models
 @model IEnumerable<Ambiente>
 
@@ -26,71 +27,101 @@
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 18px;
         }
 
         .ambientes-contador {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 36px;
-            padding: 7px 12px;
+            min-height: 35px;
+            padding: 7px 14px;
+            border: 1px solid #756442;
             border-radius: 20px;
-            background: #FFF2A8;
-            color: #1F1F1F;
-            font-size: 12px;
-            font-weight: 700;
+            background: #302C23;
+            color: #E8D5A5;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
         }
 
         .ambientes-tabela-wrap {
-            overflow-x: auto;
             width: 100%;
+            overflow-x: auto;
+            border: 1px solid #49443A;
+            border-radius: 10px;
         }
 
         .ambientes-tabela {
             width: 100%;
+            min-width: 650px;
             border-collapse: collapse;
-            font-size: 13px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
         }
 
         .ambientes-tabela thead {
-            background: #FFFCF4;
+            background: #302E28;
         }
 
         .ambientes-tabela th {
-            padding: 15px 13px;
-            color: #77736A;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: .5px;
+            padding: 16px 15px;
+            color: #C8C0B1;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
             text-align: left;
             text-transform: uppercase;
             white-space: nowrap;
-            border-bottom: 1px solid #E9E1CF;
+            border-bottom: 1px solid #49443A;
         }
 
         .ambientes-tabela td {
-            padding: 16px 13px;
-            border-bottom: 1px solid #F0EBDD;
+            padding: 17px 15px;
+            color: #F7F3EA;
+            border-bottom: 1px solid #3A3831;
             vertical-align: middle;
         }
 
+        .ambientes-tabela tbody tr {
+            background: #24231F;
+            transition: background .2s ease;
+        }
+
         .ambientes-tabela tbody tr:hover {
-            background: #FFFCF4;
+            background: #2D2B26;
+        }
+
+        .ambientes-tabela tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ambiente-id {
+            color: #A9A294 !important;
+            font-size: 11px;
         }
 
         .ambiente-nome {
+            color: #E8D5A5 !important;
             font-weight: 600;
         }
 
+        .ambiente-capacidade {
+            color: #E4DED2 !important;
+            white-space: nowrap;
+        }
+
         .ambiente-status {
-            display: inline-block;
-            padding: 5px 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 10px;
+            border: 1px solid #756442;
             border-radius: 20px;
-            background: #E8F5E9;
-            color: #2E7D32;
-            font-size: 11px;
-            font-weight: 700;
+            background: #302C23;
+            color: #E8D5A5;
+            font-size: 10px;
+            font-weight: 600;
             white-space: nowrap;
         }
 
@@ -98,39 +129,48 @@
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 12px;
+            gap: 7px;
         }
 
         .ambiente-acoes a {
-            color: #2E7D32;
-            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 31px;
+            padding: 6px 10px;
+            border: 1px solid #49443A;
+            border-radius: 6px;
+            background: #302E28;
+            color: #E8D5A5;
+            font-size: 10px;
+            font-weight: 500;
             text-decoration: none;
             white-space: nowrap;
+            transition: all .2s ease;
         }
 
         .ambiente-acoes a:hover {
-            text-decoration: underline;
+            border-color: #D3B779;
+            background: #3A352A;
+            color: #FFFFFF;
         }
 
-        .ambiente-acoes .ambiente-excluir {
-            color: #B42318;
+        .ambiente-acoes a.ambiente-excluir {
+            border-color: #633C37;
+            background: #332421;
+            color: #E7A09A;
         }
 
-        .ambientes-vazio {
-            padding: 35px 18px;
-            text-align: center;
+        .ambiente-acoes a.ambiente-excluir:hover {
+            border-color: #B85D53;
+            background: #432925;
+            color: #FFD3CE;
         }
 
-        .ambientes-vazio h2 {
-            margin: 0 0 10px;
-            font-family: "Josefin Sans", sans-serif;
-            font-size: 23px;
-        }
-
-        .ambientes-vazio p {
-            margin: 0 0 22px;
-            color: #77736A;
-            font-size: 13px;
+        .ambientes-acoes-topo {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 22px;
         }
 
         .ambientes-botao-novo {
@@ -138,31 +178,91 @@
             align-items: center;
             justify-content: center;
             min-height: 44px;
-            padding: 12px 18px;
-            border-radius: 9px;
-            background: #2E7D32;
-            color: white;
-            font-size: 13px;
+            padding: 11px 19px;
+            border: 1px solid #D3B779;
+            border-radius: 8px;
+            background: #D3B779;
+            color: #1F1F1D;
+            font-family: 'Poppins', sans-serif;
+            font-size: 12px;
             font-weight: 600;
             text-decoration: none;
-            transition: background .2s;
+            transition: all .2s ease;
         }
 
         .ambientes-botao-novo:hover {
-            background: #256628;
-            color: white;
+            transform: translateY(-1px);
+            border-color: #E8D5A5;
+            background: #E8D5A5;
+            color: #1F1F1D;
+            box-shadow: 0 5px 14px rgb(0 0 0 / 20%);
         }
 
-        .ambientes-rodape {
-            padding: 17px 32px;
-            border-top: 1px solid #E9E1CF;
-            color: #77736A;
-            font-size: 12px;
+        .ambientes-vazio {
+            padding: 55px 24px;
             text-align: center;
         }
 
+        .ambientes-vazio h2 {
+            margin: 0 0 12px;
+            color: #F7F3EA;
+            font-family: 'Josefin Sans', sans-serif;
+            font-size: 25px;
+            font-weight: 600;
+        }
+
+        .ambientes-vazio p {
+            max-width: 440px;
+            margin: 0 auto 25px;
+            color: #C8C0B1;
+            font-size: 12px;
+            line-height: 1.8;
+        }
+
+        .ambientes-vazio-icone {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 58px;
+            height: 58px;
+            margin: 0 auto 20px;
+            border: 1px solid #625640;
+            border-radius: 16px;
+            background: #302C23;
+            color: #D3B779;
+            font-family: 'Josefin Sans', sans-serif;
+            font-size: 25px;
+        }
+
+        .ambientes-rodape {
+            padding: 17px 25px;
+            border-top: 1px solid #49443A;
+            color: #A9A294;
+            font-size: 10px;
+            text-align: center;
+            letter-spacing: .3px;
+        }
+
         @@media (max-width: 650px) {
-            .ambientes-tabela { min-width: 650px; }
+            .ambientes-topo {
+                align-items: flex-start;
+            }
+
+            .ambientes-contador {
+                margin-top: 3px;
+            }
+
+            .ambientes-acoes-topo {
+                justify-content: stretch;
+            }
+
+            .ambientes-botao-novo {
+                width: 100%;
+            }
+
+            .ambientes-vazio {
+                padding: 40px 20px;
+            }
         }
     </style>
 </head>
@@ -193,30 +293,33 @@
                     </div>
 
                     <span class="ambientes-contador">
-                        @lista.Count @(lista.Count == 1 ? "ambiente" : "ambientes")
+                        @lista.Count @(lista.Count == 1 ? "ambiente cadastrado" : "ambientes cadastrados")
                     </span>
                 </div>
             </header>
 
-            @if (!lista.Any())
-            {
-                <div class="ambientes-vazio">
-                    <h2>Nenhum ambiente cadastrado</h2>
+            <div class="detalhes-edicao-conteudo">
 
-                    <p>
-                        Cadastre o primeiro ambiente para começar a organizar os espaços do restaurante.
-                    </p>
+                @if (!lista.Any())
+                {
+                    <div class="ambientes-vazio">
+                        <div class="ambientes-vazio-icone">+</div>
 
-                    <a asp-action="Create" class="ambientes-botao-novo">
-                        + Cadastrar ambiente
-                    </a>
-                </div>
-            }
-            else
-            {
-                <div class="detalhes-edicao-conteudo">
+                        <h2>Nenhum ambiente cadastrado</h2>
 
-                    <div style="margin-bottom: 22px;">
+                        <p>
+                            Cadastre o primeiro ambiente para organizar os espaços
+                            e facilitar a distribuição das mesas do restaurante.
+                        </p>
+
+                        <a asp-action="Create" class="ambientes-botao-novo">
+                            + Cadastrar ambiente
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="ambientes-acoes-topo">
                         <a asp-action="Create" class="ambientes-botao-novo">
                             + Cadastrar ambiente
                         </a>
@@ -238,13 +341,15 @@
                                 @foreach (var ambiente in lista)
                                 {
                                     <tr>
-                                        <td>#@ambiente.Id</td>
+                                        <td class="ambiente-id">
+                                            #@ambiente.Id
+                                        </td>
 
                                         <td class="ambiente-nome">
                                             @ambiente.Nome
                                         </td>
 
-                                        <td>
+                                        <td class="ambiente-capacidade">
                                             @ambiente.Capacidade
                                             @(ambiente.Capacidade == 1 ? "pessoa" : "pessoas")
                                         </td>
@@ -281,8 +386,9 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-            }
+                }
+
+            </div>
 
             <footer class="ambientes-rodape">
                 Santa Massa · Painel de gerenciamento

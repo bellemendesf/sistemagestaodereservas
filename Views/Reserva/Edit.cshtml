@@ -12,7 +12,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewData["Title"] - Santa Massa</title>
+    <title>@ViewData["Title"]</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,15 +40,11 @@
                     <div asp-validation-summary="All" class="detalhes-edicao-erros"></div>
 
                     <div class="detalhes-edicao-campo">
-                        <label asp-for="MesaId">Número da mesa</label>
-                        <input asp-for="MesaId" type="number" min="1" readonly="@restaurante" />
-                        <span asp-validation-for="MesaId" class="detalhes-edicao-erros"></span>
-                    </div>
-
-                    <div class="detalhes-edicao-campo">
-                        <label asp-for="FuncionarioID">Funcionário responsável</label>
-                        <input asp-for="FuncionarioID" type="number" min="1" readonly />
-                        <span asp-validation-for="FuncionarioID" class="detalhes-edicao-erros"></span>
+                        <label>Número da mesa</label>
+                        <input type="text" value="Mesa @Model.MesaId" readonly />
+                        <small class="detalhes-edicao-ajuda">
+                            O número da mesa não pode ser alterado.
+                        </small>
                     </div>
 
                     <div class="detalhes-edicao-campo">
@@ -63,11 +59,19 @@
                         <span asp-validation-for="QtdPessoas" class="detalhes-edicao-erros"></span>
                     </div>
 
-                    <div class="detalhes-edicao-campo">
-                        <label asp-for="Status">Status da reserva</label>
-                        <input asp-for="Status" readonly="@(!restaurante)" placeholder="Ex.: Pendente, Confirmada ou Cancelada" />
-                        <span asp-validation-for="Status" class="detalhes-edicao-erros"></span>
-                    </div>
+
+<div class="detalhes-edicao-campo">
+    <label asp-for="Status">Status da mesa</label>
+
+    <select asp-for="Status">
+        <option value="Livre">Livre</option>
+        <option value="Reservada">Reservada</option>
+        <option value="Ocupada">Ocupada</option>
+    </select>
+
+    <span asp-validation-for="Status" class="detalhes-edicao-erros"></span>
+</div>
+
 
                     <div class="detalhes-edicao-acoes">
                         <button type="submit"

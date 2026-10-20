@@ -1,11 +1,10 @@
 
 :root {
-    --creme: #FFF8E1;
-    --creme-escuro: #F3E4B8;
-    --amarelo: #F4D000;
-    --preto: #1F1F1F;
-    --verde: #2E7D32;
-    --verde-hover: #256628;
+    --preto: #0B0B0B;
+    --dourado: #C6A45C;
+    --dourado-suave: rgba(198, 164, 92, 0.28);
+    --branco: #F5F1E8;
+    --cinza: #B7B1A5;
 }
 
 * {
@@ -15,133 +14,226 @@
 body.area-page {
     margin: 0;
     min-height: 100vh;
-    background: var(--creme);
-    color: var(--preto);
+    background:
+        radial-gradient(
+            ellipse at 50% 0%,
+            #1B1914 0%,
+            var(--preto) 58%
+        );
+    color: var(--branco);
     font-family: "Poppins", Arial, sans-serif;
 }
 
+/* Conteúdo */
 .area-container {
-    width: min(1100px, 92%);
+    width: min(760px, 90%);
     margin: 0 auto;
-    padding: 28px 0 24px;
+    padding: 28px 0 32px;
 }
 
+/* Voltar */
 .back-link {
-    color: var(--verde);
+    display: inline-block;
+    color: var(--cinza);
+    font-size: 0.85rem;
     text-decoration: none;
-    font-weight: 600;
+    transition: color 0.2s ease;
 }
 
 .back-link:hover {
-    color: var(--verde-hover);
-    text-decoration: underline;
+    color: var(--dourado);
 }
 
+/* Cabeçalho */
 .area-header {
+    padding: 35px 0 32px;
     text-align: center;
-    padding: 35px 0 30px;
 }
 
 .area-logo {
-    width: 100px;
-    height: 100px;
+    display: block;
+    width: 105px;
+    height: 105px;
     object-fit: contain;
-    margin-bottom: 12px;
-    border-radius: 12px;
+    margin: 0 auto 20px;
 }
 
 .area-kicker {
-    color: var(--verde);
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    margin-bottom: 10px;
+    margin: 0 0 14px;
+    color: var(--dourado);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
 }
 
 .area-header h1 {
-    font-size: clamp(2rem, 5vw, 3rem);
-    font-weight: 700;
-    margin-bottom: 12px;
+    margin: 0 0 12px;
+    color: var(--branco);
+    font-family: "Josefin Sans", sans-serif;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 600;
+    line-height: 1.2;
 }
 
 .area-header > p:last-child {
-    color: #625D50;
-    margin-bottom: 0;
+    margin: 0;
+    color: var(--cinza);
+    font-size: 0.92rem;
+    line-height: 1.7;
 }
 
+/* Detalhe dourado discreto */
+.area-header::after {
+    content: "";
+    display: block;
+    width: 48px;
+    height: 1px;
+    margin: 25px auto 0;
+    background: var(--dourado);
+}
+
+/* Lista de opções */
 .area-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
-}
-
-.area-card {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    min-height: 220px;
-    padding: 25px;
-    border: 1px solid var(--creme-escuro);
-    border-radius: 18px;
-    background: #FFFCF4;
-    color: var(--preto);
+    width: 100%;
+    gap: 0;
+}
+
+/* Cada opção funciona como um link */
+.area-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 20px;
+    padding: 23px 10px;
+    border: none;
+    border-bottom: 1px solid var(--dourado-suave);
+    border-radius: 0;
+    background: transparent;
+    color: var(--branco);
     text-decoration: none;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: background-color 0.2s ease;
+}
+
+.area-card:first-child {
+    border-top: 1px solid var(--dourado-suave);
 }
 
 .area-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 10px 24px rgba(31, 31, 31, 0.09);
-    border-color: var(--amarelo);
-    color: var(--preto);
+    background: rgba(198, 164, 92, 0.045);
+    color: var(--branco);
 }
 
+/* Não usamos ícones nas opções */
 .area-icon {
-    display: grid;
-    place-items: center;
-    width: 44px;
-    height: 44px;
-    margin-bottom: 16px;
-    border-radius: 12px;
-    background: var(--amarelo);
-    font-size: 1.5rem;
-    font-weight: 700;
+    display: none;
 }
 
+/* Título e descrição */
 .area-card h2 {
-    font-size: 1.2rem;
-    font-weight: 700;
+    margin: 0 0 7px;
+    color: var(--branco);
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.4;
+    transition: color 0.2s ease;
 }
 
 .area-card p {
-    color: #625D50;
-    line-height: 1.6;
-    margin-bottom: 18px;
+    margin: 0;
+    color: var(--cinza);
+    font-size: 0.85rem;
+    line-height: 1.65;
 }
 
+.area-card:hover h2 {
+    color: var(--dourado);
+}
+
+/* Ação à direita */
 .card-link {
-    margin-top: auto;
-    color: var(--verde);
-    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--dourado);
+    font-size: 0.82rem;
+    white-space: nowrap;
+    transition: color 0.2s ease;
 }
 
+.card-link::after {
+    content: "→";
+    font-size: 1rem;
+}
+
+.area-card:hover .card-link {
+    color: #E1C98F;
+}
+
+/* Foco pelo teclado */
+.area-card:focus-visible,
+.back-link:focus-visible {
+    outline: 1px solid var(--dourado);
+    outline-offset: 4px;
+}
+
+/* Rodapé */
 .area-footer {
     margin-top: 35px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(198, 164, 92, 0.15);
+    color: #898274;
+    font-size: 0.78rem;
+    line-height: 1.7;
     text-align: center;
-    color: #77705F;
-    font-size: 0.85rem;
 }
 
-@media (max-width: 650px) {
-    .area-grid {
-        grid-template-columns: 1fr;
+/* Celulares */
+@media (max-width: 600px) {
+    .area-container {
+        width: 88%;
+        padding-top: 22px;
     }
 
     .area-header {
-        padding-top: 25px;
+        padding: 30px 0 28px;
+    }
+
+    .area-logo {
+        width: 90px;
+        height: 90px;
+    }
+
+    .area-kicker {
+        font-size: 0.66rem;
+        letter-spacing: 0.12em;
     }
 
     .area-card {
-        min-height: 190px;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 10px;
+        padding: 21px 6px;
+    }
+
+    .area-card h2 {
+        font-size: 1.2rem;
+    }
+
+    .card-link {
+        font-size: 0.8rem;
+    }
+
+    .area-footer {
+        margin-top: 28px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
     }
 }

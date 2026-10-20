@@ -1,25 +1,54 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
+
 using GestaoReservas.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 
 public class MesaController : Controller
 {
     private readonly IMesaRepository repository;
+    private readonly IAmbienteRepository ambienteRepository;
 
-    public MesaController(IMesaRepository repository)
+    public MesaController(
+        IMesaRepository repository,
+        IAmbienteRepository ambienteRepository)
     {
         this.repository = repository;
+        this.ambienteRepository = ambienteRepository;
     }
 
-    public ActionResult Index() => View("index", repository.Read());
+    private void CarregarAmbientes(int? selecionado = null)
+    {
+        ViewBag.Ambientes = new SelectList(
+            ambienteRepository.Read(),
+            "Id",
+            "Nome",
+            selecionado
+        );
+    }
+
+    public ActionResult Index()
+    {
+        return View("index", repository.Read());
+    }
 
     [HttpGet]
-    public ActionResult Create() => View(new Mesa());
+    public ActionResult Create()
+    {
+        CarregarAmbientes();
+        return View(new Mesa());
+    }
 
     [HttpPost]
+    [ValidateAntiForgeryToken]
     public ActionResult Create(Mesa model)
     {
-        if (!ModelState.IsValid) return View(model);
+        if (!ModelState.IsValid)
+        {
+            CarregarAmbientes(model.AmbienteId);
+            return View(model);
+        }
+
         try
         {
             repository.Create(model);
@@ -27,27 +56,45 @@ public class MesaController : Controller
         }
         catch (SqlException)
         {
-            ModelState.AddModelError("", "Não foi possível cadastrar. Verifique os dados, duplicidades e a conexão com o banco.");
+            ModelState.AddModelError(
+                "",
+                "Não foi possível cadastrar a mesa. Verifique os dados e o ambiente selecionado."
+            );
+
+            CarregarAmbientes(model.AmbienteId);
             return View(model);
         }
     }
 
     [HttpGet]
-    public ActionResult Edit([FromRoute] int id)
+    public ActionResult Edit(int id)
     {
         var model = repository.Read(id);
-        if (model == null) return NotFound();
+
+        if (model == null)
+            return NotFound();
+
+        CarregarAmbientes(model.AmbienteId);
         return View(model);
     }
 
     [HttpPost]
-    public ActionResult Edit([FromRoute] int id, Mesa model)
+    [ValidateAntiForgeryToken]
+    public ActionResult Edit(int id, Mesa model)
     {
-        // A rota identifica o registro; não permita trocar a identidade pelo formulário.
+        // Preserva o número original, usado para localizar a mesa.
         model.Id = id;
         ModelState.Remove(nameof(model.Id));
-        if (repository.Read(id) == null) return NotFound();
-        if (!ModelState.IsValid) return View(model);
+
+        if (repository.Read(id) == null)
+            return NotFound();
+
+        if (!ModelState.IsValid)
+        {
+            CarregarAmbientes(model.AmbienteId);
+            return View(model);
+        }
+
         try
         {
             repository.Update(model);
@@ -55,7 +102,12 @@ public class MesaController : Controller
         }
         catch (SqlException)
         {
-            ModelState.AddModelError("", "Não foi possível salvar. Verifique os dados, duplicidades e vínculos existentes.");
+            ModelState.AddModelError(
+                "",
+                "Não foi possível salvar. Verifique os dados, o ambiente e os vínculos com reservas."
+            );
+
+            CarregarAmbientes(model.AmbienteId);
             return View(model);
         }
     }
@@ -64,7 +116,10 @@ public class MesaController : Controller
     public ActionResult Details(int id)
     {
         var model = repository.Read(id);
-        if (model == null) return NotFound();
+
+        if (model == null)
+            return NotFound();
+
         return View(model);
     }
 
@@ -72,15 +127,23 @@ public class MesaController : Controller
     public ActionResult Delete(int id)
     {
         var model = repository.Read(id);
-        if (model == null) return NotFound();
+
+        if (model == null)
+            return NotFound();
+
         return View(model);
     }
 
-    [HttpPost, ActionName("Delete")]
-    public ActionResult DeleteConfirmed([FromRoute] int id)
+    [HttpPost]
+    [ActionName("Delete")]
+    [ValidateAntiForgeryToken]
+    public ActionResult DeleteConfirmed(int id)
     {
         var model = repository.Read(id);
-        if (model == null) return NotFound();
+
+        if (model == null)
+            return NotFound();
+
         try
         {
             repository.Delete(id);
@@ -88,7 +151,11 @@ public class MesaController : Controller
         }
         catch (SqlException)
         {
-            ModelState.AddModelError("", "Não foi possível excluir. O cadastro pode estar vinculado a outros registros; verifique também a conexão.");
+            ModelState.AddModelError(
+                "",
+                "Não foi possível excluir. Esta mesa pode estar vinculada a reservas."
+            );
+
             return View("Delete", model);
         }
     }

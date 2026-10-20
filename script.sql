@@ -63,10 +63,8 @@ create table reservas
 	dia			date not null,
 	status		int		     check(status in(0,1,2)),
 	cliente_id int not null,
-	funcionario_id int not null,
 	----Restrições-----
 	foreign key(cliente_id) references clientes(pessoa_id),
-	foreign key(funcionario_id) references funcionarios(pessoa_id)
 )
 go
 

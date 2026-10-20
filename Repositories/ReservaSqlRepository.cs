@@ -21,8 +21,8 @@ public class ReservaSqlRepository : DataConnection, IReservaRepository
                 END;
                 IF NOT EXISTS (SELECT 1 FROM clientes WHERE pessoa_id = @PessoaId)
                     INSERT INTO clientes (pessoa_id, telefone) VALUES (@PessoaId, @Telefone);
-                INSERT INTO reservas (qtd_pessoas, horario, dia, status, cliente_id, funcionario_id)
-                VALUES (@QtdPessoas, CAST(@DataHora AS time), CAST(@DataHora AS date), 0, @PessoaId, @FuncionarioID);
+                INSERT INTO reservas (qtd_pessoas, horario, dia, status, cliente_id,)
+                VALUES (@QtdPessoas, CAST(@DataHora AS time), CAST(@DataHora AS date), 0, @PessoaId);
                 DECLARE @ReservaId int = CAST(SCOPE_IDENTITY() AS INT);
                 INSERT INTO Reservas_Mesas (numero_reservas, nr_mesas) VALUES (@ReservaId, @MesaId);
                 COMMIT TRANSACTION;";
@@ -32,7 +32,6 @@ public class ReservaSqlRepository : DataConnection, IReservaRepository
             cmd.Parameters.AddWithValue("@Telefone", reserva.Cliente.Telefone);
             cmd.Parameters.AddWithValue("@QtdPessoas", reserva.QtdPessoas);
             cmd.Parameters.AddWithValue("@DataHora", reserva.DataHora);
-            cmd.Parameters.AddWithValue("@FuncionarioID", reserva.FuncionarioID);
             cmd.Parameters.AddWithValue("@MesaId", reserva.MesaId);
 
             conn.Open();
@@ -57,7 +56,7 @@ public class ReservaSqlRepository : DataConnection, IReservaRepository
             cmd.CommandText = @"SELECT r.numero, r.qtd_pessoas,
                 DATEADD(SECOND, DATEDIFF(SECOND, CAST('00:00:00' AS time), r.horario), CAST(r.dia AS datetime2)),
                 CASE r.status WHEN 0 THEN 'Pendente' WHEN 1 THEN 'Confirmada' WHEN 2 THEN 'Cancelada' END,
-                rm.nr_mesas, r.cliente_id, r.funcionario_id, p.nome, p.cpf, p.email_pessoal, c.telefone
+                rm.nr_mesas, r.cliente_id, p.nome, p.cpf, p.email_pessoal, c.telefone
                 FROM reservas r
                 INNER JOIN Reservas_Mesas rm ON rm.numero_reservas = r.numero
                 INNER JOIN clientes c ON c.pessoa_id = r.cliente_id
@@ -78,7 +77,6 @@ public class ReservaSqlRepository : DataConnection, IReservaRepository
                             Status = reader.GetString(3),
                             MesaId = reader.GetInt32(4),
                             ClienteId = reader.GetInt32(5),
-                            FuncionarioID = reader.GetInt32(6),
                             Cliente = new Cliente
                             {
                                 Id = reader.GetInt32(5),
@@ -110,7 +108,7 @@ public class ReservaSqlRepository : DataConnection, IReservaRepository
             cmd.CommandText = @"SELECT r.numero, r.qtd_pessoas,
                 DATEADD(SECOND, DATEDIFF(SECOND, CAST('00:00:00' AS time), r.horario), CAST(r.dia AS datetime2)),
                 CASE r.status WHEN 0 THEN 'Pendente' WHEN 1 THEN 'Confirmada' WHEN 2 THEN 'Cancelada' END,
-                rm.nr_mesas, r.cliente_id, r.funcionario_id, p.nome, p.cpf, p.email_pessoal, c.telefone
+                rm.nr_mesas, r.cliente_id, p.nome, p.cpf, p.email_pessoal, c.telefone
                 FROM reservas r
                 INNER JOIN Reservas_Mesas rm ON rm.numero_reservas = r.numero
                 INNER JOIN clientes c ON c.pessoa_id = r.cliente_id
@@ -132,7 +130,6 @@ public class ReservaSqlRepository : DataConnection, IReservaRepository
                             Status = reader.GetString(3),
                             MesaId = reader.GetInt32(4),
                             ClienteId = reader.GetInt32(5),
-                            FuncionarioID = reader.GetInt32(6),
                             Cliente = new Cliente
                             {
                                 Id = reader.GetInt32(5),
