@@ -5,7 +5,7 @@ namespace GestaoReservas.Models;
 public class Ambiente
 {
     public int Id { get; set; }
-    [Required(ErrorMessage = "Informe o nome."), StringLength(50)]
+    [Required(ErrorMessage = "Informe o nome.")]
     public string Nome { get; set; } = "";
     [StringLength(20)]
     public string Status { get; set; } = "";

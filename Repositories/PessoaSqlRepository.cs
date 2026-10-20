@@ -11,10 +11,9 @@ public class PessoaSqlRepository : DataConnection, IPessoaRepository
         using (var cmd = new SqlCommand())
         {
             cmd.Connection = conn;
-            cmd.CommandText = @"INSERT INTO pessoas (nome, cpf, email_pessoal, senha) VALUES (@Nome, @Cpf, @Email_pessoal, @Senha);";
+            cmd.CommandText = @"INSERT INTO pessoas (nome, cpf, senha) VALUES (@Nome, @Cpf, @Senha);";
             cmd.Parameters.AddWithValue("@Nome", pessoa.Nome);
             cmd.Parameters.AddWithValue("@Cpf", pessoa.Cpf);
-            cmd.Parameters.AddWithValue("@Email_pessoal", pessoa.EmailPessoal);
             cmd.Parameters.AddWithValue("@Senha", pessoa.Senha ?? "");
 
             conn.Open();
@@ -36,7 +35,7 @@ public class PessoaSqlRepository : DataConnection, IPessoaRepository
         using (var cmd = new SqlCommand())
         {
             cmd.Connection = conn;
-            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, p.email_pessoal, p.senha FROM pessoas p";
+            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, p.senha FROM pessoas p";
 
             conn.Open();
             try
@@ -50,8 +49,7 @@ public class PessoaSqlRepository : DataConnection, IPessoaRepository
                             Id = reader.GetInt32(0),
                             Nome = reader.GetString(1),
                             Cpf = reader.GetString(2),
-                            EmailPessoal = reader.GetString(3),
-                            Senha = reader.GetString(4)
+                            Senha = reader.GetString(3)
                         });
                     }
                 }
@@ -72,7 +70,7 @@ public class PessoaSqlRepository : DataConnection, IPessoaRepository
         using (var cmd = new SqlCommand())
         {
             cmd.Connection = conn;
-            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, p.email_pessoal, p.senha FROM pessoas p WHERE p.id = @Id";
+            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, p.senha FROM pessoas p WHERE p.id = @Id";
             cmd.Parameters.AddWithValue("@Id", id);
 
             conn.Open();
@@ -87,8 +85,7 @@ public class PessoaSqlRepository : DataConnection, IPessoaRepository
                             Id = reader.GetInt32(0),
                             Nome = reader.GetString(1),
                             Cpf = reader.GetString(2),
-                            EmailPessoal = reader.GetString(3),
-                            Senha = reader.GetString(4)
+                            Senha = reader.GetString(3)
                         };
                     }
                 }
@@ -107,10 +104,9 @@ public class PessoaSqlRepository : DataConnection, IPessoaRepository
         using (var cmd = new SqlCommand())
         {
             cmd.Connection = conn;
-            cmd.CommandText = @"UPDATE pessoas SET nome = @Nome, cpf = @Cpf, email_pessoal = @Email_pessoal, senha = COALESCE(NULLIF(@Senha, ''), senha) WHERE id = @Id;";
+            cmd.CommandText = @"UPDATE pessoas SET nome = @Nome, cpf = @Cpf, senha = COALESCE(NULLIF(@Senha, ''), senha) WHERE id = @Id;";
             cmd.Parameters.AddWithValue("@Nome", pessoa.Nome);
             cmd.Parameters.AddWithValue("@Cpf", pessoa.Cpf);
-            cmd.Parameters.AddWithValue("@Email_pessoal", pessoa.EmailPessoal);
             cmd.Parameters.AddWithValue("@Senha", pessoa.Senha ?? "");
             cmd.Parameters.AddWithValue("@Id", pessoa.Id);
 

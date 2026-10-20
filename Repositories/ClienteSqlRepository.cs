@@ -12,8 +12,8 @@ public class ClienteSqlRepository : DataConnection, IClienteRepository
         {
             cmd.Connection = conn;
             cmd.CommandText = @"SET XACT_ABORT ON; BEGIN TRANSACTION;
-                INSERT INTO pessoas (nome, cpf, email_pessoal, senha) VALUES (@Nome, @Cpf, @Email_pessoal, @Senha);
-                INSERT INTO clientes (pessoa_id, telefone) VALUES (CAST(SCOPE_IDENTITY() AS INT), @Telefone);
+                INSERT INTO pessoas (nome, cpf, senha) VALUES (@Nome, @Cpf,  @Senha);
+                INSERT INTO clientes (pessoa_id, email_pessoal, telefone) VALUES (CAST(SCOPE_IDENTITY() AS INT), @Email_pessoal, @Telefone);
                 COMMIT TRANSACTION;";
             cmd.Parameters.AddWithValue("@Nome", cliente.Nome);
             cmd.Parameters.AddWithValue("@Cpf", cliente.Cpf);
@@ -77,7 +77,7 @@ public class ClienteSqlRepository : DataConnection, IClienteRepository
         using (var cmd = new SqlCommand())
         {
             cmd.Connection = conn;
-            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, p.email_pessoal, p.senha, t.telefone FROM pessoas p INNER JOIN clientes t ON p.id = t.pessoa_id WHERE p.id = @Id";
+            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, c.email_pessoal, p.senha, t.telefone FROM pessoas p INNER JOIN clientes t ON p.id = t.pessoa_id WHERE p.id = @Id";
             cmd.Parameters.AddWithValue("@Id", id);
 
             conn.Open();
@@ -114,8 +114,8 @@ public class ClienteSqlRepository : DataConnection, IClienteRepository
         {
             cmd.Connection = conn;
             cmd.CommandText = @"SET XACT_ABORT ON; BEGIN TRANSACTION;
-                UPDATE pessoas SET nome = @Nome, cpf = @Cpf, email_pessoal = @Email_pessoal, senha = COALESCE(NULLIF(@Senha, ''), senha) WHERE id = @Id;
-                UPDATE clientes SET telefone = @Telefone WHERE pessoa_id = @Id;
+                UPDATE pessoas SET nome = @Nome, cpf = @Cpf, senha = COALESCE(NULLIF(@Senha, ''), senha) WHERE id = @Id;
+                UPDATE clientes SET telefone = @Telefone, email_pessoal = @Email_pessoal, WHERE pessoa_id = @Id;
                 COMMIT TRANSACTION;";
             cmd.Parameters.AddWithValue("@Nome", cliente.Nome);
             cmd.Parameters.AddWithValue("@Cpf", cliente.Cpf);

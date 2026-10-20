@@ -10,7 +10,5 @@ public class Pessoa
     [Required(ErrorMessage = "Informe o CPF."), StringLength(20)]
     public string Cpf { get; set; } = "";
     [StringLength(100)]
-    public string EmailPessoal { get; set; } = "";
-    [StringLength(30)]
     public string Senha { get; set; } = "";
 }

@@ -12,12 +12,11 @@ public class FuncionarioSqlRepository : DataConnection, IFuncionarioRepository
         {
             cmd.Connection = conn;
             cmd.CommandText = @"SET XACT_ABORT ON; BEGIN TRANSACTION;
-                INSERT INTO pessoas (nome, cpf, email_pessoal, senha) VALUES (@Nome, @Cpf, @Email_pessoal, @Senha);
+                INSERT INTO pessoas (nome, cpf, senha) VALUES (@Nome, @Cpf, @Senha);
                 INSERT INTO funcionarios (pessoa_id, email_institucional) VALUES (CAST(SCOPE_IDENTITY() AS INT), @EmailInstitucional);
                 COMMIT TRANSACTION;";
             cmd.Parameters.AddWithValue("@Nome", funcionario.Nome);
             cmd.Parameters.AddWithValue("@Cpf", funcionario.Cpf);
-            cmd.Parameters.AddWithValue("@Email_pessoal", funcionario.EmailPessoal);
             cmd.Parameters.AddWithValue("@Senha", funcionario.Senha ?? "");
             cmd.Parameters.AddWithValue("@EmailInstitucional", funcionario.EmailInstitucional);
 
@@ -40,7 +39,7 @@ public class FuncionarioSqlRepository : DataConnection, IFuncionarioRepository
         using (var cmd = new SqlCommand())
         {
             cmd.Connection = conn;
-            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, p.email_pessoal, p.senha, t.email_institucional FROM pessoas p INNER JOIN funcionarios t ON p.id = t.pessoa_id";
+            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, p.senha, t.email_institucional FROM pessoas p INNER JOIN funcionarios t ON p.id = t.pessoa_id";
 
             conn.Open();
             try
@@ -54,9 +53,8 @@ public class FuncionarioSqlRepository : DataConnection, IFuncionarioRepository
                             Id = reader.GetInt32(0),
                             Nome = reader.GetString(1),
                             Cpf = reader.GetString(2),
-                            EmailPessoal = reader.GetString(3),
-                            Senha = reader.GetString(4),
-                            EmailInstitucional = reader.GetString(5)
+                            Senha = reader.GetString(3),
+                            EmailInstitucional = reader.GetString(4)
                         });
                     }
                 }
@@ -77,7 +75,7 @@ public class FuncionarioSqlRepository : DataConnection, IFuncionarioRepository
         using (var cmd = new SqlCommand())
         {
             cmd.Connection = conn;
-            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, p.email_pessoal, p.senha, t.email_institucional FROM pessoas p INNER JOIN funcionarios t ON p.id = t.pessoa_id WHERE p.id = @Id";
+            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, p.senha, t.email_institucional FROM pessoas p INNER JOIN funcionarios t ON p.id = t.pessoa_id WHERE p.id = @Id";
             cmd.Parameters.AddWithValue("@Id", id);
 
             conn.Open();
@@ -92,9 +90,8 @@ public class FuncionarioSqlRepository : DataConnection, IFuncionarioRepository
                             Id = reader.GetInt32(0),
                             Nome = reader.GetString(1),
                             Cpf = reader.GetString(2),
-                            EmailPessoal = reader.GetString(3),
-                            Senha = reader.GetString(4),
-                            EmailInstitucional = reader.GetString(5)
+                            Senha = reader.GetString(3),
+                            EmailInstitucional = reader.GetString(4)
                         };
                     }
                 }
@@ -114,12 +111,11 @@ public class FuncionarioSqlRepository : DataConnection, IFuncionarioRepository
         {
             cmd.Connection = conn;
             cmd.CommandText = @"SET XACT_ABORT ON; BEGIN TRANSACTION;
-                UPDATE pessoas SET nome = @Nome, cpf = @Cpf, email_pessoal = @Email_pessoal, senha = COALESCE(NULLIF(@Senha, ''), senha) WHERE id = @Id;
+                UPDATE pessoas SET nome = @Nome, cpf = @Cpf, senha = COALESCE(NULLIF(@Senha, ''), senha) WHERE id = @Id;
                 UPDATE funcionarios SET email_institucional = @EmailInstitucional WHERE pessoa_id = @Id;
                 COMMIT TRANSACTION;";
             cmd.Parameters.AddWithValue("@Nome", funcionario.Nome);
             cmd.Parameters.AddWithValue("@Cpf", funcionario.Cpf);
-            cmd.Parameters.AddWithValue("@Email_pessoal", funcionario.EmailPessoal);
             cmd.Parameters.AddWithValue("@Senha", funcionario.Senha ?? "");
             cmd.Parameters.AddWithValue("@EmailInstitucional", funcionario.EmailInstitucional);
             cmd.Parameters.AddWithValue("@Id", funcionario.Id);

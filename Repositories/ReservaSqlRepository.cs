@@ -16,12 +16,12 @@ public class ReservaSqlRepository : DataConnection, IReservaRepository
                 SELECT @PessoaId = id FROM pessoas WITH (UPDLOCK, HOLDLOCK) WHERE cpf = @Cpf;
                 IF @PessoaId IS NULL
                 BEGIN
-                    INSERT INTO pessoas (nome, cpf, email_pessoal, senha) VALUES (@Nome, @Cpf, @Email, '');
+                    INSERT INTO pessoas (nome, cpf, senha) VALUES (@Nome, @Cpf, '');
                     SET @PessoaId = CAST(SCOPE_IDENTITY() AS INT);
                 END;
                 IF NOT EXISTS (SELECT 1 FROM clientes WHERE pessoa_id = @PessoaId)
-                    INSERT INTO clientes (pessoa_id, telefone) VALUES (@PessoaId, @Telefone);
-                INSERT INTO reservas (qtd_pessoas, horario, dia, status, cliente_id,)
+                    INSERT INTO clientes (pessoa_id, email_pessoal, telefone) VALUES (@PessoaId, @Email_institucional, @Telefone);
+                INSERT INTO reservas (qtd_pessoas, horario, dia, status, cliente_id)
                 VALUES (@QtdPessoas, CAST(@DataHora AS time), CAST(@DataHora AS date), 0, @PessoaId);
                 DECLARE @ReservaId int = CAST(SCOPE_IDENTITY() AS INT);
                 INSERT INTO Reservas_Mesas (numero_reservas, nr_mesas) VALUES (@ReservaId, @MesaId);
@@ -80,10 +80,10 @@ public class ReservaSqlRepository : DataConnection, IReservaRepository
                             Cliente = new Cliente
                             {
                                 Id = reader.GetInt32(5),
-                                Nome = reader.GetString(7),
-                                Cpf = reader.GetString(8),
-                                EmailPessoal = reader.GetString(9),
-                                Telefone = reader.GetString(10)
+                                Nome = reader.GetString(6),
+                                Cpf = reader.GetString(7),
+                                EmailPessoal = reader.GetString(8),
+                                Telefone = reader.GetString(9)
                             }
                         });
                     }
@@ -133,10 +133,10 @@ public class ReservaSqlRepository : DataConnection, IReservaRepository
                             Cliente = new Cliente
                             {
                                 Id = reader.GetInt32(5),
-                                Nome = reader.GetString(7),
-                                Cpf = reader.GetString(8),
-                                EmailPessoal = reader.GetString(9),
-                                Telefone = reader.GetString(10)
+                                Nome = reader.GetString(6),
+                                Cpf = reader.GetString(7),
+                                EmailPessoal = reader.GetString(8),
+                                Telefone = reader.GetString(9)
                             }
                         };
                     }
