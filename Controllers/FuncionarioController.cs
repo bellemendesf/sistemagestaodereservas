@@ -19,8 +19,8 @@ public class FuncionarioController : Controller
     [HttpPost]
     public ActionResult Create(Funcionario model)
     {
-        if (string.IsNullOrWhiteSpace(model.EmailPessoal))
-            ModelState.AddModelError(nameof(model.EmailPessoal), "Informe o e-mail pessoal.");
+        if (string.IsNullOrWhiteSpace(model.EmailInstitucional))
+            ModelState.AddModelError(nameof(model.EmailInstitucional), "Informe o e-mail pessoal.");
         if (string.IsNullOrWhiteSpace(model.Senha))
             ModelState.AddModelError(nameof(model.Senha), "Informe a senha.");
         if (!ModelState.IsValid) return View(model);
@@ -51,8 +51,8 @@ public class FuncionarioController : Controller
         model.Id = id;
         ModelState.Remove(nameof(model.Id));
         if (repository.Read(id) == null) return NotFound();
-        if (string.IsNullOrWhiteSpace(model.EmailPessoal))
-            ModelState.AddModelError(nameof(model.EmailPessoal), "Informe o e-mail pessoal.");
+        if (string.IsNullOrWhiteSpace(model.EmailInstitucional))
+            ModelState.AddModelError(nameof(model.EmailInstitucional), "Informe o e-mail pessoal.");
         if (!ModelState.IsValid) return View(model);
         try
         {
