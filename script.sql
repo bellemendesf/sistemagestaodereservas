@@ -66,7 +66,6 @@ create table reservas
 	cliente_id int not null,
 	----Restrições-----
 	foreign key(cliente_id)		references clientes(pessoa_id),
-	foreign key(funcionario_id) references funcionarios(pessoa_id),
 	foreign key(mesas_nr)		references mesas(nr)
 )
 go
