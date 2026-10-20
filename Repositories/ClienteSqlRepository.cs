@@ -40,7 +40,7 @@ public class ClienteSqlRepository : DataConnection, IClienteRepository
         using (var cmd = new SqlCommand())
         {
             cmd.Connection = conn;
-            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, p.email_pessoal, p.senha, t.telefone FROM pessoas p INNER JOIN clientes t ON p.id = t.pessoa_id";
+            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, c.email_pessoal, p.senha, c.telefone FROM pessoas p INNER JOIN clientes c ON p.id = c.pessoa_id";
 
             conn.Open();
             try
@@ -77,7 +77,7 @@ public class ClienteSqlRepository : DataConnection, IClienteRepository
         using (var cmd = new SqlCommand())
         {
             cmd.Connection = conn;
-            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, c.email_pessoal, p.senha, t.telefone FROM pessoas p INNER JOIN clientes t ON p.id = t.pessoa_id WHERE p.id = @Id";
+            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, c.email_pessoal, p.senha, c.telefone FROM pessoas p INNER JOIN clientes c ON p.id = t.pessoa_id WHERE p.id = @Id";
             cmd.Parameters.AddWithValue("@Id", id);
 
             conn.Open();
@@ -115,7 +115,7 @@ public class ClienteSqlRepository : DataConnection, IClienteRepository
             cmd.Connection = conn;
             cmd.CommandText = @"SET XACT_ABORT ON; BEGIN TRANSACTION;
                 UPDATE pessoas SET nome = @Nome, cpf = @Cpf, senha = COALESCE(NULLIF(@Senha, ''), senha) WHERE id = @Id;
-                UPDATE clientes SET telefone = @Telefone, email_pessoal = @Email_pessoal, WHERE pessoa_id = @Id;
+                UPDATE clientes SET telefone = @Telefone, email_pessoal = @Email_pessoal WHERE pessoa_id = @Id;
                 COMMIT TRANSACTION;";
             cmd.Parameters.AddWithValue("@Nome", cliente.Nome);
             cmd.Parameters.AddWithValue("@Cpf", cliente.Cpf);

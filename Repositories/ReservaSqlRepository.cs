@@ -20,7 +20,7 @@ public class ReservaSqlRepository : DataConnection, IReservaRepository
                     SET @PessoaId = CAST(SCOPE_IDENTITY() AS INT);
                 END;
                 IF NOT EXISTS (SELECT 1 FROM clientes WHERE pessoa_id = @PessoaId)
-                    INSERT INTO clientes (pessoa_id, email_pessoal, telefone) VALUES (@PessoaId, @Email_institucional, @Telefone);
+                    INSERT INTO clientes (pessoa_id, email_pessoal, telefone) VALUES (@PessoaId, @Email_pessoal, @Telefone);
                 INSERT INTO reservas (qtd_pessoas, horario, dia, status, cliente_id)
                 VALUES (@QtdPessoas, CAST(@DataHora AS time), CAST(@DataHora AS date), 0, @PessoaId);
                 DECLARE @ReservaId int = CAST(SCOPE_IDENTITY() AS INT);
@@ -28,7 +28,7 @@ public class ReservaSqlRepository : DataConnection, IReservaRepository
                 COMMIT TRANSACTION;";
             cmd.Parameters.AddWithValue("@Nome", reserva.Cliente.Nome);
             cmd.Parameters.AddWithValue("@Cpf", reserva.Cliente.Cpf);
-            cmd.Parameters.AddWithValue("@Email", reserva.Cliente.EmailPessoal ?? "");
+            cmd.Parameters.AddWithValue("@Email_pessoal", reserva.Cliente.EmailPessoal ?? "");
             cmd.Parameters.AddWithValue("@Telefone", reserva.Cliente.Telefone);
             cmd.Parameters.AddWithValue("@QtdPessoas", reserva.QtdPessoas);
             cmd.Parameters.AddWithValue("@DataHora", reserva.DataHora);
@@ -56,7 +56,7 @@ public class ReservaSqlRepository : DataConnection, IReservaRepository
             cmd.CommandText = @"SELECT r.numero, r.qtd_pessoas,
                 DATEADD(SECOND, DATEDIFF(SECOND, CAST('00:00:00' AS time), r.horario), CAST(r.dia AS datetime2)),
                 CASE r.status WHEN 0 THEN 'Pendente' WHEN 1 THEN 'Confirmada' WHEN 2 THEN 'Cancelada' END,
-                rm.nr_mesas, r.cliente_id, p.nome, p.cpf, p.email_pessoal, c.telefone
+                rm.nr_mesas, r.cliente_id, p.nome, p.cpf, c.email_pessoal, c.telefone
                 FROM reservas r
                 INNER JOIN Reservas_Mesas rm ON rm.numero_reservas = r.numero
                 INNER JOIN clientes c ON c.pessoa_id = r.cliente_id
@@ -108,7 +108,7 @@ public class ReservaSqlRepository : DataConnection, IReservaRepository
             cmd.CommandText = @"SELECT r.numero, r.qtd_pessoas,
                 DATEADD(SECOND, DATEDIFF(SECOND, CAST('00:00:00' AS time), r.horario), CAST(r.dia AS datetime2)),
                 CASE r.status WHEN 0 THEN 'Pendente' WHEN 1 THEN 'Confirmada' WHEN 2 THEN 'Cancelada' END,
-                rm.nr_mesas, r.cliente_id, p.nome, p.cpf, p.email_pessoal, c.telefone
+                rm.nr_mesas, r.cliente_id, p.nome, p.cpf, c.email_pessoal, c.telefone
                 FROM reservas r
                 INNER JOIN Reservas_Mesas rm ON rm.numero_reservas = r.numero
                 INNER JOIN clientes c ON c.pessoa_id = r.cliente_id
