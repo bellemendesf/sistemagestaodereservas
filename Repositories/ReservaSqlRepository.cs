@@ -21,8 +21,8 @@ public class ReservaSqlRepository : DataConnection, IReservaRepository
                 END;
                 IF NOT EXISTS (SELECT 1 FROM clientes WHERE pessoa_id = @PessoaId)
                     INSERT INTO clientes (pessoa_id, email_pessoal, telefone) VALUES (@PessoaId, @Email_pessoal, @Telefone);
-                INSERT INTO reservas (qtd_pessoas, horario, dia, status, cliente_id)
-                VALUES (@QtdPessoas, CAST(@DataHora AS time), CAST(@DataHora AS date), 0, @PessoaId);
+                INSERT INTO reservas (qtd_pessoas, data_hora, status, mesas_nr, cliente_id)
+                VALUES (@QtdPessoas, @DataHora, 0, @MesaId, @PessoaId);
                 DECLARE @ReservaId int = CAST(SCOPE_IDENTITY() AS INT);
                 INSERT INTO Reservas_Mesas (numero_reservas, nr_mesas) VALUES (@ReservaId, @MesaId);
                 COMMIT TRANSACTION;";
@@ -54,11 +54,10 @@ public class ReservaSqlRepository : DataConnection, IReservaRepository
         {
             cmd.Connection = conn;
             cmd.CommandText = @"SELECT r.numero, r.qtd_pessoas,
-                DATEADD(SECOND, DATEDIFF(SECOND, CAST('00:00:00' AS time), r.horario), CAST(r.dia AS datetime2)),
+                r.data_hora,
                 CASE r.status WHEN 0 THEN 'Pendente' WHEN 1 THEN 'Confirmada' WHEN 2 THEN 'Cancelada' END,
-                rm.nr_mesas, r.cliente_id, p.nome, p.cpf, c.email_pessoal, c.telefone
+                r.mesas_nr, r.cliente_id, p.nome, p.cpf, c.email_pessoal, c.telefone
                 FROM reservas r
-                INNER JOIN Reservas_Mesas rm ON rm.numero_reservas = r.numero
                 INNER JOIN clientes c ON c.pessoa_id = r.cliente_id
                 INNER JOIN pessoas p ON p.id = c.pessoa_id";
 
@@ -75,7 +74,9 @@ public class ReservaSqlRepository : DataConnection, IReservaRepository
                             QtdPessoas = reader.GetInt32(1),
                             DataHora = reader.GetDateTime(2),
                             Status = reader.GetString(3),
-                            MesaId = reader.GetInt32(4),
+                            MesaId = reader.IsDBNull(4)
+                            ? null
+                            : reader.GetInt32(4),
                             ClienteId = reader.GetInt32(5),
                             Cliente = new Cliente
                             {
@@ -106,11 +107,10 @@ public class ReservaSqlRepository : DataConnection, IReservaRepository
         {
             cmd.Connection = conn;
             cmd.CommandText = @"SELECT r.numero, r.qtd_pessoas,
-                DATEADD(SECOND, DATEDIFF(SECOND, CAST('00:00:00' AS time), r.horario), CAST(r.dia AS datetime2)),
+                r.data_hora,
                 CASE r.status WHEN 0 THEN 'Pendente' WHEN 1 THEN 'Confirmada' WHEN 2 THEN 'Cancelada' END,
-                rm.nr_mesas, r.cliente_id, p.nome, p.cpf, c.email_pessoal, c.telefone
+                r.mesas_nr, r.cliente_id, p.nome, p.cpf, c.email_pessoal, c.telefone
                 FROM reservas r
-                INNER JOIN Reservas_Mesas rm ON rm.numero_reservas = r.numero
                 INNER JOIN clientes c ON c.pessoa_id = r.cliente_id
                 INNER JOIN pessoas p ON p.id = c.pessoa_id WHERE r.numero = @Id";
             cmd.Parameters.AddWithValue("@Id", id);
@@ -160,7 +160,7 @@ public class ReservaSqlRepository : DataConnection, IReservaRepository
             cmd.CommandText = @"SET XACT_ABORT ON; BEGIN TRANSACTION;
                 IF EXISTS (SELECT 1 FROM reservas WITH (UPDLOCK, HOLDLOCK) WHERE numero = @Id AND status <> 2)
                 BEGIN
-                    UPDATE reservas SET qtd_pessoas = @QtdPessoas, dia = CAST(@DataHora AS date), horario = CAST(@DataHora AS time) WHERE numero = @Id;
+                    UPDATE reservas SET qtd_pessoas = @QtdPessoas, data_hora = @DataHora, mesas_nr = @MesaId WHERE numero = @Id;
                     DELETE FROM Reservas_Mesas WHERE numero_reservas = @Id;
                     INSERT INTO Reservas_Mesas (numero_reservas, nr_mesas) VALUES (@Id, @MesaId);
                 END;

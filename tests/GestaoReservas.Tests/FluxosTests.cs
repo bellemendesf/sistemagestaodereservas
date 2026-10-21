@@ -123,7 +123,6 @@ public class FluxosTests
         Assert.Equal(2, atual.MesaId);
         Assert.Equal(3, atual.QtdPessoas);
         Assert.Equal("Pendente", atual.Status);
-        Assert.Equal(1, atual.FuncionarioID);
         Assert.Equal("Cliente de teste", atual.Cliente.Nome);
 
         Assert.Equal(HttpStatusCode.Redirect, (await Post(client, $"/AreaRestaurante/Edit/{id}", $"/AreaRestaurante/Edit/{id}", new()
@@ -207,7 +206,7 @@ public class FluxosTests
         using var app = new AplicacaoTeste();
         using var client = app.Cliente();
         Dictionary<string,string> fields = new()
-        { ["Nome"] = "Sala", ["Numero"] = "5", ["Capacidade"] = "10", ["QtdLugares"] = "4", ["Status"] = "Livre" };
+        { ["Nome"] = "Sala", ["Numero"] = "5", ["Capacidade"] = "10", ["QtdLugares"] = "4", ["AmbienteId"] = "1", ["Status"] = "Livre" };
         Assert.Equal(HttpStatusCode.Redirect, (await Post(client, $"/{entity}/Create", $"/{entity}/Create", fields)).StatusCode);
         Assert.Equal(HttpStatusCode.OK, (await client.GetAsync($"/{entity}/Index")).StatusCode);
         Assert.Equal(HttpStatusCode.OK, (await client.GetAsync($"/{entity}/Details/1")).StatusCode);

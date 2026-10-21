@@ -1,0 +1,83 @@
+@using GestaoReservas.Models
+@model Reserva
+
+@{
+    ViewData["Title"] = "Detalhes da Reserva";
+    Layout = null;
+    string voltar = string.Equals(ViewContext.RouteData.Values["controller"]?.ToString(), "AreaRestaurante", StringComparison.OrdinalIgnoreCase) ? "Reservas" : "Index";
+}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/DetalhesEdicao.css" asp-append-version="true">
+</head>
+<body class="detalhes-edicao-page">
+    <main class="detalhes-edicao-container">
+        <a asp-action="@voltar" class="detalhes-edicao-voltar">← Voltar às reservas</a>
+
+        <section class="detalhes-edicao-card">
+            <header class="detalhes-edicao-header">
+                <p class="detalhes-edicao-kicker">Santa Massa · Rio Preto</p>
+                <h1>Detalhes da reserva</h1>
+                <p class="detalhes-edicao-descricao">
+                    Confira as informações desta reserva.
+                </p>
+            </header>
+
+            <div class="detalhes-edicao-conteudo">
+                <div class="detalhes-edicao-grid">
+                    <div class="detalhes-edicao-item">
+                        <span>Código da reserva</span>
+                        <strong>#@Model.Id</strong>
+                    </div>
+
+                    <div class="detalhes-edicao-item">
+                        <span>Mesa</span>
+                        <strong>@Model.MesaId</strong>
+                    </div>
+
+                    <div class="detalhes-edicao-item">
+                        <span>Data e hora</span>
+                        <strong>@Model.DataHora.ToString("dd/MM/yyyy 'às' HH:mm")</strong>
+                    </div>
+
+                    <div class="detalhes-edicao-item">
+                        <span>Quantidade de pessoas</span>
+                        <strong>@Model.QtdPessoas @(Model.QtdPessoas == 1 ? "pessoa" : "pessoas")</strong>
+                    </div>
+
+                    <div class="detalhes-edicao-item">
+                        <span>Status</span>
+                        <strong class="detalhes-edicao-status">@Model.Status</strong>
+                    </div>
+                </div>
+
+                <div class="detalhes-edicao-acoes" style="margin-top: 24px;">
+                    <a asp-action="Edit" asp-route-id="@Model.Id"
+                       class="detalhes-edicao-botao detalhes-edicao-botao-principal">
+                        Editar reserva
+                    </a>
+
+                    <a asp-action="@voltar"
+                       class="detalhes-edicao-botao detalhes-edicao-botao-secundario">
+                        Voltar à listagem
+                    </a>
+                </div>
+            </div>
+
+            <footer class="detalhes-edicao-rodape">
+                Santa Massa · Painel de gerenciamento
+            </footer>
+        </section>
+    </main>
+</body>
+</html>

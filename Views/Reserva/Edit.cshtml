@@ -61,12 +61,12 @@
 
 
 <div class="detalhes-edicao-campo">
-    <label asp-for="Status">Status da mesa</label>
+    <label asp-for="Status">Status da reserva</label>
 
     <select asp-for="Status">
-        <option value="Livre">Livre</option>
-        <option value="Reservada">Reservada</option>
-        <option value="Ocupada">Ocupada</option>
+        <option value="Pendente">Pendente</option>
+        <option value="Confirmada">Confirmada</option>
+        <option value="Cancelada">Cancelada</option>
     </select>
 
     <span asp-validation-for="Status" class="detalhes-edicao-erros"></span>

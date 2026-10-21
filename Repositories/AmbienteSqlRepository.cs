@@ -10,7 +10,10 @@ public class AmbienteSqlRepository : DataConnection, IAmbienteRepository
         using (var cmd = new SqlCommand())
         {
             cmd.Connection = conn;
-            cmd.CommandText = @"INSERT INTO ambientes (nome, status, capacidade) VALUES (@Nome, @Status, @Capacidade);";
+            cmd.CommandText = @"SET XACT_ABORT ON; BEGIN TRANSACTION;
+                DECLARE @Codigo int = (SELECT ISNULL(MAX(codigo), 0) + 1 FROM ambientes WITH (UPDLOCK, HOLDLOCK));
+                INSERT INTO ambientes (codigo, nome, status, capacidade) VALUES (@Codigo, @Nome, @Status, @Capacidade);
+                COMMIT TRANSACTION;";
             cmd.Parameters.AddWithValue("@Nome", ambiente.Nome);
             cmd.Parameters.AddWithValue("@Status", ambiente.Status ?? "");
             cmd.Parameters.AddWithValue("@Capacidade", ambiente.Capacidade);

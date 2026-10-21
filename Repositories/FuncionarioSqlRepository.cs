@@ -18,7 +18,7 @@ public class FuncionarioSqlRepository : DataConnection, IFuncionarioRepository
             cmd.Parameters.AddWithValue("@Nome", funcionario.Nome);
             cmd.Parameters.AddWithValue("@Cpf", funcionario.Cpf);
             cmd.Parameters.AddWithValue("@Senha", funcionario.Senha ?? "");
-            cmd.Parameters.AddWithValue("@Email_Institucional", funcionario.EmailInstitucional);
+            cmd.Parameters.AddWithValue("@EmailInstitucional", funcionario.EmailInstitucional);
 
             conn.Open();
             try

@@ -1,3 +1,11 @@
+﻿use master
+go
+if db_id('gestaoReserva') is not null
+begin
+    alter database gestaoReserva set single_user with rollback immediate;
+    drop database gestaoReserva;
+end
+go
 create database gestaoReserva
 go
 use gestaoReserva
@@ -45,7 +53,8 @@ create table mesas
 (
 nr						int not null primary key,
 numero					int not null,
-status                                     varchar(20) not null check (status in ('Disponivel','Ocupada','Reservada'))
+status                                     varchar(20) not null check (status in ('Disponivel','Ocupada','Reservada')),
+qtd_lugares int not null default 0,
 codigo_ambientes		int not null,
 ---Restrições----------	
 constraint fk_codigo_ambientes
@@ -64,7 +73,7 @@ mesas_nr	int  not null,
 cliente_id int not null,
 ----Restrições-----
 
-constraint fk_cliente_id
+constraint fk_reservas_cliente_id
 foreign key(cliente_id)		references clientes(pessoa_id),
 
 constraint fk_mesas_nr
@@ -78,7 +87,7 @@ numero_reservas int not null,
 nr_mesas		int not null,
 
 	-----Restrições------
-constraint pk_reservas_mesas primary key(numero_reservas, nr_mesas)
+constraint pk_reservas_mesas primary key(numero_reservas, nr_mesas),
 constraint fk_numero_reservas
 foreign key(numero_reservas) references reservas(numero),
 constraint fk_nr_mesas
@@ -86,3 +95,7 @@ foreign key(nr_mesas) references mesas(nr)
 
 )
 go
+
+ALTER TABLE reservas
+ALTER COLUMN mesas_nr INT NULL;
+GO

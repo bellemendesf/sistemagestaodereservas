@@ -1,71 +1,149 @@
+
 @using GestaoReservas.Models
 @model IEnumerable<Reserva>
 
 @{
     Layout = "~/Views/Shared/_ReservaLayout.cshtml";
     ViewData["Title"] = "Reservas";
-    var lista = Model.ToList();
-    bool restaurante = string.Equals(ViewContext.RouteData.Values["controller"]?.ToString(), "AreaRestaurante", StringComparison.OrdinalIgnoreCase);
+
+    var lista = Model?.ToList() ?? new List<Reserva>();
+
+    bool restaurante = string.Equals(
+        ViewContext.RouteData.Values["controller"]?.ToString(),
+        "AreaRestaurante",
+        StringComparison.OrdinalIgnoreCase);
 }
 
-<section class="panel">
-    <div class="panel-head">
-        <h2>Reservas cadastradas</h2>
-        <span class="count">@(lista.Count) @(lista.Count == 1 ? "reserva" : "reservas")</span>
-    </div>
+<section class="reservas-lista">
+
+    <header class="reservas-lista-cabecalho">
+        <div>
+            <p class="reservas-lista-kicker">PAINEL DE CONTROLE</p>
+            <h2>Reservas cadastradas</h2>
+            <p class="reservas-lista-descricao">
+                @(restaurante
+                    ? "Acompanhe os agendamentos e gerencie as reservas do restaurante."
+                    : "Consulte os detalhes e acompanhe seus agendamentos.")
+            </p>
+        </div>
+
+        <span class="reservas-contador">
+            @lista.Count @(lista.Count == 1 ? "reserva" : "reservas")
+        </span>
+    </header>
 
     @if (!lista.Any())
     {
-        <div class="empty">
-            <p>Ainda não há reservas. Crie a primeira para ver a listagem aqui.</p>
-            @if (!restaurante) { <a class="btn-save" asp-action="Create">Nova reserva</a> }
+        <div class="reservas-vazio">
+            <div class="reservas-vazio-icone">R</div>
+
+            <h3>Nenhuma reserva por aqui</h3>
+
+            <p>
+                @(restaurante
+                    ? "Quando houver reservas cadastradas, elas aparecerão nesta listagem."
+                    : "Você ainda não possui reservas. Que tal planejar sua próxima visita?")
+            </p>
+
+            @if (!restaurante)
+            {
+                <a asp-controller="Reserva"
+                   asp-action="Create"
+                   class="reservas-botao-novo">
+                    + Nova reserva
+                </a>
+            }
         </div>
     }
     else
     {
-        <div class="table-wrap">
-            <table class="reserva-table">
+        @if (!restaurante)
+        {
+            <div class="reservas-lista-acoes">
+                <a asp-controller="Reserva"
+                   asp-action="Create"
+                   class="reservas-botao-novo">
+                    + Nova reserva
+                </a>
+            </div>
+        }
+
+        <div class="reservas-tabela-wrap">
+            <table class="reservas-tabela">
                 <thead>
                     <tr>
                         <th>Cliente</th>
                         <th>Mesa</th>
-                        <th>Funcionário</th>
                         <th>Data e hora</th>
                         <th>Pessoas</th>
                         <th>Status</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
+
                 <tbody>
                     @foreach (var reserva in lista)
                     {
                         var status = reserva.Status ?? "";
+
                         var badge = status.ToLowerInvariant() switch
                         {
-                            "confirmada" => "badge-confirmada",
-                            "pendente" => "badge-pendente",
-                            "cancelada" => "badge-cancelada",
-                            _ => ""
+                            "confirmada" => "status-confirmada",
+                            "realizada" => "status-confirmada",
+                            "pendente" => "status-pendente",
+                            "cancelada" => "status-cancelada",
+                            _ => "status-outro"
                         };
 
                         <tr>
-                            <td data-label="Cliente">@(reserva.Cliente?.Nome ?? "—")</td>
-                            <td data-label="Mesa">@reserva.MesaId</td>
-                            <td data-label="Data e hora">@reserva.DataHora.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td data-label="Pessoas">@reserva.QtdPessoas</td>
-                            <td data-label="Status">
-                                <span class="badge @badge">@(string.IsNullOrWhiteSpace(status) ? "—" : status)</span>
+                            <td data-label="Cliente" class="reserva-cliente">
+                                @(reserva.Cliente?.Nome ?? "—")
                             </td>
+
+                            <td data-label="Mesa">
+                                @reserva.MesaId
+                            </td>
+
+                            <td data-label="Data e hora" class="reserva-data">
+                                @reserva.DataHora.ToString("dd/MM/yyyy")
+                                <span>@reserva.DataHora.ToString("HH:mm")</span>
+                            </td>
+
+                            <td data-label="Pessoas">
+                                @reserva.QtdPessoas
+                            </td>
+
+                            <td data-label="Status">
+                                <span class="reserva-status @badge">
+                                    @(string.IsNullOrWhiteSpace(status) ? "Não informado" : status)
+                                </span>
+                            </td>
+
                             <td data-label="Ações">
-                                <div class="actions">
-                                    <a asp-action="Details" asp-route-id="@reserva.Id">Detalhes</a>
-                                    @if (reserva.Status != "Cancelada")
+                                <div class="reservas-acoes">
+                                    <a asp-action="Details"
+                                       asp-route-id="@reserva.Id"
+                                       class="reserva-acao">
+                                        Detalhes
+                                    </a>
+
+                                    @if (!string.Equals(status, "Cancelada", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        <a asp-action="Edit" asp-route-id="@reserva.Id">@(restaurante ? "Alterar status" : "Editar")</a>
+                                        <a asp-action="Edit"
+                                           asp-route-id="@reserva.Id"
+                                           class="reserva-acao">
+                                            @(restaurante ? "Alterar status" : "Editar")
+                                        </a>
                                     }
-                                    @if (!restaurante && reserva.Status != "Cancelada")
+
+                                    @if (!restaurante &&
+                                         !string.Equals(status, "Cancelada", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        <a asp-action="Delete" asp-route-id="@reserva.Id" class="is-danger">Cancelar</a>
+                                        <a asp-action="Delete"
+                                           asp-route-id="@reserva.Id"
+                                           class="reserva-acao reserva-acao-cancelar">
+                                            Cancelar
+                                        </a>
                                     }
                                 </div>
                             </td>
@@ -75,4 +153,9 @@
             </table>
         </div>
     }
+
+    <footer class="reservas-lista-rodape">
+        Santa Massa - Gestão de reservas
+    </footer>
+
 </section>

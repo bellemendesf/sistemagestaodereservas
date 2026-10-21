@@ -1,8 +1,9 @@
- @model List<Funcionario>
+```cshtml
+@model List<GestaoReservas.Models.Funcionario>
 
 @{
     Layout = null;
-    ViewData["Title"] = "Funcionários cadastrados";
+    ViewData["Title"] = "Funcionários";
 }
 
 <!DOCTYPE html>
@@ -11,15 +12,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>@ViewData["Title"] | Santa Massa</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
-          rel="stylesheet">
+    <title>@ViewData["Title"] - Santa Massa</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap"
           rel="stylesheet">
 
     <link rel="stylesheet"
@@ -31,31 +29,32 @@
 
     <main class="funcionarios-container">
 
-        <nav class="funcionarios-nav">
-            <a asp-controller="AreaRestaurante" asp-action="Index">
-                ← Voltar à Área do Restaurante
-            </a>
-        </nav>
+        <a asp-controller="AreaRestaurante"
+           asp-action="Index"
+           class="funcionarios-voltar">
+            ← Voltar à área do restaurante
+        </a>
 
         <section class="funcionarios-card">
 
             <header class="funcionarios-header">
-                <div>
+                <div class="funcionarios-titulos">
                     <p class="funcionarios-kicker">
                         Santa Massa · Rio Preto
                     </p>
 
-                    <h1>Funcionários cadastrados</h1>
+                    <h1>Equipe do restaurante</h1>
 
                     <p class="funcionarios-descricao">
-                        Consulte e gerencie os dados da equipe do restaurante.
+                        Consulte e gerencie os funcionários cadastrados.
                     </p>
                 </div>
 
                 <a asp-controller="Funcionario"
                    asp-action="Create"
-                   class="btn-funcionario-novo">
-                    + Cadastrar funcionário
+                   class="funcionarios-botao funcionarios-botao-principal">
+                    <span aria-hidden="true">+</span>
+                    Cadastrar funcionário
                 </a>
             </header>
 
@@ -64,6 +63,10 @@
                 @if (Model == null || Model.Count == 0)
                 {
                     <div class="funcionarios-vazio">
+                        <div class="funcionarios-vazio-icone" aria-hidden="true">
+                            ♧
+                        </div>
+
                         <h2>Nenhum funcionário cadastrado</h2>
 
                         <p>
@@ -72,84 +75,108 @@
 
                         <a asp-controller="Funcionario"
                            asp-action="Create"
-                           class="btn-funcionario-novo">
+                           class="funcionarios-botao funcionarios-botao-principal">
                             Cadastrar primeiro funcionário
                         </a>
                     </div>
                 }
                 else
                 {
-                    <p class="funcionarios-contagem">
-                        Total de registros: <strong>@Model.Count</strong>
-                    </p>
+                    <div class="funcionarios-resumo">
+                        <div>
+                            <span class="funcionarios-resumo-label">
+                                Funcionários cadastrados
+                            </span>
 
-                    <div class="funcionarios-tabela">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nome</th>
-                                    <th>CPF</th>
-                                    <th>E-mail pessoal</th>
-                                    <th>E-mail institucional</th>
-                                    <th>Ações</th>
-                                </tr>
-                            </thead>
+                            <strong class="funcionarios-resumo-numero">
+                                @Model.Count.ToString("D2")
+                            </strong>
+                        </div>
 
-                            <tbody>
-                                @foreach (Funcionario item in Model)
-                                {
-                                    <tr>
-                                        <td class="funcionario-id">
-                                            @item.Id
-                                        </td>
+                        <span class="funcionarios-resumo-legenda">
+                            @(Model.Count == 1
+                                ? "1 registro encontrado"
+                                : $"{Model.Count} registros encontrados")
+                        </span>
+                    </div>
 
-                                        <td class="funcionario-nome">
-                                            @item.Nome
-                                        </td>
+                    <div class="funcionarios-lista">
+                        @foreach (var item in Model)
+                        {
+                            <article class="funcionario-item">
 
-                                        <td>@item.Cpf</td>
+                                <div class="funcionario-identificacao">
+                                    <div class="funcionario-avatar" aria-hidden="true">
+                                        @(string.IsNullOrWhiteSpace(item.Nome)
+                                            ? "?"
+                                            : item.Nome.Trim().Substring(0, 1).ToUpper())
+                                    </div>
 
-                                        <td>@item.EmailInstitucional
-                                        </td>
+                                    <div class="funcionario-informacoes">
+                                        <span class="funcionario-id">
+                                            FUNCIONÁRIO #@item.Id
+                                        </span>
 
-                                        <td>@item.EmailInstitucional</td>
+                                        <h2 class="funcionario-nome">
+                                            @(string.IsNullOrWhiteSpace(item.Nome)
+                                                ? "Nome não informado"
+                                                : item.Nome)
+                                        </h2>
 
-                                        <td>
-                                            <div class="funcionario-acoes">
-                                                <a asp-controller="Funcionario"
-                                                   asp-action="Edit"
-                                                   asp-route-id="@item.Id"
-                                                   class="acao-editar">
-                                                    Editar
-                                                </a>
+                                        <p class="funcionario-cpf">
+                                            CPF:
+                                            @(string.IsNullOrWhiteSpace(item.Cpf)
+                                                ? "Não informado"
+                                                : item.Cpf)
+                                        </p>
+                                    </div>
+                                </div>
 
-                                                <a asp-controller="Funcionario"
-                                                   asp-action="Details"
-                                                   asp-route-id="@item.Id"
-                                                   class="acao-detalhes">
-                                                    Detalhes
-                                                </a>
+                                <div class="funcionario-contatos">
+                                    <div class="funcionario-contato">
+                                        <span>E-mail institucional</span>
 
-                                                <a asp-controller="Funcionario"
-                                                   asp-action="Delete"
-                                                   asp-route-id="@item.Id"
-                                                   class="acao-excluir">
-                                                    Excluir
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+                                        <p>
+                                            @(string.IsNullOrWhiteSpace(item.EmailInstitucional)
+                                                ? "Não informado"
+                                                : item.EmailInstitucional)
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="funcionario-acoes">
+                                    <a asp-controller="Funcionario"
+                                       asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="funcionarios-botao funcionarios-botao-secundario">
+                                        Detalhes
+                                    </a>
+
+                                    <a asp-controller="Funcionario"
+                                       asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="funcionarios-botao funcionarios-botao-editar">
+                                        Editar
+                                    </a>
+
+                                    <a asp-controller="Funcionario"
+                                       asp-action="Delete"
+                                       asp-route-id="@item.Id"
+                                       class="funcionarios-botao funcionarios-botao-excluir">
+                                        Excluir
+                                    </a>
+                                </div>
+
+                            </article>
+                        }
                     </div>
                 }
 
             </div>
 
             <footer class="funcionarios-footer">
-                Santa Massa · Painel de gerenciamento
+                <span>Santa Massa</span>
+                <span>Painel de gerenciamento</span>
             </footer>
 
         </section>
@@ -158,3 +185,4 @@
 
 </body>
 </html>
+```

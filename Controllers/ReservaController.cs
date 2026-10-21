@@ -31,9 +31,12 @@ public class ReservaController : Controller
             repository.Create(model);
             return RedirectToAction(nameof(Index));
         }
-        catch (SqlException)
+        catch (SqlException ex)
         {
-            ModelState.AddModelError("", "Não foi possível cadastrar. Verifique CPF, telefone, e mesa cadastrados e a conexão com o banco.");
+            string motivo = ex.Number == 547 ? "A mesa informada não está cadastrada."
+                : (ex.Number == 2627 || ex.Number == 2601) ? "Telefone ou e-mail já pertence a outro cliente com CPF diferente."
+                : "Verifique CPF, telefone, e mesa cadastrados e a conexão com o banco.";
+            ModelState.AddModelError("", "Não foi possível cadastrar. " + motivo);
             return View(model);
         }
     }

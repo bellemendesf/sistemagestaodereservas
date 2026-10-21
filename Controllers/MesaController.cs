@@ -79,39 +79,41 @@ public class MesaController : Controller
     }
 
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public ActionResult Edit(int id, Mesa model)
+[ValidateAntiForgeryToken]
+public ActionResult Edit(int id, Mesa model)
+{
+    // O ID original identifica a mesa no banco.
+    // Ele não deve ser alterado pelo formulário.
+    var mesaExistente = repository.Read(id);
+
+    if (mesaExistente == null)
+        return NotFound();
+
+    model.Id = id;
+    ModelState.Remove(nameof(model.Id));
+
+    if (!ModelState.IsValid)
     {
-        // Preserva o número original, usado para localizar a mesa.
-        model.Id = id;
-        ModelState.Remove(nameof(model.Id));
-
-        if (repository.Read(id) == null)
-            return NotFound();
-
-        if (!ModelState.IsValid)
-        {
-            CarregarAmbientes(model.AmbienteId);
-            return View(model);
-        }
-
-        try
-        {
-            repository.Update(model);
-            return RedirectToAction(nameof(Index));
-        }
-        catch (SqlException)
-        {
-            ModelState.AddModelError(
-                "",
-                "Não foi possível salvar. Verifique os dados, o ambiente e os vínculos com reservas."
-            );
-
-            CarregarAmbientes(model.AmbienteId);
-            return View(model);
-        }
+        CarregarAmbientes(model.AmbienteId);
+        return View(model);
     }
 
+    try
+    {
+        repository.Update(model);
+        return RedirectToAction(nameof(Index));
+    }
+    catch (SqlException)
+    {
+        ModelState.AddModelError(
+            "",
+            "Não foi possível salvar. Verifique os dados, o ambiente e os vínculos com reservas."
+        );
+
+        CarregarAmbientes(model.AmbienteId);
+        return View(model);
+    }
+}
     [HttpGet]
     public ActionResult Details(int id)
     {
@@ -149,14 +151,19 @@ public class MesaController : Controller
             repository.Delete(id);
             return RedirectToAction(nameof(Index));
         }
-        catch (SqlException)
-        {
-            ModelState.AddModelError(
-                "",
-                "Não foi possível excluir. Esta mesa pode estar vinculada a reservas."
-            );
+        catch (InvalidOperationException ex)
+{
+    ModelState.AddModelError("", ex.Message);
+    return View("Delete", model);
+}
+catch (SqlException)
+{
+    ModelState.AddModelError(
+        "",
+        "Não foi possível excluir a mesa. Verifique os vínculos existentes."
+    );
 
-            return View("Delete", model);
-        }
+    return View("Delete", model);
+}
     }
 }

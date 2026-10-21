@@ -242,3 +242,217 @@ body.home {
     margin-top: 8px;
     background: var(--dourado);
 }
+/* Cabeçalho com endereço e horário */
+.home-info-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 15px 5%;
+    background: #181817;
+    border-bottom: 1px solid #49443A;
+    color: #F7F3EA;
+    font-family: "Poppins", sans-serif;
+}
+
+.home-info-endereco {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.home-info-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border: 1px solid #49443A;
+    border-radius: 50%;
+    color: #D3B779;
+    font-size: 1.25rem;
+}
+
+.home-info-label {
+    display: block;
+    margin-bottom: 4px;
+    color: #D3B779;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+}
+
+.home-info-endereco p,
+.home-info-horario p {
+    margin: 0;
+    color: #F7F3EA;
+    font-size: 0.78rem;
+    line-height: 1.6;
+}
+
+.home-info-horario {
+    flex-shrink: 0;
+}
+
+.home-info-horario p {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.home-info-ponto {
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #7DB58A;
+}
+.home-info-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+    padding: 14px 5%;
+    background: #181817;
+    border-bottom: 1px solid #49443A;
+    color: #F7F3EA;
+    font-family: "Poppins", sans-serif;
+}
+
+.home-info-esquerda {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    min-width: 0;
+}
+
+.home-info-logo {
+    display: block;
+    width: 82px;
+    height: 68px;
+    flex-shrink: 0;
+    object-fit: contain;
+    border-radius: 6px;
+}
+
+.home-info-endereco {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.home-info-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border: 1px solid #49443A;
+    border-radius: 50%;
+    color: #D3B779;
+    font-size: 1.25rem;
+}
+
+.home-info-label {
+    display: block;
+    margin-bottom: 4px;
+    color: #D3B779;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+}
+
+.home-info-endereco p,
+.home-info-horario p {
+    margin: 0;
+    color: #F7F3EA;
+    font-size: 0.78rem;
+    line-height: 1.6;
+}
+
+.home-info-horario {
+    flex-shrink: 0;
+}
+
+.home-info-horario p {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.home-info-ponto {
+    width: 7px;
+    height: 7px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #7DB58A;
+}
+
+/* Responsividade */
+@media (max-width: 800px) {
+    .home-info-topo {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 18px;
+        padding: 18px 20px;
+    }
+
+    .home-info-esquerda {
+        gap: 16px;
+        width: 100%;
+    }
+
+    .home-info-logo {
+        width: 68px;
+        height: 60px;
+    }
+
+    .home-info-endereco p {
+        overflow-wrap: anywhere;
+    }
+
+    .home-info-horario {
+        padding-left: 84px;
+    }
+}
+
+@media (max-width: 420px) {
+    .home-info-esquerda {
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .home-info-logo {
+        width: 55px;
+        height: 52px;
+    }
+
+    .home-info-icone {
+        display: none;
+    }
+
+    .home-info-horario {
+        padding-left: 67px;
+    }
+}
+/* Ajuste para celulares */
+@media (max-width: 700px) {
+    .home-info-topo {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+        padding: 18px 20px;
+    }
+
+    .home-info-endereco p {
+        overflow-wrap: anywhere;
+    }
+
+    .home-info-horario {
+        padding-left: 48px;
+    }
+}

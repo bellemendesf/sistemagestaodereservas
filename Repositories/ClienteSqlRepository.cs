@@ -77,7 +77,7 @@ public class ClienteSqlRepository : DataConnection, IClienteRepository
         using (var cmd = new SqlCommand())
         {
             cmd.Connection = conn;
-            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, c.email_pessoal, p.senha, c.telefone FROM pessoas p INNER JOIN clientes c ON p.id = t.pessoa_id WHERE p.id = @Id";
+            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, c.email_pessoal, p.senha, c.telefone FROM pessoas p INNER JOIN clientes c ON p.id = c.pessoa_id WHERE p.id = @Id";
             cmd.Parameters.AddWithValue("@Id", id);
 
             conn.Open();
