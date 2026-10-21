@@ -1,0 +1,382 @@
+:root {
+    --reserva-fundo: #181817;
+    --reserva-painel: #2B2925;
+    --reserva-painel-hover: #34312B;
+    --reserva-dourado: #D3B779;
+    --reserva-dourado-claro: #E8D5A5;
+    --reserva-texto: #F7F3EA;
+    --reserva-secundario: #C8C0B1;
+    --reserva-borda: #49443A;
+    --reserva-verde: #91D0A5;
+    --reserva-vermelho: #F09B95;
+    --reserva-amarelo: #F0D28A;
+}
+
+/* ===== LISTAGEM DE RESERVAS — SANTA MASSA ===== */
+
+.reservas-lista {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+    color: #F7F3EA;
+    font-family: 'Poppins', sans-serif;
+}
+
+.reservas-lista-cabecalho {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 25px;
+    border-bottom: 1px solid #49443A;
+}
+
+.reservas-lista-kicker {
+    margin: 0 0 10px;
+    color: #D3B779;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+
+.reservas-lista-cabecalho h2 {
+    margin: 0 0 10px;
+    color: #F7F3EA;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 600;
+}
+
+.reservas-lista-descricao {
+    max-width: 540px;
+    margin: 0;
+    color: #C8C0B1;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.reservas-contador {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 35px;
+    padding: 8px 14px;
+    border: 1px solid #756442;
+    border-radius: 20px;
+    background: #302C23;
+    color: #E8D5A5;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.reservas-lista-acoes {
+    display: flex;
+    justify-content: flex-end;
+    padding: 22px 25px 0;
+}
+
+.reservas-botao-novo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 11px 18px;
+    border: 1px solid #D3B779;
+    border-radius: 8px;
+    background: #D3B779;
+    color: #1F1F1D;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all .2s ease;
+}
+
+.reservas-botao-novo:hover {
+    transform: translateY(-1px);
+    border-color: #E8D5A5;
+    background: #E8D5A5;
+    color: #1F1F1D;
+}
+
+.reservas-tabela-wrap {
+    width: 100%;
+    padding: 22px 25px 25px;
+}
+
+.reservas-tabela {
+    width: 100%;
+    border: 1px solid #49443A;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 10px;
+    background: #24231F;
+    font-size: 11px;
+}
+
+.reservas-tabela thead {
+    background: #302E28;
+}
+
+.reservas-tabela th {
+    padding: 15px 12px;
+    border-bottom: 1px solid #49443A;
+    color: #C8C0B1;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .8px;
+    text-align: left;
+    text-transform: uppercase;
+}
+
+.reservas-tabela td {
+    padding: 16px 12px;
+    border-bottom: 1px solid #3A3831;
+    color: #F7F3EA;
+    vertical-align: middle;
+    overflow-wrap: anywhere;
+}
+
+.reservas-tabela tbody tr {
+    background: #24231F;
+    transition: background .2s ease;
+}
+
+.reservas-tabela tbody tr:hover {
+    background: #2D2B26;
+}
+
+.reservas-tabela tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.reserva-cliente {
+    color: #E8D5A5 !important;
+    font-weight: 600;
+}
+
+.reserva-data {
+    min-width: 100px;
+    white-space: nowrap;
+}
+
+.reserva-data span {
+    display: block;
+    margin-top: 4px;
+    color: #D3B779;
+    font-size: 10px;
+}
+
+.reserva-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 9px;
+    border: 1px solid transparent;
+    border-radius: 20px;
+    font-size: 9px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.status-confirmada {
+    border-color: #42664A;
+    background: #26372A;
+    color: #A7D5AE;
+}
+
+.status-pendente {
+    border-color: #756442;
+    background: #302C23;
+    color: #E8D5A5;
+}
+
+.status-cancelada {
+    border-color: #633C37;
+    background: #332421;
+    color: #E7A09A;
+}
+
+.status-outro {
+    border-color: #49443A;
+    background: #302E28;
+    color: #C8C0B1;
+}
+
+.reservas-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.reserva-acao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 30px;
+    padding: 6px 9px;
+    border: 1px solid #49443A;
+    border-radius: 6px;
+    background: #302E28;
+    color: #E8D5A5;
+    font-size: 9px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all .2s ease;
+}
+
+.reserva-acao:hover {
+    border-color: #D3B779;
+    background: #3A352A;
+    color: #FFFFFF;
+}
+
+.reserva-acao-cancelar {
+    border-color: #633C37;
+    background: #332421;
+    color: #E7A09A;
+}
+
+.reserva-acao-cancelar:hover {
+    border-color: #B85D53;
+    background: #432925;
+    color: #FFD3CE;
+}
+
+.reservas-vazio {
+    padding: 55px 25px;
+    text-align: center;
+}
+
+.reservas-vazio-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 58px;
+    margin: 0 auto 20px;
+    border: 1px solid #756442;
+    border-radius: 16px;
+    background: #302C23;
+    color: #D3B779;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.reservas-vazio h3 {
+    margin: 0 0 12px;
+    color: #F7F3EA;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.reservas-vazio p {
+    max-width: 440px;
+    margin: 0 auto 24px;
+    color: #C8C0B1;
+    font-size: 12px;
+    line-height: 1.8;
+}
+
+.reservas-lista-rodape {
+    padding: 17px 25px;
+    border-top: 1px solid #49443A;
+    color: #A9A294;
+    font-size: 10px;
+    text-align: center;
+    letter-spacing: .3px;
+}
+
+/* ===== TABLET E CELULAR ===== */
+
+@media (max-width: 900px) {
+    .reservas-tabela,
+    .reservas-tabela tbody,
+    .reservas-tabela tr,
+    .reservas-tabela td {
+        display: block;
+        width: 100%;
+    }
+
+    .reservas-tabela {
+        border: none;
+        background: transparent;
+    }
+
+    .reservas-tabela thead {
+        display: none;
+    }
+
+    .reservas-tabela tbody tr {
+        margin-bottom: 16px;
+        overflow: hidden;
+        border: 1px solid #49443A;
+        border-radius: 10px;
+        background: #24231F;
+    }
+
+    .reservas-tabela tbody tr:last-child {
+        margin-bottom: 0;
+    }
+
+    .reservas-tabela td {
+        display: grid;
+        grid-template-columns: minmax(95px, 35%) minmax(0, 1fr);
+        gap: 12px;
+        align-items: start;
+        padding: 13px 15px;
+        border-bottom: 1px solid #3A3831;
+        text-align: left;
+    }
+
+    .reservas-tabela td::before {
+        content: attr(data-label);
+        color: #C8C0B1;
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: .5px;
+        text-transform: uppercase;
+    }
+
+    .reservas-tabela td:last-child {
+        border-bottom: none;
+    }
+
+    .reservas-acoes {
+        min-width: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .reservas-lista-cabecalho {
+        padding: 22px 18px;
+    }
+
+    .reservas-contador {
+        margin-top: 0;
+    }
+
+    .reservas-lista-acoes {
+        padding: 18px 18px 0;
+    }
+
+    .reservas-lista-acoes .reservas-botao-novo {
+        width: 100%;
+    }
+
+    .reservas-tabela-wrap {
+        padding: 18px;
+    }
+
+    .reservas-vazio {
+        padding: 40px 20px;
+    }
+
+    .reservas-lista-rodape {
+        padding: 16px;
+    }
+}

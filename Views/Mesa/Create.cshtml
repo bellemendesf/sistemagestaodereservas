@@ -1,0 +1,97 @@
+@model GestaoReservas.Models.Mesa
+
+@{
+    ViewData["Title"] = "Cadastrar Mesa";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Santa Massa</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/Mesas.css" asp-append-version="true">
+</head>
+
+<body class="mesas-page">
+<main class="mesas-container">
+    <a asp-action="Index" class="mesas-voltar">
+        ← Voltar às mesas
+    </a>
+
+    <section class="mesas-card">
+        <header class="mesas-header">
+            <div>
+                <p class="mesas-kicker">Santa Massa · Rio Preto</p>
+                <h1>Cadastrar mesa</h1>
+                <p class="mesas-descricao">
+                    Cadastre uma mesa e defina sua capacidade e disponibilidade.
+                </p>
+            </div>
+        </header>
+
+        <div class="mesas-conteudo">
+            
+<form asp-action="Create" method="post" class="mesas-form">
+    <div asp-validation-summary="All" class="mesas-erro"></div>
+
+    <div class="mesas-campo">
+        <label asp-for="Numero">Número da mesa</label>
+        <input asp-for="Numero" type="number" min="1" placeholder="Ex.: 4" />
+        <span asp-validation-for="Numero" class="mesas-erro"></span>
+    </div>
+
+    <div class="mesas-campo">
+        <label asp-for="QtdLugares">Quantidade de lugares</label>
+        <input asp-for="QtdLugares" type="number" min="1" placeholder="Ex.: 4" />
+        <span asp-validation-for="QtdLugares" class="mesas-erro"></span>
+    </div>
+
+        
+<div class="mesas-campo">
+    <label asp-for="AmbienteId">Ambiente</label>
+
+    <select asp-for="AmbienteId"
+            asp-items="ViewBag.Ambientes">
+        <option value="0">Selecione o ambiente</option>
+    </select>
+
+    <span asp-validation-for="AmbienteId"
+          class="mesas-erro"></span>
+</div>
+
+
+
+    <div class="mesas-campo">
+        <label asp-for="Status">Status da mesa</label>
+        <select asp-for="Status">
+            <option value="">Selecione o status</option>
+            <option value="Livre">Livre</option>
+            <option value="Reservada">Reservada</option>
+            <option value="Ocupada">Ocupada</option>
+        </select>
+        <span asp-validation-for="Status" class="mesas-erro"></span>
+    </div>
+
+    <div class="mesas-acoes">
+        <button type="submit" class="mesas-botao-principal">Cadastrar mesa</button>
+        <a asp-action="Index" class="mesas-botao-secundario">Cancelar</a>
+    </div>
+</form>
+
+        </div>
+
+        <footer class="mesas-footer">
+            Santa Massa · Painel de gerenciamento
+        </footer>
+    </section>
+</main>
+
+</body>
+</html>

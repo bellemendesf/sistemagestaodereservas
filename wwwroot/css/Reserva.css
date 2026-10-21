@@ -1,0 +1,398 @@
+
+:root {
+    --sm-fundo: #181817;
+    --sm-fundo-secundario: #22211F;
+    --sm-painel: #2B2925;
+    --sm-painel-claro: #34312B;
+    --sm-dourado: #D3B779;
+    --sm-dourado-claro: #E8D5A5;
+    --sm-texto: #F7F3EA;
+    --sm-texto-secundario: #C8C0B1;
+    --sm-borda: #49443A;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+}
+
+body.page-reserva {
+    min-height: 100vh;
+    margin: 0;
+    background:
+        radial-gradient(ellipse at 50% 0%, #393226 0%, transparent 48%),
+        var(--sm-fundo);
+    color: var(--sm-texto);
+    font-family: "Poppins", sans-serif;
+    font-size: 15px;
+}
+
+/* Fundo decorativo */
+
+.page-glow {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: linear-gradient(
+        135deg,
+        rgba(211, 183, 121, 0.035),
+        transparent 42%,
+        rgba(211, 183, 121, 0.025)
+    );
+}
+
+/* Cabeçalho */
+
+.page-top {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    width: 100%;
+    padding: 18px 6%;
+    background: rgba(24, 24, 23, 0.88);
+    border-bottom: 1px solid rgba(211, 183, 121, 0.22);
+}
+
+.page-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--sm-dourado-claro);
+    text-decoration: none;
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 1.45rem;
+    font-weight: 600;
+    letter-spacing: 0.6px;
+}
+
+.page-brand:hover {
+    color: #FFFFFF;
+}
+
+.reserva-logo {
+    display: block;
+    width: 54px;
+    height: 54px;
+    object-fit: cover;
+    border: 1px solid rgba(211, 183, 121, 0.6);
+    border-radius: 50%;
+}
+
+.page-home-link {
+    padding: 10px 17px;
+    color: var(--sm-texto-secundario);
+    border: 1px solid var(--sm-borda);
+    border-radius: 7px;
+    text-decoration: none;
+    font-size: 0.88rem;
+    transition: 0.2s ease;
+}
+
+.page-home-link:hover {
+    color: var(--sm-dourado-claro);
+    border-color: var(--sm-dourado);
+    background: rgba(211, 183, 121, 0.07);
+}
+
+/* Conteúdo central */
+
+.page-shell {
+    position: relative;
+    z-index: 1;
+    width: min(1440px, 94%);
+    margin: 0 auto;
+    padding: 48px 0 64px;
+}
+
+.page-intro {
+    margin: 0 auto 30px;
+    text-align: center;
+}
+
+.page-kicker {
+    margin: 0 0 12px;
+    color: var(--sm-dourado);
+    font-size: 0.77rem;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+}
+
+.page-intro h1 {
+    margin: 0;
+    color: var(--sm-texto);
+    font-family: "Josefin Sans", sans-serif;
+    font-size: clamp(2.3rem, 4vw, 3.4rem);
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.page-lead {
+    max-width: 680px;
+    margin: 14px auto 0;
+    color: var(--sm-texto-secundario);
+    font-size: 1rem;
+    line-height: 1.8;
+}
+
+/* Navegação */
+
+.page-tabs {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0 auto 28px;
+}
+
+.page-tab {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 150px;
+    padding: 12px 23px;
+    color: var(--sm-texto-secundario);
+    background: var(--sm-fundo-secundario);
+    border: 1px solid var(--sm-borda);
+    border-radius: 7px;
+    text-decoration: none;
+    font-size: 0.91rem;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+
+.page-tab:hover {
+    color: var(--sm-dourado-claro);
+    border-color: var(--sm-dourado);
+}
+
+.page-tab.is-active {
+    color: #211D15;
+    background: var(--sm-dourado);
+    border-color: var(--sm-dourado);
+    font-weight: 600;
+}
+
+/* Área em que cada View é carregada */
+
+.page-content {
+    width: 100%;
+    min-width: 0;
+}
+
+/* Responsividade */
+
+@media (min-width: 1600px) {
+    .page-shell {
+        width: min(1500px, 92%);
+    }
+}
+
+@media (max-width: 768px) {
+    .page-top {
+        padding: 15px 4%;
+    }
+
+    .page-brand {
+        gap: 9px;
+        font-size: 1.15rem;
+    }
+
+    .reserva-logo {
+        width: 43px;
+        height: 43px;
+    }
+
+    .page-home-link {
+        padding: 9px 11px;
+        font-size: 0.78rem;
+    }
+
+    .page-shell {
+        width: 94%;
+        padding: 34px 0 44px;
+    }
+
+    .page-intro {
+        margin-bottom: 24px;
+    }
+
+    .page-lead {
+        font-size: 0.9rem;
+    }
+
+    .page-tabs {
+        margin-bottom: 22px;
+    }
+
+    .page-tab {
+        min-width: 130px;
+        padding: 11px 16px;
+    }
+}
+
+@media (max-width: 420px) {
+    .page-top {
+        gap: 10px;
+    }
+
+    .page-brand {
+        font-size: 1rem;
+    }
+
+    .reserva-logo {
+        width: 36px;
+        height: 36px;
+    }
+
+    .page-home-link {
+        padding: 8px;
+        font-size: 0.72rem;
+    }
+
+    .page-intro h1 {
+        font-size: 2.1rem;
+    }
+
+    .page-kicker {
+        font-size: 0.68rem;
+        letter-spacing: 1.5px;
+    }
+}
+
+/* =====================================
+   NOVA RESERVA — SANTA MASSA
+   ===================================== */
+
+.page-content form {
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 36px 40px;
+    background: #2B2925;
+    border: 1px solid #49443A;
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
+/* Grupos dos campos */
+
+.page-content form .mb-3,
+.page-content form .form-group {
+    margin-bottom: 24px !important;
+}
+
+/* Labels */
+
+.page-content form label,
+.page-content form .form-label {
+    display: block;
+    margin-bottom: 9px;
+    color: #E8D5A5;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+}
+
+/* Campos de texto, data, quantidade e seletores */
+
+.page-content form .form-control,
+.page-content form .form-select,
+.page-content form input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+.page-content form select,
+.page-content form textarea {
+    width: 100%;
+    min-height: 50px;
+    padding: 12px 15px;
+    color: #F7F3EA;
+    background-color: #201F1D;
+    border: 1px solid #514B40;
+    border-radius: 7px;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.9rem;
+    box-shadow: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Texto de orientação */
+
+.page-content form input::placeholder,
+.page-content form textarea::placeholder {
+    color: #A9A193;
+    opacity: 1;
+}
+
+/* Foco */
+
+.page-content form .form-control:focus,
+.page-content form .form-select:focus,
+.page-content form input:focus,
+.page-content form select:focus,
+.page-content form textarea:focus {
+    color: #F7F3EA;
+    background-color: #25231F;
+    border-color: #D3B779;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(211, 183, 121, 0.12);
+}
+
+/* Opções dos seletores */
+
+.page-content form select option {
+    color: #F7F3EA;
+    background-color: #201F1D;
+}
+
+/* Validação */
+
+.page-content form .text-danger,
+.page-content form .field-validation-error {
+    display: block;
+    margin-top: 6px;
+    color: #F09B95 !important;
+    font-size: 0.8rem;
+}
+
+/* Botões */
+
+.page-content form button[type="submit"],
+.page-content form input[type="submit"] {
+    min-height: 47px;
+    padding: 12px 24px;
+    color: #211D15;
+    background: #D3B779;
+    border: 1px solid #D3B779;
+    border-radius: 7px;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.page-content form button[type="submit"]:hover,
+.page-content form input[type="submit"]:hover {
+    background: #E8D5A5;
+    border-color: #E8D5A5;
+    transform: translateY(-1px);
+}
+
+/* Layout em celular */
+
+@media (max-width: 600px) {
+    .page-content form {
+        padding: 24px 18px;
+    }
+
+    .page-content form .mb-3,
+    .page-content form .form-group {
+        margin-bottom: 19px !important;
+    }
+}

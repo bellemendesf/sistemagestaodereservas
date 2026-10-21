@@ -1,6 +1,11 @@
-public class Cliente: Pessoa
+using System.ComponentModel.DataAnnotations;
+
+namespace GestaoReservas.Models;
+
+public class Cliente : Pessoa
 {
-    public required string Telefone {get;set;}
-    public required string Email {get;set;}
-    public required string Senha {get;set;}
+    [Required(ErrorMessage = "Informe o telefone."), StringLength(20)]
+    public string Telefone { get; set; } = "";
+    public string EmailPessoal { get; set; } = "";
+   
 }

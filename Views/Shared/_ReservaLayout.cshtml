@@ -1,0 +1,100 @@
+
+@{
+    bool restaurante = string.Equals(
+        ViewContext.RouteData.Values["controller"]?.ToString(),
+        "AreaRestaurante",
+        StringComparison.OrdinalIgnoreCase);
+
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+
+    var isList =
+        string.Equals(action, "Index", StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(action, "Reservas", StringComparison.OrdinalIgnoreCase);
+
+    var isCreate = string.Equals(
+        action,
+        "Create",
+        StringComparison.OrdinalIgnoreCase);
+}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - Santa Massa</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap"
+          rel="stylesheet" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+          crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="~/css/Reserva.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/ReservasIndex.css" asp-append-version="true" />
+</head>
+
+<body class="page-reserva">
+    <div class="page-glow" aria-hidden="true"></div>
+
+    <header class="page-top">
+        <a class="page-brand"
+           asp-controller="Home"
+           asp-action="Index">
+            <img src="~/images/logosantamassa.jpg"
+                 alt="Logo do restaurante Santa Massa"
+                 class="reserva-logo" />
+
+            <span>Santa Massa</span>
+        </a>
+
+        <a class="page-home-link"
+           asp-controller="Home"
+           asp-action="Index">
+            Voltar ao início
+        </a>
+    </header>
+
+    <main class="page-shell">
+        <section class="page-intro">
+            <p class="page-kicker">SANTA MASSA · GESTÃO DE RESERVAS</p>
+
+            <h1>@ViewData["Title"]</h1>
+
+            <p class="page-lead">
+                @(restaurante
+                    ? "Acompanhe e organize as reservas do restaurante."
+                    : "Consulte suas reservas ou organize uma nova experiência.")
+            </p>
+        </section>
+
+        <nav class="page-tabs" aria-label="Seções de reservas">
+            <a asp-controller="@(restaurante ? "AreaRestaurante" : "Reserva")"
+               asp-action="@(restaurante ? "Reservas" : "Index")"
+               class="page-tab @(isList ? "is-active" : "")"
+               aria-current="@(isList ? "page" : null)">
+                Listagem
+            </a>
+
+            @if (!restaurante)
+            {
+                <a asp-controller="Reserva"
+                   asp-action="Create"
+                   class="page-tab @(isCreate ? "is-active" : "")"
+                   aria-current="@(isCreate ? "page" : null)">
+                    Nova reserva
+                </a>
+            }
+        </nav>
+
+        <div class="page-content">
+            @RenderBody()
+        </div>
+    </main>
+</body>
+</html>

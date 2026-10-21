@@ -1,0 +1,99 @@
+@{
+    Layout = null;
+    ViewData["Title"] = "Santa Massa Rio Preto";
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+          crossorigin="anonymous" />
+    <link rel="stylesheet" href="~/css/Home.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap"
+          rel="stylesheet" />
+</head>
+<body class="home">
+    
+<header class="home-info-topo">
+
+    <div class="home-info-esquerda">
+        <img src="~/images/logosantamassa.jpg"
+             alt="Logo Santa Massa"
+             class="home-info-logo" />
+
+        <div class="home-info-endereco">
+
+            <div>
+                <span class="home-info-label">NOSSO ENDEREÇO</span>
+                <p>
+                    R. XV de Novembro, 3411 - Centro,
+                    São José do Rio Preto - SP, 15015-110
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="home-info-horario">
+        <span class="home-info-label">HORÁRIO DE FUNCIONAMENTO</span>
+        <p>
+            <span class="home-info-ponto"></span>
+            Segunda a sábado, das 18:30h às 23:30h
+        </p>
+    </div>
+
+</header>
+
+    <div class="home-glow" aria-hidden="true"></div>
+
+<header class="home-top">
+    <img src="~/images/logosantamassa.jpg"
+         alt="Logo do restaurante Santa Massa"
+         class="home-logo" />
+
+    <span class="home-brand">Santa Massa</span>
+
+    <span class="home-subbrand">RIO PRETO</span>
+    <div class="home-divider" aria-hidden="true"></div>
+</header>
+
+
+<main class="home-hero">
+    <p class="home-kicker">
+        RESTAURANTE ITALIANO · SÃO JOSÉ DO RIO PRETO
+    </p>
+
+    <h1>Bem-vindo ao Santa Massa</h1>
+
+    <p class="home-lead">
+        Escolha como deseja acessar nosso sistema.
+    </p>
+
+    <div class="home-actions">
+        <a asp-controller="AreaCliente"
+           asp-action="Index"
+           class="home-card">
+            <h2>Entrar como cliente</h2>
+            <p>Faça uma reserva e consulte as opções disponíveis.</p>
+            <span>Continuar →</span>
+        </a>
+
+        <a asp-controller="AreaRestaurante"
+           asp-action="Index"
+           class="home-card">
+            <h2>Entrar como funcionário</h2>
+            <p>Gerencie reservas, mesas e ambientes.</p>
+            <span>Acessar painel →</span>
+        </a>
+    </div>
+</main>
+
+</body>
+</html>

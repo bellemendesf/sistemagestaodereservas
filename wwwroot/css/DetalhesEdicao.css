@@ -1,0 +1,340 @@
+
+/* ========================================
+   SANTA MASSA — DETALHES E EDIÇÃO DE MESAS
+   ======================================== */
+
+:root {
+    --fundo: #181817;
+    --cartao: #24231F;
+    --cartao-item: #2D2B26;
+    --dourado: #D3B779;
+    --dourado-claro: #E8D5A5;
+    --texto: #F7F3EA;
+    --texto-secundario: #C8C0B1;
+    --borda: #49443A;
+    --verde: #7DB58A;
+    --vermelho: #E7A09A;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body.detalhes-edicao-page {
+    margin: 0;
+    min-height: 100vh;
+    padding: 42px 20px;
+    background:
+        radial-gradient(ellipse at top, #302B20 0%, transparent 52%),
+        var(--fundo);
+    color: var(--texto);
+    font-family: "Poppins", sans-serif;
+}
+
+/* Container */
+
+.detalhes-edicao-container {
+    width: 100%;
+    max-width: 820px;
+    margin: 0 auto;
+}
+
+/* Voltar */
+
+.detalhes-edicao-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 24px;
+    color: var(--dourado-claro);
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.detalhes-edicao-voltar:hover {
+    color: #FFFFFF;
+    transform: translateX(-3px);
+}
+
+/* Cartão principal */
+
+.detalhes-edicao-card {
+    overflow: hidden;
+    background: var(--cartao);
+    border: 1px solid var(--borda);
+    border-radius: 17px;
+    box-shadow: 0 20px 55px rgb(0 0 0 / 28%);
+}
+
+/* Cabeçalho */
+
+.detalhes-edicao-header {
+    padding: 32px 36px;
+    background: linear-gradient(135deg, #302C23, #24231F 75%);
+    border-top: 3px solid var(--dourado);
+    border-bottom: 1px solid var(--borda);
+}
+
+.detalhes-edicao-kicker {
+    margin: 0 0 12px;
+    color: var(--dourado);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+}
+
+.detalhes-edicao-header h1 {
+    margin: 0;
+    color: var(--texto);
+    font-family: "Josefin Sans", sans-serif;
+    font-size: clamp(29px, 5vw, 38px);
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.detalhes-edicao-descricao {
+    max-width: 540px;
+    margin: 12px 0 0;
+    color: var(--texto-secundario);
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+/* Conteúdo */
+
+.detalhes-edicao-conteudo {
+    padding: 34px 36px;
+}
+
+/* Informações da mesa */
+
+.detalhes-edicao-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.detalhes-edicao-item {
+    min-width: 0;
+    padding: 21px;
+    background: var(--cartao-item);
+    border: 1px solid var(--borda);
+    border-radius: 11px;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.detalhes-edicao-item:hover {
+    border-color: #756442;
+    transform: translateY(-2px);
+}
+
+.detalhes-edicao-item span {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--texto-secundario);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.detalhes-edicao-item strong {
+    display: block;
+    overflow-wrap: anywhere;
+    color: var(--texto);
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* Status */
+
+.detalhes-edicao-status {
+    display: inline-flex !important;
+    align-items: center;
+    width: fit-content;
+    padding: 6px 12px;
+    background: rgb(211 183 121 / 10%);
+    border: 1px solid rgb(211 183 121 / 35%);
+    border-radius: 6px;
+    color: var(--dourado-claro) !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+}
+
+/* Formulário */
+
+.detalhes-edicao-form {
+    display: flex;
+    flex-direction: column;
+    gap: 23px;
+}
+
+.detalhes-edicao-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.detalhes-edicao-campo label {
+    color: var(--dourado-claro);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.detalhes-edicao-campo input,
+.detalhes-edicao-campo select {
+    width: 100%;
+    min-height: 49px;
+    padding: 12px 15px;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    outline: none;
+    background: #1D1C19;
+    color: var(--texto);
+    font-family: "Poppins", sans-serif;
+    font-size: 13px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.detalhes-edicao-campo input::placeholder {
+    color: #898477;
+}
+
+.detalhes-edicao-campo input:focus,
+.detalhes-edicao-campo select:focus {
+    border-color: var(--dourado);
+    box-shadow: 0 0 0 3px rgb(211 183 121 / 12%);
+}
+
+.detalhes-edicao-campo select {
+    cursor: pointer;
+}
+
+.detalhes-edicao-campo select option {
+    background: var(--cartao);
+    color: var(--texto);
+}
+
+.detalhes-edicao-campo input[type="hidden"] {
+    display: none;
+}
+
+/* Mensagens de validação */
+
+.detalhes-edicao-erros {
+    color: var(--vermelho);
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.detalhes-edicao-erros:empty {
+    display: none;
+}
+
+/* Botões */
+
+.detalhes-edicao-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 13px;
+    margin-top: 10px;
+}
+
+.detalhes-edicao-botao {
+    display: inline-flex;
+    min-height: 47px;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font-family: "Poppins", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease,
+                color 0.2s ease, transform 0.2s ease;
+}
+
+.detalhes-edicao-botao:hover {
+    transform: translateY(-2px);
+}
+
+.detalhes-edicao-botao-principal {
+    background: var(--dourado);
+    border-color: var(--dourado);
+    color: #201E19;
+}
+
+.detalhes-edicao-botao-principal:hover {
+    background: var(--dourado-claro);
+    border-color: var(--dourado-claro);
+    color: #201E19;
+}
+
+.detalhes-edicao-botao-secundario {
+    background: transparent;
+    border-color: #625640;
+    color: var(--dourado-claro);
+}
+
+.detalhes-edicao-botao-secundario:hover {
+    background: #34312B;
+    border-color: var(--dourado);
+    color: #FFFFFF;
+}
+
+/* Rodapé */
+
+.detalhes-edicao-rodape {
+    padding: 19px 30px;
+    border-top: 1px solid var(--borda);
+    color: #A9A294;
+    font-size: 10px;
+    letter-spacing: 0.5px;
+    text-align: center;
+}
+
+/* Responsividade */
+
+@media (max-width: 600px) {
+    body.detalhes-edicao-page {
+        padding: 25px 13px;
+    }
+
+    .detalhes-edicao-header {
+        padding: 27px 22px;
+    }
+
+    .detalhes-edicao-conteudo {
+        padding: 25px 21px;
+    }
+
+    .detalhes-edicao-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .detalhes-edicao-item {
+        padding: 18px;
+    }
+
+    .detalhes-edicao-acoes {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .detalhes-edicao-botao {
+        width: 100%;
+    }
+
+    .detalhes-edicao-rodape {
+        padding: 17px 20px;
+    }
+}

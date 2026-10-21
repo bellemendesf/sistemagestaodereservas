@@ -1,0 +1,101 @@
+﻿use master
+go
+if db_id('gestaoReserva') is not null
+begin
+    alter database gestaoReserva set single_user with rollback immediate;
+    drop database gestaoReserva;
+end
+go
+create database gestaoReserva
+go
+use gestaoReserva
+go
+create table pessoas
+(
+id			    int			not null primary key identity,
+nome			varchar(50) not null,
+cpf				varchar(20) not null unique,
+senha			varchar(30) not null
+)
+go
+
+create table clientes
+(
+pessoa_id	  int		  not null primary key,
+email_pessoal	varchar(100)not null unique,
+telefone		  varchar(20) not null unique,
+--------Restrições---------
+constraint  fk_cliente_id
+foreign key (pessoa_id) references pessoas(id)
+)
+go
+
+create table funcionarios
+(
+pessoa_id int		  not null primary key,
+email_institucional	      varchar(50) not null unique,
+---------Restrições---------
+constraint  fk_funcionario_id
+foreign key (pessoa_id) references pessoas(id)
+)
+go
+
+create table ambientes
+(
+codigo		int			not null primary key,
+nome		varchar(50) not null,
+status		varchar(20)		null,
+capacidade	int			not null
+)
+go
+
+create table mesas
+(
+nr						int not null primary key,
+numero					int not null,
+status                                     varchar(20) not null check (status in ('Disponivel','Ocupada','Reservada')),
+qtd_lugares int not null default 0,
+codigo_ambientes		int not null,
+---Restrições----------	
+constraint fk_codigo_ambientes
+foreign key(codigo_ambientes) references ambientes(codigo)
+
+)
+go
+
+create table reservas
+(
+numero		int  not null primary key identity,
+qtd_pessoas	int not null check (qtd_pessoas > 0),
+data_hora datetime not null default getdate(),
+status		int		     check(status in(0,1,2)),
+mesas_nr	int  not null,
+cliente_id int not null,
+----Restrições-----
+
+constraint fk_reservas_cliente_id
+foreign key(cliente_id)		references clientes(pessoa_id),
+
+constraint fk_mesas_nr
+foreign key(mesas_nr)		references mesas(nr)
+)
+go
+
+create table Reservas_Mesas
+(	
+numero_reservas int not null,
+nr_mesas		int not null,
+
+	-----Restrições------
+constraint pk_reservas_mesas primary key(numero_reservas, nr_mesas),
+constraint fk_numero_reservas
+foreign key(numero_reservas) references reservas(numero),
+constraint fk_nr_mesas
+foreign key(nr_mesas) references mesas(nr)
+
+)
+go
+
+ALTER TABLE reservas
+ALTER COLUMN mesas_nr INT NULL;
+GO

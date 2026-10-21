@@ -1,0 +1,165 @@
+using GestaoReservas.Models;
+using Microsoft.Data.SqlClient;
+
+public class MesaSqlRepository : DataConnection, IMesaRepository
+{
+    public MesaSqlRepository(IConfiguration configuration) : base(configuration) { }
+
+    public void Create(Mesa mesa)
+    {
+        // UNIÃO: nr identifica a mesa; a View de A não informa AmbienteId.
+        using (var cmd = new SqlCommand())
+        {
+            cmd.Connection = conn;
+            cmd.CommandText = @"INSERT INTO mesas (nr, numero, status, codigo_ambientes) VALUES (@Numero, @Numero, CASE WHEN @Status = 'Livre' THEN 'Disponivel' ELSE @Status END, @AmbienteId);";
+            cmd.Parameters.AddWithValue("@Numero", mesa.Numero);
+            cmd.Parameters.AddWithValue("@Status", mesa.Status);
+            cmd.Parameters.AddWithValue("@AmbienteId", mesa.AmbienteId);
+
+            conn.Open();
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+    }
+
+public List<Mesa> Read()
+{
+    var mesas = new List<Mesa>();
+
+    using (var cmd = new SqlCommand())
+    {
+        cmd.Connection = conn;
+        cmd.CommandText = @"
+            SELECT
+                m.nr,
+                0,
+                CASE WHEN m.status = 'Disponivel' THEN 'Livre' ELSE m.status END,
+                COALESCE(m.codigo_ambientes, 0),
+                COALESCE(a.nome, 'Sem ambiente')
+            FROM mesas m
+            LEFT JOIN ambientes a
+                ON m.codigo_ambientes = a.codigo
+            ORDER BY m.nr;";
+
+        conn.Open();
+
+        try
+        {
+            using (SqlDataReader reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    mesas.Add(new Mesa
+                    {
+                        Id = reader.GetInt32(0),
+                        Numero = reader.GetInt32(0),
+                        QtdLugares = reader.GetInt32(1),
+                        Status = reader.GetString(2),
+                        AmbienteId = reader.GetInt32(3),
+                        AmbienteNome = reader.GetString(4)
+                    });
+                }
+            }
+        }
+        finally
+        {
+            conn.Close();
+        }
+    }
+
+    return mesas;
+}
+    public Mesa? Read(int id)
+    {
+        Mesa? mesa = null;
+
+        using (var cmd = new SqlCommand())
+        {
+            cmd.Connection = conn;
+            cmd.CommandText = @"SELECT nr, 0, CASE WHEN status = 'Disponivel' THEN 'Livre' ELSE status END, COALESCE(codigo_ambientes, 0) FROM mesas WHERE nr = @Id";
+            cmd.Parameters.AddWithValue("@Id", id);
+
+            conn.Open();
+            try
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        mesa = new Mesa
+                        {
+                            Id = reader.GetInt32(0),
+                            Numero = reader.GetInt32(0),
+                            QtdLugares = reader.GetInt32(1),
+                            Status = reader.GetString(2),
+                            AmbienteId = reader.GetInt32(3)
+                        };
+                    }
+                }
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        return mesa;
+    }
+
+   public void Update(Mesa mesa)
+{
+    using (var cmd = new SqlCommand())
+    {
+        cmd.Connection = conn;
+        cmd.CommandText = @"
+            UPDATE mesas
+            SET nr = @Numero,
+                numero = @Numero,
+                status = CASE WHEN @Status = 'Livre' THEN 'Disponivel' ELSE @Status END,
+                codigo_ambientes = @AmbienteId
+            WHERE nr = @Id;";
+
+        cmd.Parameters.AddWithValue("@Numero", mesa.Numero);
+        cmd.Parameters.AddWithValue("@Status", mesa.Status);
+        cmd.Parameters.AddWithValue("@AmbienteId", mesa.AmbienteId);
+        cmd.Parameters.AddWithValue("@Id", mesa.Id);
+
+        conn.Open();
+
+        try
+        {
+            cmd.ExecuteNonQuery();
+        }
+        finally
+        {
+            conn.Close();
+        }
+    }
+}
+
+    public void Delete(int id)
+    {
+        using (var cmd = new SqlCommand())
+        {
+            cmd.Connection = conn;
+            cmd.CommandText = @"DELETE FROM mesas WHERE nr = @Id;";
+            cmd.Parameters.AddWithValue("@Id", id);
+
+            conn.Open();
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+    }
+}

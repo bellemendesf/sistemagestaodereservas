@@ -1,6 +1,9 @@
-public class Funcionario: Pessoa
+using System.ComponentModel.DataAnnotations;
+
+namespace GestaoReservas.Models;
+
+public class Funcionario : Pessoa
 {
-    public int Codigo {get;set;}
-    public required string Email {get;set;}
-    public required string Senha {get;set;}
+    [Required(ErrorMessage = "Informe o e-mail institucional.")]
+    public string EmailInstitucional { get; set; } = "";
 }

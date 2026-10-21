@@ -1,0 +1,188 @@
+```cshtml
+@model List<GestaoReservas.Models.Funcionario>
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Funcionários";
+}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>@ViewData["Title"] - Santa Massa</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="~/css/Funcionarios.css"
+          asp-append-version="true">
+</head>
+
+<body class="funcionarios-page">
+
+    <main class="funcionarios-container">
+
+        <a asp-controller="AreaRestaurante"
+           asp-action="Index"
+           class="funcionarios-voltar">
+            ← Voltar à área do restaurante
+        </a>
+
+        <section class="funcionarios-card">
+
+            <header class="funcionarios-header">
+                <div class="funcionarios-titulos">
+                    <p class="funcionarios-kicker">
+                        Santa Massa · Rio Preto
+                    </p>
+
+                    <h1>Equipe do restaurante</h1>
+
+                    <p class="funcionarios-descricao">
+                        Consulte e gerencie os funcionários cadastrados.
+                    </p>
+                </div>
+
+                <a asp-controller="Funcionario"
+                   asp-action="Create"
+                   class="funcionarios-botao funcionarios-botao-principal">
+                    <span aria-hidden="true">+</span>
+                    Cadastrar funcionário
+                </a>
+            </header>
+
+            <div class="funcionarios-conteudo">
+
+                @if (Model == null || Model.Count == 0)
+                {
+                    <div class="funcionarios-vazio">
+                        <div class="funcionarios-vazio-icone" aria-hidden="true">
+                            ♧
+                        </div>
+
+                        <h2>Nenhum funcionário cadastrado</h2>
+
+                        <p>
+                            Os funcionários cadastrados aparecerão nesta lista.
+                        </p>
+
+                        <a asp-controller="Funcionario"
+                           asp-action="Create"
+                           class="funcionarios-botao funcionarios-botao-principal">
+                            Cadastrar primeiro funcionário
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="funcionarios-resumo">
+                        <div>
+                            <span class="funcionarios-resumo-label">
+                                Funcionários cadastrados
+                            </span>
+
+                            <strong class="funcionarios-resumo-numero">
+                                @Model.Count.ToString("D2")
+                            </strong>
+                        </div>
+
+                        <span class="funcionarios-resumo-legenda">
+                            @(Model.Count == 1
+                                ? "1 registro encontrado"
+                                : $"{Model.Count} registros encontrados")
+                        </span>
+                    </div>
+
+                    <div class="funcionarios-lista">
+                        @foreach (var item in Model)
+                        {
+                            <article class="funcionario-item">
+
+                                <div class="funcionario-identificacao">
+                                    <div class="funcionario-avatar" aria-hidden="true">
+                                        @(string.IsNullOrWhiteSpace(item.Nome)
+                                            ? "?"
+                                            : item.Nome.Trim().Substring(0, 1).ToUpper())
+                                    </div>
+
+                                    <div class="funcionario-informacoes">
+                                        <span class="funcionario-id">
+                                            FUNCIONÁRIO #@item.Id
+                                        </span>
+
+                                        <h2 class="funcionario-nome">
+                                            @(string.IsNullOrWhiteSpace(item.Nome)
+                                                ? "Nome não informado"
+                                                : item.Nome)
+                                        </h2>
+
+                                        <p class="funcionario-cpf">
+                                            CPF:
+                                            @(string.IsNullOrWhiteSpace(item.Cpf)
+                                                ? "Não informado"
+                                                : item.Cpf)
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="funcionario-contatos">
+                                    <div class="funcionario-contato">
+                                        <span>E-mail institucional</span>
+
+                                        <p>
+                                            @(string.IsNullOrWhiteSpace(item.EmailInstitucional)
+                                                ? "Não informado"
+                                                : item.EmailInstitucional)
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="funcionario-acoes">
+                                    <a asp-controller="Funcionario"
+                                       asp-action="Details"
+                                       asp-route-id="@item.Id"
+                                       class="funcionarios-botao funcionarios-botao-secundario">
+                                        Detalhes
+                                    </a>
+
+                                    <a asp-controller="Funcionario"
+                                       asp-action="Edit"
+                                       asp-route-id="@item.Id"
+                                       class="funcionarios-botao funcionarios-botao-editar">
+                                        Editar
+                                    </a>
+
+                                    <a asp-controller="Funcionario"
+                                       asp-action="Delete"
+                                       asp-route-id="@item.Id"
+                                       class="funcionarios-botao funcionarios-botao-excluir">
+                                        Excluir
+                                    </a>
+                                </div>
+
+                            </article>
+                        }
+                    </div>
+                }
+
+            </div>
+
+            <footer class="funcionarios-footer">
+                <span>Santa Massa</span>
+                <span>Painel de gerenciamento</span>
+            </footer>
+
+        </section>
+
+    </main>
+
+</body>
+</html>
+```
