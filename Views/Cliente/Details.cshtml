@@ -1,29 +1,49 @@
+﻿@* Tipo de dado (modelo) que esta view recebe do controller *@
 @model Cliente
 @* View Details de Cliente: apresenta os campos do DER via model MVC.
    As alterações passam pelo controller e pela interface do repositório. *@
+@* Tipo do documento (HTML5) *@
 <!DOCTYPE html>
+@* Início do documento HTML *@
 <html lang="pt-BR">
+@* Cabeçalho do documento (título, fontes e estilos) *@
 <head>
+    @* Configuração da página *@
     <meta charset="UTF-8">
+    @* Configuração da página *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @* Título da aba *@
     <title>Details - Cliente</title>
+    @* Arquivo de estilo/fonte externo *@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+@* Corpo da página *@
 <body class="container py-4">
+    @* Navegação *@
     <nav class="mb-4">
+        @* Link *@
         <a href="/Cliente/Index">Clientes</a> |
+        @* Link *@
         <a href="/Funcionario/Index">Funcionários</a>
     </nav>
+    @* Título principal *@
     <h1>Detalhes - Cliente</h1>
     @* Senha e hash não são apresentados nas páginas de consulta. *@
     <dl>
+        @* Nome do dado *@
         <dt>ID</dt><dd>@Model.Id</dd>
+        @* Nome do dado *@
         <dt>Nome</dt><dd>@Model.Nome</dd>
+        @* Nome do dado *@
         <dt>CPF</dt><dd>@Model.Cpf</dd>
+        @* Nome do dado *@
         <dt>E-mail pessoal</dt><dd>@Model.EmailPessoal</dd>
+        @* Nome do dado *@
         <dt>Telefone</dt><dd>@Model.Telefone</dd>
     </dl>
+    @* Link *@
     <a href="/Cliente/Edit/@Model.Id" class="btn btn-primary">Editar</a>
+    @* Link *@
     <a href="/Cliente/Index" class="btn btn-secondary mt-2">Voltar</a>
 </body>
 </html>

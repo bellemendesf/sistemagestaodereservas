@@ -1,25 +1,37 @@
-
+﻿
+@* Importação usada pelas views *@
 @using GestaoReservas.Models
+@* Tipo de dado (modelo) que esta view recebe do controller *@
 @model IEnumerable<Reserva>
 
+@* Bloco C#: configurações da view (título, layout e variáveis) *@
 @{
+    // Atribui Layout
     Layout = "~/Views/Shared/_ReservaLayout.cshtml";
     ViewData["Title"] = "Reservas";
 
+    // Variável lista
     var lista = Model?.ToList() ?? new List<Reserva>();
 
+    // Variável restaurante
     bool restaurante = string.Equals(
         ViewContext.RouteData.Values["controller"]?.ToString(),
         "AreaRestaurante",
         StringComparison.OrdinalIgnoreCase);
 }
 
+@* Seção da página *@
 <section class="reservas-lista">
 
+    @* Cabeçalho *@
     <header class="reservas-lista-cabecalho">
+        @* Bloco *@
         <div>
+            @* Parágrafo de texto *@
             <p class="reservas-lista-kicker">PAINEL DE CONTROLE</p>
+            @* Subtítulo *@
             <h2>Reservas cadastradas</h2>
+            @* Parágrafo de texto *@
             <p class="reservas-lista-descricao">
                 @(restaurante
                     ? "Acompanhe os agendamentos e gerencie as reservas do restaurante."
@@ -27,26 +39,33 @@
             </p>
         </div>
 
+        @* Texto destacado *@
         <span class="reservas-contador">
             @lista.Count @(lista.Count == 1 ? "reserva" : "reservas")
         </span>
     </header>
 
+    @* Mostra o bloco só se a condição for verdadeira *@
     @if (!lista.Any())
     {
+        @* Bloco (classe reservas-vazio) *@
         <div class="reservas-vazio">
+            @* Bloco (classe reservas-vazio-icone) *@
             <div class="reservas-vazio-icone">R</div>
 
             <h3>Nenhuma reserva por aqui</h3>
 
+            @* Parágrafo de texto *@
             <p>
                 @(restaurante
                     ? "Quando houver reservas cadastradas, elas aparecerão nesta listagem."
                     : "Você ainda não possui reservas. Que tal planejar sua próxima visita?")
             </p>
 
+            @* Mostra o bloco só se a condição for verdadeira *@
             @if (!restaurante)
             {
+                @* Link *@
                 <a asp-controller="Reserva"
                    asp-action="Create"
                    class="reservas-botao-novo">
@@ -55,11 +74,15 @@
             }
         </div>
     }
+    @* Caso contrário, mostra este bloco *@
     else
     {
+        @* Mostra o bloco só se a condição for verdadeira *@
         @if (!restaurante)
         {
+            @* Bloco (classe reservas-lista-acoes) *@
             <div class="reservas-lista-acoes">
+                @* Link *@
                 <a asp-controller="Reserva"
                    asp-action="Create"
                    class="reservas-botao-novo">
@@ -68,20 +91,32 @@
             </div>
         }
 
+        @* Bloco (classe reservas-tabela-wrap) *@
         <div class="reservas-tabela-wrap">
+            @* Tabela *@
             <table class="reservas-tabela">
+                @* Cabeçalho da tabela *@
                 <thead>
+                    @* Linha da tabela *@
                     <tr>
+                        @* Título da coluna *@
                         <th>Cliente</th>
+                        @* Título da coluna *@
                         <th>Mesa</th>
-                        <th>Data e hora</th>
+                        @* Título da coluna *@
+                        <th>Data</th>
+                        @* Título da coluna *@
                         <th>Pessoas</th>
+                        @* Título da coluna *@
                         <th>Status</th>
+                        @* Título da coluna *@
                         <th>Ações</th>
                     </tr>
                 </thead>
 
+                @* Corpo da tabela *@
                 <tbody>
+                    @* Repete o bloco para cada item da lista *@
                     @foreach (var reserva in lista)
                     {
                         var status = reserva.Status ?? "";
@@ -95,40 +130,51 @@
                             _ => "status-outro"
                         };
 
+                        @* Linha da tabela *@
                         <tr>
+                            @* Célula *@
                             <td data-label="Cliente" class="reserva-cliente">
                                 @(reserva.Cliente?.Nome ?? "—")
                             </td>
 
+                            @* Célula *@
                             <td data-label="Mesa">
                                 @reserva.MesaId
                             </td>
 
-                            <td data-label="Data e hora" class="reserva-data">
+                            @* Célula *@
+                            <td data-label="Data" class="reserva-data">
                                 @reserva.DataHora.ToString("dd/MM/yyyy")
-                                <span>@reserva.DataHora.ToString("HH:mm")</span>
                             </td>
 
+                            @* Célula *@
                             <td data-label="Pessoas">
                                 @reserva.QtdPessoas
                             </td>
 
+                            @* Célula *@
                             <td data-label="Status">
+                                @* Texto destacado *@
                                 <span class="reserva-status @badge">
                                     @(string.IsNullOrWhiteSpace(status) ? "Não informado" : status)
                                 </span>
                             </td>
 
+                            @* Célula *@
                             <td data-label="Ações">
+                                @* Bloco (classe reservas-acoes) *@
                                 <div class="reservas-acoes">
+                                    @* Link (asp-action Details) *@
                                     <a asp-action="Details"
                                        asp-route-id="@reserva.Id"
                                        class="reserva-acao">
                                         Detalhes
                                     </a>
 
+                                    @* Mostra o bloco só se a condição for verdadeira *@
                                     @if (!string.Equals(status, "Cancelada", StringComparison.OrdinalIgnoreCase))
                                     {
+                                        @* Link (asp-action Edit) *@
                                         <a asp-action="Edit"
                                            asp-route-id="@reserva.Id"
                                            class="reserva-acao">
@@ -136,9 +182,11 @@
                                         </a>
                                     }
 
+                                    @* Mostra o bloco só se a condição for verdadeira *@
                                     @if (!restaurante &&
                                          !string.Equals(status, "Cancelada", StringComparison.OrdinalIgnoreCase))
                                     {
+                                        @* Link (asp-action Delete) *@
                                         <a asp-action="Delete"
                                            asp-route-id="@reserva.Id"
                                            class="reserva-acao reserva-acao-cancelar">
@@ -154,6 +202,7 @@
         </div>
     }
 
+    @* Rodapé *@
     <footer class="reservas-lista-rodape">
         Santa Massa - Gestão de reservas
     </footer>

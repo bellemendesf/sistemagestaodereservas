@@ -1,0 +1,235 @@
+﻿using GestaoReservas.Models;
+using Microsoft.Data.SqlClient;
+
+public class ReservaSqlRepository : DataConnection, IReservaRepository
+{
+    public ReservaSqlRepository(IConfiguration configuration) : base(configuration) { }
+
+    public void Create(Reserva reserva)
+    {
+        // UNIÃO: liga o Cliente recebido por A ao cadastro e à reserva SQL de B.
+        using (var cmd = new SqlCommand())
+        {
+            cmd.Connection = conn;
+            cmd.CommandText = @"SET XACT_ABORT ON; BEGIN TRANSACTION;
+                DECLARE @PessoaId int;
+                SELECT @PessoaId = id FROM pessoas WITH (UPDLOCK, HOLDLOCK) WHERE cpf = @Cpf;
+                IF @PessoaId IS NULL
+                BEGIN
+                    INSERT INTO pessoas (nome, cpf, senha) VALUES (@Nome, @Cpf, '');
+                    SET @PessoaId = CAST(SCOPE_IDENTITY() AS INT);
+                END;
+                IF NOT EXISTS (SELECT 1 FROM clientes WHERE pessoa_id = @PessoaId)
+                    INSERT INTO clientes (pessoa_id, email_pessoal, telefone) VALUES (@PessoaId, @Email_pessoal, @Telefone);
+                INSERT INTO reservas (qtd_pessoas, data_hora, status, mesas_nr, cliente_id)
+                VALUES (@QtdPessoas, @DataHora, 0, @MesaId, @PessoaId);
+                DECLARE @ReservaId int = CAST(SCOPE_IDENTITY() AS INT);
+                INSERT INTO Reservas_Mesas (numero_reservas, nr_mesas) VALUES (@ReservaId, @MesaId);
+                COMMIT TRANSACTION;
+                SELECT @ReservaId;";
+            cmd.Parameters.AddWithValue("@Nome", reserva.Cliente.Nome);
+            cmd.Parameters.AddWithValue("@Cpf", reserva.Cliente.Cpf);
+            cmd.Parameters.AddWithValue("@Email_pessoal", reserva.Cliente.EmailPessoal ?? "");
+            cmd.Parameters.AddWithValue("@Telefone", reserva.Cliente.Telefone);
+            cmd.Parameters.AddWithValue("@QtdPessoas", reserva.QtdPessoas);
+            cmd.Parameters.AddWithValue("@DataHora", reserva.DataHora);
+            cmd.Parameters.AddWithValue("@MesaId", reserva.MesaId);
+
+            conn.Open();
+            try
+            {
+                // ALTERAÇÃO: guarda o número gerado para mostrar a reserva (com status) após o cadastro.
+                reserva.Id = Convert.ToInt32(cmd.ExecuteScalar());
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+    }
+
+    public List<Reserva> Read()
+    {
+        var reservas = new List<Reserva>();
+
+        using (var cmd = new SqlCommand())
+        {
+            cmd.Connection = conn;
+            cmd.CommandText = @"SELECT r.numero, r.qtd_pessoas,
+                r.data_hora,
+                CASE r.status WHEN 0 THEN 'Pendente' WHEN 1 THEN 'Confirmada' WHEN 2 THEN 'Cancelada' END,
+                r.mesas_nr, r.cliente_id, p.nome, p.cpf, c.email_pessoal, c.telefone
+                FROM reservas r
+                INNER JOIN clientes c ON c.pessoa_id = r.cliente_id
+                INNER JOIN pessoas p ON p.id = c.pessoa_id";
+
+            conn.Open();
+            try
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        reservas.Add(new Reserva
+                        {
+                            Id = reader.GetInt32(0),
+                            QtdPessoas = reader.GetInt32(1),
+                            DataHora = reader.GetDateTime(2),
+                            Status = reader.GetString(3),
+                            MesaId = reader.IsDBNull(4)
+                            ? null
+                            : reader.GetInt32(4),
+                            ClienteId = reader.GetInt32(5),
+                            Cliente = new Cliente
+                            {
+                                Id = reader.GetInt32(5),
+                                Nome = reader.GetString(6),
+                                Cpf = reader.GetString(7),
+                                EmailPessoal = reader.GetString(8),
+                                Telefone = reader.GetString(9)
+                            }
+                        });
+                    }
+                }
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        return reservas;
+    }
+
+    public Reserva? Read(int id)
+    {
+        Reserva? reserva = null;
+
+        using (var cmd = new SqlCommand())
+        {
+            cmd.Connection = conn;
+            cmd.CommandText = @"SELECT r.numero, r.qtd_pessoas,
+                r.data_hora,
+                CASE r.status WHEN 0 THEN 'Pendente' WHEN 1 THEN 'Confirmada' WHEN 2 THEN 'Cancelada' END,
+                r.mesas_nr, r.cliente_id, p.nome, p.cpf, c.email_pessoal, c.telefone
+                FROM reservas r
+                INNER JOIN clientes c ON c.pessoa_id = r.cliente_id
+                INNER JOIN pessoas p ON p.id = c.pessoa_id WHERE r.numero = @Id";
+            cmd.Parameters.AddWithValue("@Id", id);
+
+            conn.Open();
+            try
+            {
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        reserva = new Reserva
+                        {
+                            Id = reader.GetInt32(0),
+                            QtdPessoas = reader.GetInt32(1),
+                            DataHora = reader.GetDateTime(2),
+                            Status = reader.GetString(3),
+                            MesaId = reader.GetInt32(4),
+                            ClienteId = reader.GetInt32(5),
+                            Cliente = new Cliente
+                            {
+                                Id = reader.GetInt32(5),
+                                Nome = reader.GetString(6),
+                                Cpf = reader.GetString(7),
+                                EmailPessoal = reader.GetString(8),
+                                Telefone = reader.GetString(9)
+                            }
+                        };
+                    }
+                }
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+
+        return reserva;
+    }
+
+    public void Update(Reserva reserva)
+    {
+        // UNIÃO: preserva cliente, funcionário e status como no repositório de A.
+        using (var cmd = new SqlCommand())
+        {
+            cmd.Connection = conn;
+            cmd.CommandText = @"SET XACT_ABORT ON; BEGIN TRANSACTION;
+                IF EXISTS (SELECT 1 FROM reservas WITH (UPDLOCK, HOLDLOCK) WHERE numero = @Id AND status <> 2)
+                BEGIN
+                    UPDATE reservas SET qtd_pessoas = @QtdPessoas, data_hora = @DataHora, mesas_nr = @MesaId WHERE numero = @Id;
+                    DELETE FROM Reservas_Mesas WHERE numero_reservas = @Id;
+                    INSERT INTO Reservas_Mesas (numero_reservas, nr_mesas) VALUES (@Id, @MesaId);
+                END;
+                COMMIT TRANSACTION;
+                SELECT @ReservaId;";
+            cmd.Parameters.AddWithValue("@Id", reserva.Id);
+            cmd.Parameters.AddWithValue("@QtdPessoas", reserva.QtdPessoas);
+            cmd.Parameters.AddWithValue("@DataHora", reserva.DataHora);
+            cmd.Parameters.AddWithValue("@MesaId", reserva.MesaId);
+
+            conn.Open();
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+    }
+
+    public void UpdateStatus(int id, string status)
+    {
+        // UNIÃO: aplica no SQL os estados e o bloqueio de canceladas da versão A.
+        if (status != "Pendente" && status != "Confirmada" && status != "Cancelada")
+        {
+            return;
+        }
+
+        using (var cmd = new SqlCommand())
+        {
+            cmd.Connection = conn;
+            cmd.CommandText = @"UPDATE reservas SET status = CASE @Status WHEN 'Pendente' THEN 0 WHEN 'Confirmada' THEN 1 WHEN 'Cancelada' THEN 2 END WHERE numero = @Id AND status <> 2;";
+            cmd.Parameters.AddWithValue("@Status", status);
+            cmd.Parameters.AddWithValue("@Id", id);
+
+            conn.Open();
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+    }
+
+    public void Delete(int id)
+    {
+        // UNIÃO: cancela no banco sem apagar o histórico, conforme A.
+        using (var cmd = new SqlCommand())
+        {
+            cmd.Connection = conn;
+            cmd.CommandText = @"UPDATE reservas SET status = 2 WHERE numero = @Id;";
+            cmd.Parameters.AddWithValue("@Id", id);
+
+            conn.Open();
+            try
+            {
+                cmd.ExecuteNonQuery();
+            }
+            finally
+            {
+                conn.Close();
+            }
+        }
+    }
+}

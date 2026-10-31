@@ -1,64 +1,92 @@
-
+﻿
+@* Tipo de dado (modelo) que esta view recebe do controller *@
 @model Cliente
 
+@* Bloco C#: configurações da view (título, layout e variáveis) *@
 @{
+    // Atribui Layout
     Layout = null;
     ViewData["Title"] = "Cadastrar-se";
 }
 
+@* Tipo do documento (HTML5) *@
 <!DOCTYPE html>
+@* Início do documento HTML *@
 <html lang="pt-BR">
+@* Cabeçalho do documento (título, fontes e estilos) *@
 <head>
+    @* Configuração da página *@
     <meta charset="UTF-8">
+    @* Configuração da página *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    @* Título da aba *@
     <title>@ViewData["Title"]</title>
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    @* Arquivo de estilo/fonte externo *@
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap"
           rel="stylesheet">
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="stylesheet" href="~/css/Cadastro.css" asp-append-version="true">
 </head>
 
+@* Corpo da página *@
 <body class="cadastro-page">
+    @* Conteúdo principal *@
     <main class="cadastro-container">
 
+        @* Link *@
         <a class="cadastro-voltar-topo"
            asp-controller="Home"
            asp-action="Index">
             ← Página inicial
         </a>
 
+        @* Seção da página *@
         <section class="cadastro-card">
 
+            @* Cabeçalho *@
             <header class="cadastro-header">
+                @* Imagem *@
                 <img src="~/images/logosantamassa.jpg"
                      alt="Santa Massa"
                      class="cadastro-logo">
 
+                @* Parágrafo de texto *@
                 <p class="cadastro-subtitulo">Santa Massa · Área do cliente</p>
 
+                @* Título principal *@
                 <h1>Criar cadastro</h1>
 
+                @* Parágrafo de texto *@
                 <p class="cadastro-descricao">
                     Preencha seus dados para cadastrar-se no nosso sistema
                     de reservas.
                 </p>
             </header>
 
+            @* Resumo dos erros de validação *@
             @Html.ValidationSummary(false, "", new { @class = "cadastro-erros" })
 
+            @* Formulário *@
             <form asp-controller="Cliente"
                   asp-action="Create"
                   method="post"
                   class="cadastro-form">
 
+                @* Token antifalsificação do formulário *@
                 @Html.AntiForgeryToken()
 
+                @* Bloco (classe campo-cadastro) *@
                 <div class="campo-cadastro">
+                    @* Rótulo do campo *@
                     <label for="Nome">Nome completo</label>
+                    @* Campo de entrada (id Nome) *@
                     <input id="Nome"
                            name="Nome"
                            type="text"
@@ -68,8 +96,11 @@
                            required>
                 </div>
 
+                @* Bloco (classe campo-cadastro) *@
                 <div class="campo-cadastro">
+                    @* Rótulo do campo *@
                     <label for="Cpf">CPF</label>
+                    @* Campo de entrada (id Cpf) *@
                     <input id="Cpf"
                            name="Cpf"
                            type="text"
@@ -79,8 +110,11 @@
                            required>
                 </div>
 
+                @* Bloco (classe campo-cadastro) *@
                 <div class="campo-cadastro">
+                    @* Rótulo do campo *@
                     <label for="EmailPessoal">E-mail pessoal</label>
+                    @* Campo de entrada (id EmailPessoal) *@
                     <input id="EmailPessoal"
                            name="EmailPessoal"
                            type="email"
@@ -90,8 +124,11 @@
                            required>
                 </div>
 
+                @* Bloco (classe campo-cadastro) *@
                 <div class="campo-cadastro">
+                    @* Rótulo do campo *@
                     <label for="Telefone">Telefone</label>
+                    @* Campo de entrada (id Telefone) *@
                     <input id="Telefone"
                            name="Telefone"
                            type="tel"
@@ -101,8 +138,11 @@
                            required>
                 </div>
 
+                @* Bloco (classe campo-cadastro) *@
                 <div class="campo-cadastro">
+                    @* Rótulo do campo *@
                     <label for="Senha">Senha</label>
+                    @* Campo de entrada (id Senha) *@
                     <input id="Senha"
                            name="Senha"
                            type="password"
@@ -111,11 +151,14 @@
                            required>
                 </div>
 
+                @* Bloco (classe cadastro-botoes) *@
                 <div class="cadastro-botoes">
+                    @* Botão *@
                     <button type="submit" class="btn-cadastro-salvar">
                         Criar cadastro
                     </button>
 
+                    @* Link *@
                     <a asp-controller="Home"
                        asp-action="Index"
                        class="btn-cadastro-voltar">
@@ -126,6 +169,7 @@
             </form>
         </section>
 
+        @* Rodapé *@
         <footer class="cadastro-rodape">
             Santa Massa - Rio Preto
         </footer>

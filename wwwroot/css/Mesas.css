@@ -1,443 +1,510 @@
-
+﻿
+/* Variáveis de cores do site */
 :root {
-    --sm-fundo: #181817;
-    --sm-painel: #2B2925;
-    --sm-painel-claro: #34312B;
-    --sm-dourado: #D3B779;
-    --sm-dourado-claro: #E8D5A5;
-    --sm-texto: #F7F3EA;
-    --sm-secundario: #C8C0B1;
-    --sm-borda: #49443A;
+    --sm-fundo: #181817; /* variável de cor --sm-fundo */
+    --sm-painel: #2B2925; /* variável de cor --sm-painel */
+    --sm-painel-claro: #34312B; /* variável de cor --sm-painel-claro */
+    --sm-dourado: #D3B779; /* variável de cor --sm-dourado */
+    --sm-dourado-claro: #E8D5A5; /* variável de cor --sm-dourado-claro */
+    --sm-texto: #F7F3EA; /* variável de cor --sm-texto */
+    --sm-secundario: #C8C0B1; /* variável de cor --sm-secundario */
+    --sm-borda: #49443A; /* variável de cor --sm-borda */
 }
 
+/* Estilo de: * */
 * {
-    box-sizing: border-box;
+    box-sizing: border-box; /* cálculo do tamanho */
 }
 
+/* Estilo de: body.mesas-page */
 body.mesas-page {
-    min-height: 100vh;
-    margin: 0;
-    padding: 38px 24px;
-    color: var(--sm-texto);
+    min-height: 100vh; /* altura mínima */
+    margin: 0; /* espaçamento externo */
+    padding: 38px 24px; /* espaçamento interno */
+    color: var(--sm-texto); /* cor do texto */
     background:
         radial-gradient(ellipse at top, #393226 0%, transparent 48%),
         var(--sm-fundo);
-    font-family: "Poppins", sans-serif;
+    font-family: "Poppins", sans-serif; /* fonte */
 }
 
+/* Estilo de: .mesas-container */
 .mesas-container {
-    width: min(1400px, 100%);
-    margin: 0 auto;
+    width: min(1400px, 100%); /* largura */
+    margin: 0 auto; /* espaçamento externo */
 }
 
+/* Estilo de: .mesas-voltar */
 .mesas-voltar {
-    display: inline-block;
-    margin-bottom: 24px;
-    color: var(--sm-dourado-claro);
-    font-size: 0.9rem;
-    text-decoration: none;
-    transition: color 0.2s ease;
+    display: inline-block; /* tipo de exibição */
+    margin-bottom: 24px; /* margem inferior */
+    color: var(--sm-dourado-claro); /* cor do texto */
+    font-size: 0.9rem; /* tamanho da fonte */
+    text-decoration: none; /* decoração do texto */
+    transition: color 0.2s ease; /* animação suave */
 }
 
+/* Estilo de: .mesas-voltar:hover */
 .mesas-voltar:hover {
-    color: #FFFFFF;
-    text-decoration: underline;
-    text-underline-offset: 4px;
+    color: #FFFFFF; /* cor do texto */
+    text-decoration: underline; /* decoração do texto */
+    text-underline-offset: 4px; /* propriedade text-underline-offset */
 }
 
+/* Estilo de: .mesas-card */
 .mesas-card {
-    overflow: hidden;
-    background: var(--sm-painel);
-    border: 1px solid var(--sm-borda);
-    border-radius: 14px;
-    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+    overflow: hidden; /* conteúdo excedente */
+    background: var(--sm-painel); /* fundo */
+    border: 1px solid var(--sm-borda); /* borda */
+    border-radius: 14px; /* cantos arredondados */
+    box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22); /* sombra */
 }
 
+/* Estilo de: .mesas-header */
 .mesas-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 22px;
-    padding: 34px 38px;
-    border-bottom: 1px solid var(--sm-borda);
+    display: flex; /* tipo de exibição */
+    align-items: center; /* alinhamento vertical */
+    justify-content: space-between; /* alinhamento horizontal */
+    flex-wrap: wrap; /* quebra de linha dos itens */
+    gap: 22px; /* espaço entre itens */
+    padding: 34px 38px; /* espaçamento interno */
+    border-bottom: 1px solid var(--sm-borda); /* borda inferior */
 }
 
+/* Estilo de: .mesas-kicker */
 .mesas-kicker {
-    margin: 0 0 10px;
-    color: var(--sm-dourado);
-    font-size: 0.76rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
+    margin: 0 0 10px; /* espaçamento externo */
+    color: var(--sm-dourado); /* cor do texto */
+    font-size: 0.76rem; /* tamanho da fonte */
+    font-weight: 600; /* peso da fonte */
+    letter-spacing: 0.15em; /* espaço entre letras */
+    text-transform: uppercase; /* maiúsculas/minúsculas */
 }
 
+/* Estilo de: .mesas-header h1 */
 .mesas-header h1 {
-    margin: 0 0 12px;
-    color: var(--sm-texto);
-    font-family: "Josefin Sans", sans-serif;
-    font-size: clamp(2.1rem, 4vw, 2.8rem);
-    font-weight: 600;
+    margin: 0 0 12px; /* espaçamento externo */
+    color: var(--sm-texto); /* cor do texto */
+    font-family: "Josefin Sans", sans-serif; /* fonte */
+    font-size: clamp(2.1rem, 4vw, 2.8rem); /* tamanho da fonte */
+    font-weight: 600; /* peso da fonte */
 }
 
+/* Estilo de: .mesas-descricao */
 .mesas-descricao {
-    margin: 0;
-    color: var(--sm-secundario);
-    font-size: 0.92rem;
-    line-height: 1.8;
+    margin: 0; /* espaçamento externo */
+    color: var(--sm-secundario); /* cor do texto */
+    font-size: 0.92rem; /* tamanho da fonte */
+    line-height: 1.8; /* altura da linha */
 }
 
+/* Estilo de: .btn-mesa-nova */
 .btn-mesa-nova {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 48px;
-    padding: 13px 22px;
-    color: #211D15;
-    background: var(--sm-dourado);
-    border: 1px solid var(--sm-dourado);
-    border-radius: 7px;
-    font-size: 0.88rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: background 0.2s ease, transform 0.2s ease;
+    display: inline-flex; /* tipo de exibição */
+    align-items: center; /* alinhamento vertical */
+    justify-content: center; /* alinhamento horizontal */
+    min-height: 48px; /* altura mínima */
+    padding: 13px 22px; /* espaçamento interno */
+    color: #211D15; /* cor do texto */
+    background: var(--sm-dourado); /* fundo */
+    border: 1px solid var(--sm-dourado); /* borda */
+    border-radius: 7px; /* cantos arredondados */
+    font-size: 0.88rem; /* tamanho da fonte */
+    font-weight: 600; /* peso da fonte */
+    text-decoration: none; /* decoração do texto */
+    transition: background 0.2s ease, transform 0.2s ease; /* animação suave */
 }
 
+/* Estilo de: .btn-mesa-nova:hover */
 .btn-mesa-nova:hover {
-    color: #211D15;
-    background: var(--sm-dourado-claro);
-    border-color: var(--sm-dourado-claro);
-    transform: translateY(-1px);
+    color: #211D15; /* cor do texto */
+    background: var(--sm-dourado-claro); /* fundo */
+    border-color: var(--sm-dourado-claro); /* cor da borda */
+    transform: translateY(-1px); /* transformação (movimento) */
 }
 
+/* Estilo de: .mesas-conteudo */
 .mesas-conteudo {
-    padding: 30px 38px 36px;
+    padding: 30px 38px 36px; /* espaçamento interno */
 }
 
+/* Estilo de: .mesas-contagem */
 .mesas-contagem {
-    margin: 0 0 20px;
-    color: var(--sm-secundario);
-    font-size: 0.88rem;
+    margin: 0 0 20px; /* espaçamento externo */
+    color: var(--sm-secundario); /* cor do texto */
+    font-size: 0.88rem; /* tamanho da fonte */
 }
 
+/* Estilo de: .mesas-table-wrap */
 .mesas-table-wrap {
-    width: 100%;
-    overflow-x: auto;
-    border: 1px solid var(--sm-borda);
-    border-radius: 9px;
+    width: 100%; /* largura */
+    overflow-x: auto; /* rolagem horizontal */
+    border: 1px solid var(--sm-borda); /* borda */
+    border-radius: 9px; /* cantos arredondados */
 }
 
+/* Estilo de: .mesas-table */
 .mesas-table {
-    width: 100%;
-    min-width: 600px;
-    margin: 0;
-    border-collapse: collapse;
+    width: 100%; /* largura */
+    min-width: 600px; /* largura mínima */
+    margin: 0; /* espaçamento externo */
+    border-collapse: collapse; /* bordas da tabela unidas */
 }
 
+/* Estilo de: .mesas-table thead th */
 .mesas-table thead th {
-    padding: 17px 19px;
-    color: var(--sm-dourado-claro);
-    background: #25221D;
-    border-bottom: 1px solid #514631;
-    font-size: 0.76rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-align: left;
-    white-space: nowrap;
+    padding: 17px 19px; /* espaçamento interno */
+    color: var(--sm-dourado-claro); /* cor do texto */
+    background: #25221D; /* fundo */
+    border-bottom: 1px solid #514631; /* borda inferior */
+    font-size: 0.76rem; /* tamanho da fonte */
+    font-weight: 600; /* peso da fonte */
+    letter-spacing: 0.06em; /* espaço entre letras */
+    text-align: left; /* alinhamento do texto */
+    white-space: nowrap; /* quebra de linha do texto */
 }
 
+/* Estilo de: .mesas-table tbody td */
 .mesas-table tbody td {
-    padding: 18px 19px;
-    color: var(--sm-texto);
-    border-bottom: 1px solid #3A3731;
-    font-size: 0.88rem;
-    vertical-align: middle;
+    padding: 18px 19px; /* espaçamento interno */
+    color: var(--sm-texto); /* cor do texto */
+    border-bottom: 1px solid #3A3731; /* borda inferior */
+    font-size: 0.88rem; /* tamanho da fonte */
+    vertical-align: middle; /* alinhamento vertical */
 }
 
+/* Estilo de: .mesas-table tbody tr */
 .mesas-table tbody tr {
-    background: var(--sm-painel);
-    transition: background 0.2s ease;
+    background: var(--sm-painel); /* fundo */
+    transition: background 0.2s ease; /* animação suave */
 }
 
+/* Estilo de: .mesas-table tbody tr:hover */
 .mesas-table tbody tr:hover {
-    background: var(--sm-painel-claro);
+    background: var(--sm-painel-claro); /* fundo */
 }
 
+/* Estilo de: .mesas-table tbody tr:last-child td */
 .mesas-table tbody tr:last-child td {
-    border-bottom: none;
+    border-bottom: none; /* borda inferior */
 }
 
+/* Estilo de: .mesa-numero */
 .mesa-numero {
-    color: var(--sm-dourado-claro) !important;
-    font-weight: 600;
+    color: var(--sm-dourado-claro) !important; /* cor do texto */
+    font-weight: 600; /* peso da fonte */
 }
 
+/* Estilo de: .mesa-status */
 .mesa-status {
-    display: inline-block;
-    padding: 6px 12px;
-    border: 1px solid transparent;
-    border-radius: 30px;
-    font-size: 0.76rem;
-    font-weight: 600;
-    white-space: nowrap;
+    display: inline-block; /* tipo de exibição */
+    padding: 6px 12px; /* espaçamento interno */
+    border: 1px solid transparent; /* borda */
+    border-radius: 30px; /* cantos arredondados */
+    font-size: 0.76rem; /* tamanho da fonte */
+    font-weight: 600; /* peso da fonte */
+    white-space: nowrap; /* quebra de linha do texto */
 }
 
+/* Estilo de: .status-livre */
 .status-livre {
-    color: #A9D9B4;
-    background: rgba(88, 163, 108, 0.13);
-    border-color: rgba(128, 194, 144, 0.28);
+    color: #A9D9B4; /* cor do texto */
+    background: rgba(88, 163, 108, 0.13); /* fundo */
+    border-color: rgba(128, 194, 144, 0.28); /* cor da borda */
 }
 
+/* Estilo de: .status-reservada */
 .status-reservada {
-    color: #E8D5A5;
-    background: rgba(211, 183, 121, 0.12);
-    border-color: rgba(211, 183, 121, 0.3);
+    color: #E8D5A5; /* cor do texto */
+    background: rgba(211, 183, 121, 0.12); /* fundo */
+    border-color: rgba(211, 183, 121, 0.3); /* cor da borda */
 }
 
+/* Estilo de: .status-ocupada */
 .status-ocupada {
-    color: #F0A5A0;
-    background: rgba(220, 105, 98, 0.12);
-    border-color: rgba(220, 105, 98, 0.28);
+    color: #F0A5A0; /* cor do texto */
+    background: rgba(220, 105, 98, 0.12); /* fundo */
+    border-color: rgba(220, 105, 98, 0.28); /* cor da borda */
 }
 
+/* Estilo de: .status-outro */
 .status-outro {
-    color: var(--sm-secundario);
-    background: rgba(200, 192, 177, 0.08);
-    border-color: var(--sm-borda);
+    color: var(--sm-secundario); /* cor do texto */
+    background: rgba(200, 192, 177, 0.08); /* fundo */
+    border-color: var(--sm-borda); /* cor da borda */
 }
 
+/* Estilo de: .mesas-acoes */
 .mesas-acoes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-    white-space: nowrap;
+    display: flex; /* tipo de exibição */
+    flex-wrap: wrap; /* quebra de linha dos itens */
+    gap: 14px; /* espaço entre itens */
+    white-space: nowrap; /* quebra de linha do texto */
 }
 
+/* Estilo de: .mesas-acoes a */
 .mesas-acoes a {
-    font-size: 0.83rem;
-    font-weight: 500;
-    text-decoration: none;
-    transition: color 0.2s ease;
+    font-size: 0.83rem; /* tamanho da fonte */
+    font-weight: 500; /* peso da fonte */
+    text-decoration: none; /* decoração do texto */
+    transition: color 0.2s ease; /* animação suave */
 }
 
+/* Estilo de: .mesas-acoes a:hover */
 .mesas-acoes a:hover {
-    color: #FFFFFF;
-    text-decoration: underline;
-    text-underline-offset: 4px;
+    color: #FFFFFF; /* cor do texto */
+    text-decoration: underline; /* decoração do texto */
+    text-underline-offset: 4px; /* propriedade text-underline-offset */
 }
 
 .mesas-acoes .acao-editar,
+/* Estilo de: .mesas-acoes .acao-detalhes */
 .mesas-acoes .acao-detalhes {
-    color: var(--sm-dourado-claro);
+    color: var(--sm-dourado-claro); /* cor do texto */
 }
 
+/* Estilo de: .mesas-acoes .acao-excluir */
 .mesas-acoes .acao-excluir {
-    color: #F0A5A0;
+    color: #F0A5A0; /* cor do texto */
 }
 
+/* Estilo de: .mesas-vazio */
 .mesas-vazio {
-    padding: 55px 20px;
-    text-align: center;
+    padding: 55px 20px; /* espaçamento interno */
+    text-align: center; /* alinhamento do texto */
 }
 
+/* Estilo de: .mesas-vazio h2 */
 .mesas-vazio h2 {
-    margin-bottom: 12px;
-    color: var(--sm-dourado-claro);
-    font-family: "Josefin Sans", sans-serif;
-    font-size: 1.7rem;
+    margin-bottom: 12px; /* margem inferior */
+    color: var(--sm-dourado-claro); /* cor do texto */
+    font-family: "Josefin Sans", sans-serif; /* fonte */
+    font-size: 1.7rem; /* tamanho da fonte */
 }
 
+/* Estilo de: .mesas-vazio p */
 .mesas-vazio p {
-    color: var(--sm-secundario);
-    font-size: 0.9rem;
-    line-height: 1.8;
+    color: var(--sm-secundario); /* cor do texto */
+    font-size: 0.9rem; /* tamanho da fonte */
+    line-height: 1.8; /* altura da linha */
 }
 
+/* Estilo de: .mesas-footer */
 .mesas-footer {
-    padding: 19px;
-    color: var(--sm-secundario);
-    border-top: 1px solid var(--sm-borda);
-    font-size: 0.8rem;
-    text-align: center;
+    padding: 19px; /* espaçamento interno */
+    color: var(--sm-secundario); /* cor do texto */
+    border-top: 1px solid var(--sm-borda); /* borda superior */
+    font-size: 0.8rem; /* tamanho da fonte */
+    text-align: center; /* alinhamento do texto */
 }
 
+/* Regras para telas que atendem: (max-width: 700px) */
 @media (max-width: 700px) {
+    /* Estilo de: body.mesas-page */
     body.mesas-page {
-        padding: 22px 12px;
+        padding: 22px 12px; /* espaçamento interno */
     }
 
+    /* Estilo de: .mesas-header */
     .mesas-header {
-        align-items: stretch;
-        padding: 26px 22px;
+        align-items: stretch; /* alinhamento vertical */
+        padding: 26px 22px; /* espaçamento interno */
     }
 
+    /* Estilo de: .mesas-header h1 */
     .mesas-header h1 {
-        font-size: 2rem;
+        font-size: 2rem; /* tamanho da fonte */
     }
 
+    /* Estilo de: .mesas-conteudo */
     .mesas-conteudo {
-        padding: 22px 16px 26px;
+        padding: 22px 16px 26px; /* espaçamento interno */
     }
 
+    /* Estilo de: .btn-mesa-nova */
     .btn-mesa-nova {
-        width: 100%;
+        width: 100%; /* largura */
     }
 
+    /* Estilo de: .mesas-table */
     .mesas-table {
-        min-width: 600px;
+        min-width: 600px; /* largura mínima */
     }
 }
 
 
 /* Formulário de cadastro e edição de mesas */
+/* Estilo de: .mesas-form */
 .mesas-form {
-    width: 100%;
-    max-width: 760px;
-    margin: 0 auto;
+    width: 100%; /* largura */
+    max-width: 760px; /* largura máxima */
+    margin: 0 auto; /* espaçamento externo */
 }
 
+/* Estilo de: .mesas-form .mesas-campo */
 .mesas-form .mesas-campo {
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
-    margin-bottom: 25px;
+    display: flex; /* tipo de exibição */
+    flex-direction: column; /* direção dos itens */
+    gap: 9px; /* espaço entre itens */
+    margin-bottom: 25px; /* margem inferior */
 }
 
+/* Estilo de: .mesas-form label */
 .mesas-form label {
-    color: #E8D5A5;
-    font-family: 'Poppins', sans-serif;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.4px;
+    color: #E8D5A5; /* cor do texto */
+    font-family: 'Poppins', sans-serif; /* fonte */
+    font-size: 13px; /* tamanho da fonte */
+    font-weight: 500; /* peso da fonte */
+    letter-spacing: 0.4px; /* espaço entre letras */
 }
 
 .mesas-form input,
+/* Estilo de: .mesas-form select */
 .mesas-form select {
-    width: 100%;
-    min-height: 49px;
-    padding: 12px 15px;
-    background-color: #22211E;
-    color: #F7F3EA;
-    border: 1px solid #49443A;
-    border-radius: 9px;
-    outline: none;
-    font-family: 'Poppins', sans-serif;
-    font-size: 14px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    box-sizing: border-box;
+    width: 100%; /* largura */
+    min-height: 49px; /* altura mínima */
+    padding: 12px 15px; /* espaçamento interno */
+    background-color: #22211E; /* cor de fundo */
+    color: #F7F3EA; /* cor do texto */
+    border: 1px solid #49443A; /* borda */
+    border-radius: 9px; /* cantos arredondados */
+    outline: none; /* contorno de foco */
+    font-family: 'Poppins', sans-serif; /* fonte */
+    font-size: 14px; /* tamanho da fonte */
+    transition: border-color 0.2s, box-shadow 0.2s; /* animação suave */
+    box-sizing: border-box; /* cálculo do tamanho */
 }
 
+/* Estilo de: .mesas-form input::placeholder */
 .mesas-form input::placeholder {
-    color: #898477;
+    color: #898477; /* cor do texto */
 }
 
 .mesas-form input:focus,
+/* Estilo de: .mesas-form select:focus */
 .mesas-form select:focus {
-    border-color: #D3B779;
-    box-shadow: 0 0 0 3px rgb(211 183 121 / 13%);
+    border-color: #D3B779; /* cor da borda */
+    box-shadow: 0 0 0 3px rgb(211 183 121 / 13%); /* sombra */
 }
 
+/* Estilo de: .mesas-form select */
 .mesas-form select {
-    cursor: pointer;
+    cursor: pointer; /* tipo de cursor */
 }
 
+/* Estilo de: .mesas-form select option */
 .mesas-form select option {
-    background-color: #22211E;
-    color: #F7F3EA;
+    background-color: #22211E; /* cor de fundo */
+    color: #F7F3EA; /* cor do texto */
 }
 
+/* Estilo de: .mesas-form .mesas-erro */
 .mesas-form .mesas-erro {
-    color: #F0A29A;
-    font-size: 12px;
+    color: #F0A29A; /* cor do texto */
+    font-size: 12px; /* tamanho da fonte */
 }
 
+/* Estilo de: .mesas-form .mesas-acoes */
 .mesas-form .mesas-acoes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 30px;
+    display: flex; /* tipo de exibição */
+    flex-wrap: wrap; /* quebra de linha dos itens */
+    gap: 12px; /* espaço entre itens */
+    margin-top: 30px; /* margem superior */
 }
 
+/* Regras para telas que atendem: (max-width: 600px) */
 @media (max-width: 600px) {
+    /* Estilo de: .mesas-form */
     .mesas-form {
-        max-width: 100%;
+        max-width: 100%; /* largura máxima */
     }
 
     .mesas-form input,
+    /* Estilo de: .mesas-form select */
     .mesas-form select {
-        min-height: 46px;
+        min-height: 46px; /* altura mínima */
     }
 }
 
 /* Botões do formulário de mesas */
+/* Estilo de: .mesas-acoes */
 .mesas-acoes {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-top: 32px;
+    display: flex; /* tipo de exibição */
+    align-items: center; /* alinhamento vertical */
+    gap: 14px; /* espaço entre itens */
+    margin-top: 32px; /* margem superior */
 }
 
 .mesas-botao-principal,
+/* Estilo de: .mesas-botao-secundario */
 .mesas-botao-secundario {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 47px;
-    padding: 0 25px;
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-sizing: border-box;
+    display: inline-flex; /* tipo de exibição */
+    align-items: center; /* alinhamento vertical */
+    justify-content: center; /* alinhamento horizontal */
+    min-height: 47px; /* altura mínima */
+    padding: 0 25px; /* espaçamento interno */
+    border-radius: 8px; /* cantos arredondados */
+    font-family: 'Poppins', sans-serif; /* fonte */
+    font-size: 13px; /* tamanho da fonte */
+    font-weight: 600; /* peso da fonte */
+    text-decoration: none; /* decoração do texto */
+    cursor: pointer; /* tipo de cursor */
+    transition: all 0.2s ease; /* animação suave */
+    box-sizing: border-box; /* cálculo do tamanho */
 }
 
 /* Cadastrar mesa */
+/* Estilo de: .mesas-botao-principal */
 .mesas-botao-principal {
-    background: #D3B779;
-    color: #1F1F1D;
-    border: 1px solid #D3B779;
-    box-shadow: 0 4px 12px rgb(0 0 0 / 18%);
+    background: #D3B779; /* fundo */
+    color: #1F1F1D; /* cor do texto */
+    border: 1px solid #D3B779; /* borda */
+    box-shadow: 0 4px 12px rgb(0 0 0 / 18%); /* sombra */
 }
 
+/* Estilo de: .mesas-botao-principal:hover */
 .mesas-botao-principal:hover {
-    background: #E8D5A5;
-    border-color: #E8D5A5;
-    color: #1F1F1D;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgb(0 0 0 / 25%);
+    background: #E8D5A5; /* fundo */
+    border-color: #E8D5A5; /* cor da borda */
+    color: #1F1F1D; /* cor do texto */
+    transform: translateY(-2px); /* transformação (movimento) */
+    box-shadow: 0 6px 16px rgb(0 0 0 / 25%); /* sombra */
 }
 
 /* Cancelar */
+/* Estilo de: .mesas-botao-secundario */
 .mesas-botao-secundario {
-    background: transparent;
-    color: #E8D5A5;
-    border: 1px solid #625640;
+    background: transparent; /* fundo */
+    color: #E8D5A5; /* cor do texto */
+    border: 1px solid #625640; /* borda */
 }
 
+/* Estilo de: .mesas-botao-secundario:hover */
 .mesas-botao-secundario:hover {
-    background: #34312B;
-    border-color: #D3B779;
-    color: #FFFFFF;
-    transform: translateY(-2px);
+    background: #34312B; /* fundo */
+    border-color: #D3B779; /* cor da borda */
+    color: #FFFFFF; /* cor do texto */
+    transform: translateY(-2px); /* transformação (movimento) */
 }
 
 .mesas-botao-principal:focus-visible,
+/* Estilo de: .mesas-botao-secundario:focus-visible */
 .mesas-botao-secundario:focus-visible {
-    outline: 2px solid #E8D5A5;
-    outline-offset: 3px;
+    outline: 2px solid #E8D5A5; /* contorno de foco */
+    outline-offset: 3px; /* propriedade outline-offset */
 }
 
+/* Regras para telas que atendem: (max-width: 480px) */
 @media (max-width: 480px) {
+    /* Estilo de: .mesas-acoes */
     .mesas-acoes {
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: column; /* direção dos itens */
+        align-items: stretch; /* alinhamento vertical */
     }
 
     .mesas-botao-principal,
+    /* Estilo de: .mesas-botao-secundario */
     .mesas-botao-secundario {
-        width: 100%;
+        width: 100%; /* largura */
     }
 }

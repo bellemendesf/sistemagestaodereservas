@@ -1,66 +1,105 @@
+﻿@* Importação usada pelas views *@
 @using GestaoReservas.Models
+@* Tipo de dado (modelo) que esta view recebe do controller *@
 @model Mesa
 
+@* Bloco C#: configurações da view (título, layout e variáveis) *@
 @{
     ViewData["Title"] = "Detalhes da Mesa";
+    // Atribui Layout
     Layout = null;
 }
 
+@* Tipo do documento (HTML5) *@
 <!DOCTYPE html>
+@* Início do documento HTML *@
 <html lang="pt-BR">
+@* Cabeçalho do documento (título, fontes e estilos) *@
 <head>
+    @* Configuração da página *@
     <meta charset="UTF-8">
+    @* Configuração da página *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @* Título da aba *@
     <title>@ViewData["Title"] - Santa Massa</title>
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    @* Arquivo de estilo/fonte externo *@
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="stylesheet" href="~/css/DetalhesEdicao.css" asp-append-version="true">
 </head>
+@* Corpo da página *@
 <body class="detalhes-edicao-page">
+    @* Conteúdo principal *@
     <main class="detalhes-edicao-container">
+        @* Link (asp-action Index) *@
         <a asp-action="Index" class="detalhes-edicao-voltar">← Voltar às mesas</a>
 
+        @* Seção da página *@
         <section class="detalhes-edicao-card">
+            @* Cabeçalho *@
             <header class="detalhes-edicao-header">
+                @* Parágrafo de texto *@
                 <p class="detalhes-edicao-kicker">Santa Massa · Rio Preto</p>
+                @* Título principal *@
                 <h1>Detalhes da mesa</h1>
+                @* Parágrafo de texto *@
                 <p class="detalhes-edicao-descricao">
                     Confira as informações e a disponibilidade desta mesa.
                 </p>
             </header>
 
+            @* Bloco (classe detalhes-edicao-conteudo) *@
             <div class="detalhes-edicao-conteudo">
+                @* Bloco (classe detalhes-edicao-grid) *@
                 <div class="detalhes-edicao-grid">
+                    @* Bloco (classe detalhes-edicao-item) *@
                     <div class="detalhes-edicao-item">
+                        @* Texto destacado *@
                         <span>Código da mesa</span>
+                        @* Texto em negrito *@
                         <strong>#@Model.Id</strong>
                     </div>
 
+                    @* Bloco (classe detalhes-edicao-item) *@
                     <div class="detalhes-edicao-item">
+                        @* Texto destacado *@
                         <span>Número da mesa</span>
+                        @* Texto em negrito *@
                         <strong>Mesa @Model.Numero</strong>
                     </div>
 
+                    @* Bloco (classe detalhes-edicao-item) *@
                     <div class="detalhes-edicao-item">
+                        @* Texto destacado *@
                         <span>Quantidade de lugares</span>
+                        @* Texto em negrito *@
                         <strong>@Model.QtdLugares @(Model.QtdLugares == 1 ? "lugar" : "lugares")</strong>
                     </div>
 
+                    @* Bloco (classe detalhes-edicao-item) *@
                     <div class="detalhes-edicao-item">
+                        @* Texto destacado *@
                         <span>Status</span>
+                        @* Texto em negrito *@
                         <strong class="detalhes-edicao-status">@Model.Status</strong>
                     </div>
                 </div>
 
+                @* Bloco (classe detalhes-edicao-acoes) *@
                 <div class="detalhes-edicao-acoes" style="margin-top: 24px;">
+                    @* Link (asp-action Edit, id @Model.Id) *@
                     <a asp-action="Edit" asp-route-id="@Model.Id"
                        class="detalhes-edicao-botao detalhes-edicao-botao-principal">
                         Editar mesa
                     </a>
 
+                    @* Link (asp-action Index) *@
                     <a asp-action="Index"
                        class="detalhes-edicao-botao detalhes-edicao-botao-secundario">
                         Voltar à listagem
@@ -68,6 +107,7 @@
                 </div>
             </div>
 
+            @* Rodapé *@
             <footer class="detalhes-edicao-rodape">
                 Santa Massa · Painel de gerenciamento
             </footer>

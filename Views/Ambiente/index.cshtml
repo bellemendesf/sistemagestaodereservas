@@ -1,360 +1,447 @@
-
+﻿
+@* Importação usada pelas views *@
 @using GestaoReservas.Models
+@* Tipo de dado (modelo) que esta view recebe do controller *@
 @model IEnumerable<Ambiente>
 
+@* Bloco C#: configurações da view (título, layout e variáveis) *@
 @{
     ViewData["Title"] = "Ambientes";
+    // Atribui Layout
     Layout = null;
+    // Variável lista
     var lista = Model?.ToList() ?? new List<Ambiente>();
 }
 
+@* Tipo do documento (HTML5) *@
 <!DOCTYPE html>
+@* Início do documento HTML *@
 <html lang="pt-BR">
+@* Cabeçalho do documento (título, fontes e estilos) *@
 <head>
+    @* Configuração da página *@
     <meta charset="UTF-8">
+    @* Configuração da página *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @* Título da aba *@
     <title>@ViewData["Title"] - Santa Massa</title>
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    @* Arquivo de estilo/fonte externo *@
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="stylesheet" href="~/css/DetalhesEdicao.css" asp-append-version="true">
 
+    @* Estilos desta página *@
     <style>
+        /* Estilo de: .ambientes-topo */
         .ambientes-topo {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 18px;
+            display: flex; /* tipo de exibição */
+            align-items: center; /* alinhamento vertical */
+            justify-content: space-between; /* alinhamento horizontal */
+            flex-wrap: wrap; /* quebra de linha dos itens */
+            gap: 18px; /* espaço entre itens */
         }
 
+        /* Estilo de: .ambientes-contador */
         .ambientes-contador {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 35px;
-            padding: 7px 14px;
-            border: 1px solid #756442;
-            border-radius: 20px;
-            background: #302C23;
-            color: #E8D5A5;
-            font-size: 11px;
-            font-weight: 600;
-            white-space: nowrap;
+            display: inline-flex; /* tipo de exibição */
+            align-items: center; /* alinhamento vertical */
+            justify-content: center; /* alinhamento horizontal */
+            min-height: 35px; /* altura mínima */
+            padding: 7px 14px; /* espaçamento interno */
+            border: 1px solid #756442; /* borda */
+            border-radius: 20px; /* cantos arredondados */
+            background: #302C23; /* fundo */
+            color: #E8D5A5; /* cor do texto */
+            font-size: 11px; /* tamanho da fonte */
+            font-weight: 600; /* peso da fonte */
+            white-space: nowrap; /* quebra de linha do texto */
         }
 
+        /* Estilo de: .ambientes-tabela-wrap */
         .ambientes-tabela-wrap {
-            width: 100%;
-            overflow-x: auto;
-            border: 1px solid #49443A;
-            border-radius: 10px;
+            width: 100%; /* largura */
+            overflow-x: auto; /* rolagem horizontal */
+            border: 1px solid #49443A; /* borda */
+            border-radius: 10px; /* cantos arredondados */
         }
 
+        /* Estilo de: .ambientes-tabela */
         .ambientes-tabela {
-            width: 100%;
-            min-width: 650px;
-            border-collapse: collapse;
-            font-family: 'Poppins', sans-serif;
-            font-size: 12px;
+            width: 100%; /* largura */
+            min-width: 650px; /* largura mínima */
+            border-collapse: collapse; /* bordas da tabela unidas */
+            font-family: 'Poppins', sans-serif; /* fonte */
+            font-size: 12px; /* tamanho da fonte */
         }
 
+        /* Estilo de: .ambientes-tabela thead */
         .ambientes-tabela thead {
-            background: #302E28;
+            background: #302E28; /* fundo */
         }
 
+        /* Estilo de: .ambientes-tabela th */
         .ambientes-tabela th {
-            padding: 16px 15px;
-            color: #C8C0B1;
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-align: left;
-            text-transform: uppercase;
-            white-space: nowrap;
-            border-bottom: 1px solid #49443A;
+            padding: 16px 15px; /* espaçamento interno */
+            color: #C8C0B1; /* cor do texto */
+            font-size: 10px; /* tamanho da fonte */
+            font-weight: 600; /* peso da fonte */
+            letter-spacing: 1px; /* espaço entre letras */
+            text-align: left; /* alinhamento do texto */
+            text-transform: uppercase; /* maiúsculas/minúsculas */
+            white-space: nowrap; /* quebra de linha do texto */
+            border-bottom: 1px solid #49443A; /* borda inferior */
         }
 
+        /* Estilo de: .ambientes-tabela td */
         .ambientes-tabela td {
-            padding: 17px 15px;
-            color: #F7F3EA;
-            border-bottom: 1px solid #3A3831;
-            vertical-align: middle;
+            padding: 17px 15px; /* espaçamento interno */
+            color: #F7F3EA; /* cor do texto */
+            border-bottom: 1px solid #3A3831; /* borda inferior */
+            vertical-align: middle; /* alinhamento vertical */
         }
 
+        /* Estilo de: .ambientes-tabela tbody tr */
         .ambientes-tabela tbody tr {
-            background: #24231F;
-            transition: background .2s ease;
+            background: #24231F; /* fundo */
+            transition: background .2s ease; /* animação suave */
         }
 
+        /* Estilo de: .ambientes-tabela tbody tr:hover */
         .ambientes-tabela tbody tr:hover {
-            background: #2D2B26;
+            background: #2D2B26; /* fundo */
         }
 
+        /* Estilo de: .ambientes-tabela tbody tr:last-child td */
         .ambientes-tabela tbody tr:last-child td {
-            border-bottom: none;
+            border-bottom: none; /* borda inferior */
         }
 
+        /* Estilo de: .ambiente-id */
         .ambiente-id {
-            color: #A9A294 !important;
-            font-size: 11px;
+            color: #A9A294 !important; /* cor do texto */
+            font-size: 11px; /* tamanho da fonte */
         }
 
+        /* Estilo de: .ambiente-nome */
         .ambiente-nome {
-            color: #E8D5A5 !important;
-            font-weight: 600;
+            color: #E8D5A5 !important; /* cor do texto */
+            font-weight: 600; /* peso da fonte */
         }
 
+        /* Estilo de: .ambiente-capacidade */
         .ambiente-capacidade {
-            color: #E4DED2 !important;
-            white-space: nowrap;
+            color: #E4DED2 !important; /* cor do texto */
+            white-space: nowrap; /* quebra de linha do texto */
         }
 
+        /* Estilo de: .ambiente-status */
         .ambiente-status {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 6px 10px;
-            border: 1px solid #756442;
-            border-radius: 20px;
-            background: #302C23;
-            color: #E8D5A5;
-            font-size: 10px;
-            font-weight: 600;
-            white-space: nowrap;
+            display: inline-flex; /* tipo de exibição */
+            align-items: center; /* alinhamento vertical */
+            justify-content: center; /* alinhamento horizontal */
+            padding: 6px 10px; /* espaçamento interno */
+            border: 1px solid #756442; /* borda */
+            border-radius: 20px; /* cantos arredondados */
+            background: #302C23; /* fundo */
+            color: #E8D5A5; /* cor do texto */
+            font-size: 10px; /* tamanho da fonte */
+            font-weight: 600; /* peso da fonte */
+            white-space: nowrap; /* quebra de linha do texto */
         }
 
+        /* Estilo de: .ambiente-acoes */
         .ambiente-acoes {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            gap: 7px;
+            display: flex; /* tipo de exibição */
+            flex-wrap: wrap; /* quebra de linha dos itens */
+            align-items: center; /* alinhamento vertical */
+            gap: 7px; /* espaço entre itens */
         }
 
+        /* Estilo de: .ambiente-acoes a */
         .ambiente-acoes a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 31px;
-            padding: 6px 10px;
-            border: 1px solid #49443A;
-            border-radius: 6px;
-            background: #302E28;
-            color: #E8D5A5;
-            font-size: 10px;
-            font-weight: 500;
-            text-decoration: none;
-            white-space: nowrap;
-            transition: all .2s ease;
+            display: inline-flex; /* tipo de exibição */
+            align-items: center; /* alinhamento vertical */
+            justify-content: center; /* alinhamento horizontal */
+            min-height: 31px; /* altura mínima */
+            padding: 6px 10px; /* espaçamento interno */
+            border: 1px solid #49443A; /* borda */
+            border-radius: 6px; /* cantos arredondados */
+            background: #302E28; /* fundo */
+            color: #E8D5A5; /* cor do texto */
+            font-size: 10px; /* tamanho da fonte */
+            font-weight: 500; /* peso da fonte */
+            text-decoration: none; /* decoração do texto */
+            white-space: nowrap; /* quebra de linha do texto */
+            transition: all .2s ease; /* animação suave */
         }
 
+        /* Estilo de: .ambiente-acoes a:hover */
         .ambiente-acoes a:hover {
-            border-color: #D3B779;
-            background: #3A352A;
-            color: #FFFFFF;
+            border-color: #D3B779; /* cor da borda */
+            background: #3A352A; /* fundo */
+            color: #FFFFFF; /* cor do texto */
         }
 
+        /* Estilo de: .ambiente-acoes a.ambiente-excluir */
         .ambiente-acoes a.ambiente-excluir {
-            border-color: #633C37;
-            background: #332421;
-            color: #E7A09A;
+            border-color: #633C37; /* cor da borda */
+            background: #332421; /* fundo */
+            color: #E7A09A; /* cor do texto */
         }
 
+        /* Estilo de: .ambiente-acoes a.ambiente-excluir:hover */
         .ambiente-acoes a.ambiente-excluir:hover {
-            border-color: #B85D53;
-            background: #432925;
-            color: #FFD3CE;
+            border-color: #B85D53; /* cor da borda */
+            background: #432925; /* fundo */
+            color: #FFD3CE; /* cor do texto */
         }
 
+        /* Estilo de: .ambientes-acoes-topo */
         .ambientes-acoes-topo {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 22px;
+            display: flex; /* tipo de exibição */
+            justify-content: flex-end; /* alinhamento horizontal */
+            margin-bottom: 22px; /* margem inferior */
         }
 
+        /* Estilo de: .ambientes-botao-novo */
         .ambientes-botao-novo {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 44px;
-            padding: 11px 19px;
-            border: 1px solid #D3B779;
-            border-radius: 8px;
-            background: #D3B779;
-            color: #1F1F1D;
-            font-family: 'Poppins', sans-serif;
-            font-size: 12px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all .2s ease;
+            display: inline-flex; /* tipo de exibição */
+            align-items: center; /* alinhamento vertical */
+            justify-content: center; /* alinhamento horizontal */
+            min-height: 44px; /* altura mínima */
+            padding: 11px 19px; /* espaçamento interno */
+            border: 1px solid #D3B779; /* borda */
+            border-radius: 8px; /* cantos arredondados */
+            background: #D3B779; /* fundo */
+            color: #1F1F1D; /* cor do texto */
+            font-family: 'Poppins', sans-serif; /* fonte */
+            font-size: 12px; /* tamanho da fonte */
+            font-weight: 600; /* peso da fonte */
+            text-decoration: none; /* decoração do texto */
+            transition: all .2s ease; /* animação suave */
         }
 
+        /* Estilo de: .ambientes-botao-novo:hover */
         .ambientes-botao-novo:hover {
-            transform: translateY(-1px);
-            border-color: #E8D5A5;
-            background: #E8D5A5;
-            color: #1F1F1D;
-            box-shadow: 0 5px 14px rgb(0 0 0 / 20%);
+            transform: translateY(-1px); /* transformação (movimento) */
+            border-color: #E8D5A5; /* cor da borda */
+            background: #E8D5A5; /* fundo */
+            color: #1F1F1D; /* cor do texto */
+            box-shadow: 0 5px 14px rgb(0 0 0 / 20%); /* sombra */
         }
 
+        /* Estilo de: .ambientes-vazio */
         .ambientes-vazio {
-            padding: 55px 24px;
-            text-align: center;
+            padding: 55px 24px; /* espaçamento interno */
+            text-align: center; /* alinhamento do texto */
         }
 
+        /* Estilo de: .ambientes-vazio h2 */
         .ambientes-vazio h2 {
-            margin: 0 0 12px;
-            color: #F7F3EA;
-            font-family: 'Josefin Sans', sans-serif;
-            font-size: 25px;
-            font-weight: 600;
+            margin: 0 0 12px; /* espaçamento externo */
+            color: #F7F3EA; /* cor do texto */
+            font-family: 'Josefin Sans', sans-serif; /* fonte */
+            font-size: 25px; /* tamanho da fonte */
+            font-weight: 600; /* peso da fonte */
         }
 
+        /* Estilo de: .ambientes-vazio p */
         .ambientes-vazio p {
-            max-width: 440px;
-            margin: 0 auto 25px;
-            color: #C8C0B1;
-            font-size: 12px;
-            line-height: 1.8;
+            max-width: 440px; /* largura máxima */
+            margin: 0 auto 25px; /* espaçamento externo */
+            color: #C8C0B1; /* cor do texto */
+            font-size: 12px; /* tamanho da fonte */
+            line-height: 1.8; /* altura da linha */
         }
 
+        /* Estilo de: .ambientes-vazio-icone */
         .ambientes-vazio-icone {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 58px;
-            height: 58px;
-            margin: 0 auto 20px;
-            border: 1px solid #625640;
-            border-radius: 16px;
-            background: #302C23;
-            color: #D3B779;
-            font-family: 'Josefin Sans', sans-serif;
-            font-size: 25px;
+            display: flex; /* tipo de exibição */
+            align-items: center; /* alinhamento vertical */
+            justify-content: center; /* alinhamento horizontal */
+            width: 58px; /* largura */
+            height: 58px; /* altura */
+            margin: 0 auto 20px; /* espaçamento externo */
+            border: 1px solid #625640; /* borda */
+            border-radius: 16px; /* cantos arredondados */
+            background: #302C23; /* fundo */
+            color: #D3B779; /* cor do texto */
+            font-family: 'Josefin Sans', sans-serif; /* fonte */
+            font-size: 25px; /* tamanho da fonte */
         }
 
+        /* Estilo de: .ambientes-rodape */
         .ambientes-rodape {
-            padding: 17px 25px;
-            border-top: 1px solid #49443A;
-            color: #A9A294;
-            font-size: 10px;
-            text-align: center;
-            letter-spacing: .3px;
+            padding: 17px 25px; /* espaçamento interno */
+            border-top: 1px solid #49443A; /* borda superior */
+            color: #A9A294; /* cor do texto */
+            font-size: 10px; /* tamanho da fonte */
+            text-align: center; /* alinhamento do texto */
+            letter-spacing: .3px; /* espaço entre letras */
         }
 
+        /* Regras para telas que atendem: (max-width: 650px) */
         @@media (max-width: 650px) {
+            /* Estilo de: .ambientes-topo */
             .ambientes-topo {
-                align-items: flex-start;
+                align-items: flex-start; /* alinhamento vertical */
             }
 
+            /* Estilo de: .ambientes-contador */
             .ambientes-contador {
-                margin-top: 3px;
+                margin-top: 3px; /* margem superior */
             }
 
+            /* Estilo de: .ambientes-acoes-topo */
             .ambientes-acoes-topo {
-                justify-content: stretch;
+                justify-content: stretch; /* alinhamento horizontal */
             }
 
+            /* Estilo de: .ambientes-botao-novo */
             .ambientes-botao-novo {
-                width: 100%;
+                width: 100%; /* largura */
             }
 
+            /* Estilo de: .ambientes-vazio */
             .ambientes-vazio {
-                padding: 40px 20px;
+                padding: 40px 20px; /* espaçamento interno */
             }
         }
     </style>
 </head>
 
+@* Corpo da página *@
 <body class="detalhes-edicao-page">
+    @* Conteúdo principal *@
     <main class="detalhes-edicao-container">
 
+        @* Link *@
         <a asp-controller="AreaRestaurante"
            asp-action="Index"
            class="detalhes-edicao-voltar">
             ← Voltar à área do restaurante
         </a>
 
+        @* Seção da página *@
         <section class="detalhes-edicao-card">
 
+            @* Cabeçalho *@
             <header class="detalhes-edicao-header">
+                @* Bloco (classe ambientes-topo) *@
                 <div class="ambientes-topo">
+                    @* Bloco *@
                     <div>
+                        @* Parágrafo de texto *@
                         <p class="detalhes-edicao-kicker">
                             Santa Massa · Rio Preto
                         </p>
 
+                        @* Título principal *@
                         <h1>Ambientes</h1>
 
+                        @* Parágrafo de texto *@
                         <p class="detalhes-edicao-descricao">
                             Gerencie os espaços e a capacidade do restaurante.
                         </p>
                     </div>
 
+                    @* Texto destacado *@
                     <span class="ambientes-contador">
                         @lista.Count @(lista.Count == 1 ? "ambiente cadastrado" : "ambientes cadastrados")
                     </span>
                 </div>
             </header>
 
+            @* Bloco (classe detalhes-edicao-conteudo) *@
             <div class="detalhes-edicao-conteudo">
 
+                @* Mostra o bloco só se a condição for verdadeira *@
                 @if (!lista.Any())
                 {
+                    @* Bloco (classe ambientes-vazio) *@
                     <div class="ambientes-vazio">
+                        @* Bloco (classe ambientes-vazio-icone) *@
                         <div class="ambientes-vazio-icone">+</div>
 
+                        @* Subtítulo *@
                         <h2>Nenhum ambiente cadastrado</h2>
 
+                        @* Parágrafo de texto *@
                         <p>
                             Cadastre o primeiro ambiente para organizar os espaços
                             e facilitar a distribuição das mesas do restaurante.
                         </p>
 
+                        @* Link (asp-action Create) *@
                         <a asp-action="Create" class="ambientes-botao-novo">
                             + Cadastrar ambiente
                         </a>
                     </div>
                 }
+                @* Caso contrário, mostra este bloco *@
                 else
                 {
+                    @* Bloco (classe ambientes-acoes-topo) *@
                     <div class="ambientes-acoes-topo">
+                        @* Link (asp-action Create) *@
                         <a asp-action="Create" class="ambientes-botao-novo">
                             + Cadastrar ambiente
                         </a>
                     </div>
 
+                    @* Bloco (classe ambientes-tabela-wrap) *@
                     <div class="ambientes-tabela-wrap">
+                        @* Tabela *@
                         <table class="ambientes-tabela">
+                            @* Cabeçalho da tabela *@
                             <thead>
+                                @* Linha da tabela *@
                                 <tr>
+                                    @* Título da coluna *@
                                     <th>ID</th>
+                                    @* Título da coluna *@
                                     <th>Nome do ambiente</th>
+                                    @* Título da coluna *@
                                     <th>Capacidade</th>
+                                    @* Título da coluna *@
                                     <th>Status</th>
+                                    @* Título da coluna *@
                                     <th>Ações</th>
                                 </tr>
                             </thead>
 
+                            @* Corpo da tabela *@
                             <tbody>
+                                @* Repete o bloco para cada item da lista *@
                                 @foreach (var ambiente in lista)
                                 {
+                                    @* Linha da tabela *@
                                     <tr>
+                                        @* Célula *@
                                         <td class="ambiente-id">
                                             #@ambiente.Id
                                         </td>
 
+                                        @* Célula *@
                                         <td class="ambiente-nome">
                                             @ambiente.Nome
                                         </td>
 
+                                        @* Célula *@
                                         <td class="ambiente-capacidade">
                                             @ambiente.Capacidade
                                             @(ambiente.Capacidade == 1 ? "pessoa" : "pessoas")
                                         </td>
 
+                                        @* Célula *@
                                         <td>
+                                            @* Texto destacado *@
                                             <span class="ambiente-status">
                                                 @(string.IsNullOrWhiteSpace(ambiente.Status)
                                                     ? "Não informado"
@@ -362,18 +449,23 @@
                                             </span>
                                         </td>
 
+                                        @* Célula *@
                                         <td>
+                                            @* Bloco (classe ambiente-acoes) *@
                                             <div class="ambiente-acoes">
+                                                @* Link (asp-action Details) *@
                                                 <a asp-action="Details"
                                                    asp-route-id="@ambiente.Id">
                                                     Detalhes
                                                 </a>
 
+                                                @* Link (asp-action Edit) *@
                                                 <a asp-action="Edit"
                                                    asp-route-id="@ambiente.Id">
                                                     Editar
                                                 </a>
 
+                                                @* Link (asp-action Delete) *@
                                                 <a asp-action="Delete"
                                                    asp-route-id="@ambiente.Id"
                                                    class="ambiente-excluir">
@@ -390,6 +482,7 @@
 
             </div>
 
+            @* Rodapé *@
             <footer class="ambientes-rodape">
                 Santa Massa · Painel de gerenciamento
             </footer>

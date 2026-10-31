@@ -1,53 +1,78 @@
+﻿@* Importação usada pelas views *@
 @using GestaoReservas.Models
+@* Tipo de dado (modelo) que esta view recebe do controller *@
 @model List<GestaoReservas.Models.Mesa>
 
+@* Bloco C#: configurações da view (título, layout e variáveis) *@
 @{
+    // Atribui Layout
     Layout = null;
     ViewData["Title"] = "Mesas";
 }
 
+@* Tipo do documento (HTML5) *@
 <!DOCTYPE html>
+@* Início do documento HTML *@
 <html lang="pt-BR">
+@* Cabeçalho do documento (título, fontes e estilos) *@
 <head>
+    @* Configuração da página *@
     <meta charset="UTF-8">
+    @* Configuração da página *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    @* Título da aba *@
     <title>@ViewData["Title"]</title>
 
+    @* Arquivo de estilo/fonte externo *@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
           rel="stylesheet">
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+    @* Arquivo de estilo/fonte externo *@
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap"
           rel="stylesheet">
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="stylesheet"
           href="~/css/Mesas.css"
           asp-append-version="true">
 </head>
 
+@* Corpo da página *@
 <body class="mesas-page">
+    @* Conteúdo principal *@
     <main class="mesas-container">
 
+        @* Link *@
         <a asp-controller="AreaRestaurante"
            asp-action="Index"
            class="mesas-voltar">
             ← Voltar à Área do Restaurante
         </a>
 
+        @* Seção da página *@
         <section class="mesas-card">
 
+            @* Cabeçalho *@
             <header class="mesas-header">
+                @* Bloco *@
                 <div>
+                    @* Parágrafo de texto *@
                     <p class="mesas-kicker">Santa Massa · Rio Preto</p>
+                    @* Título principal *@
                     <h1>Mesas cadastradas</h1>
+                    @* Parágrafo de texto *@
                     <p class="mesas-descricao">
                         Consulte a capacidade e a disponibilidade das mesas.
                     </p>
                 </div>
 
+                @* Link *@
                 <a asp-controller="Mesa"
                    asp-action="Create"
                    class="btn-mesa-nova">
@@ -55,14 +80,20 @@
                 </a>
             </header>
 
+            @* Bloco (classe mesas-conteudo) *@
             <div class="mesas-conteudo">
 
+                @* Mostra o bloco só se a condição for verdadeira *@
                 @if (Model == null || Model.Count == 0)
                 {
+                    @* Bloco (classe mesas-vazio) *@
                     <div class="mesas-vazio">
+                        @* Subtítulo *@
                         <h2>Nenhuma mesa cadastrada</h2>
+                        @* Parágrafo de texto *@
                         <p>Cadastre uma mesa para começar a organizar o restaurante.</p>
 
+                        @* Link *@
                         <a asp-controller="Mesa"
                            asp-action="Create"
                            class="btn-mesa-nova">
@@ -70,26 +101,40 @@
                         </a>
                     </div>
                 }
+                @* Caso contrário, mostra este bloco *@
                 else
                 {
+                    @* Parágrafo de texto *@
                     <p class="mesas-contagem">
                         Total de mesas: <strong>@Model.Count</strong>
                     </p>
 
+                    @* Bloco (classe mesas-table-wrap) *@
                     <div class="mesas-table-wrap">
+                        @* Tabela *@
                         <table class="mesas-table">
+                            @* Cabeçalho da tabela *@
                             <thead>
+                                @* Linha da tabela *@
                                 <tr>
+                                    @* Título da coluna *@
                                     <th>ID</th>
+                                    @* Título da coluna *@
                                     <th>Número da mesa</th>
+                                    @* Título da coluna *@
                                     <th>Ambiente</th>
+                                    @* Título da coluna *@
                                     <th>Lugares</th>
+                                    @* Título da coluna *@
                                     <th>Status</th>
+                                    @* Título da coluna *@
                                     <th>Ações</th>
                                 </tr>
                             </thead>
 
+                            @* Corpo da tabela *@
                             <tbody>
+                                @* Repete o bloco para cada item da lista *@
                                 @foreach (var mesa in Model)
                                 {
                                     var status = mesa.Status?.Trim() ?? "";
@@ -102,35 +147,47 @@
                                         _ => "status-outro"
                                     };
 
+                                    @* Linha da tabela *@
                                     <tr>
+                                        @* Célula *@
                                         <td>@mesa.Id</td>
+                                        @* Célula *@
                                         <td class="mesa-numero">
                                             Mesa @mesa.Numero</td>
+                                        @* Célula *@
                                         <td>@mesa.AmbienteNome</td>
+                                        @* Célula *@
                                         <td>
                                             @mesa.QtdLugares @(mesa.QtdLugares == 1 ? "lugar" : "lugares")
                                         </td>
 
+                                        @* Célula *@
                                         <td>
+                                            @* Texto destacado *@
                                             <span class="mesa-status @classeStatus">
                                                 @(string.IsNullOrWhiteSpace(status) ? "Não informado" : status)
                                             </span>
                                         </td>
 
+                                        @* Célula *@
                                         <td>
+                                            @* Bloco (classe mesas-acoes) *@
                                             <div class="mesas-acoes">
+                                                @* Link (asp-action Details) *@
                                                 <a asp-action="Details"
                                                    asp-route-id="@mesa.Id"
                                                    class="acao-detalhes">
                                                     Detalhes
                                                 </a>
 
+                                                @* Link (asp-action Edit) *@
                                                 <a asp-action="Edit"
                                                    asp-route-id="@mesa.Id"
                                                    class="acao-editar">
                                                     Editar
                                                 </a>
 
+                                                @* Link (asp-action Delete) *@
                                                 <a asp-action="Delete"
                                                    asp-route-id="@mesa.Id"
                                                    class="acao-excluir">
@@ -147,6 +204,7 @@
 
             </div>
 
+            @* Rodapé *@
             <footer class="mesas-footer">
                 Santa Massa · Painel de gerenciamento
             </footer>

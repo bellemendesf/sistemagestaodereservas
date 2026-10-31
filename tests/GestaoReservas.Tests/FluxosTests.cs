@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Text.RegularExpressions;
 using GestaoReservas.Models;
 using Microsoft.AspNetCore.Hosting;
@@ -120,7 +120,8 @@ public class FluxosTests
         };
         Assert.Equal(HttpStatusCode.Redirect, (await Post(client, $"/Reserva/Edit/{id}", $"/Reserva/Edit/{id}", edit)).StatusCode);
         var atual = repo.Read(id)!;
-        Assert.Equal(2, atual.MesaId);
+        // O cliente não troca de mesa: continua a mesa original (1).
+        Assert.Equal(1, atual.MesaId);
         Assert.Equal(3, atual.QtdPessoas);
         Assert.Equal("Pendente", atual.Status);
         Assert.Equal("Cliente de teste", atual.Cliente.Nome);
@@ -128,7 +129,7 @@ public class FluxosTests
         Assert.Equal(HttpStatusCode.Redirect, (await Post(client, $"/AreaRestaurante/Edit/{id}", $"/AreaRestaurante/Edit/{id}", new()
         { ["Status"] = "Confirmada", ["MesaId"] = "999", ["QtdPessoas"] = "999" })).StatusCode);
         Assert.Equal("Confirmada", repo.Read(id)!.Status);
-        Assert.Equal(2, repo.Read(id)!.MesaId);
+        Assert.Equal(1, repo.Read(id)!.MesaId);
         Assert.Equal(3, repo.Read(id)!.QtdPessoas);
 
         Assert.Equal(HttpStatusCode.Redirect, (await Post(client, $"/Reserva/Delete/{id}", $"/Reserva/Delete/{id}", new() { ["Id"] = id.ToString() })).StatusCode);
@@ -167,7 +168,8 @@ public class FluxosTests
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         var stored = app.Services.GetRequiredService<IReservaRepository>().Read(1)!;
         Assert.Equal(2, stored.QtdPessoas);
-        Assert.Equal(new DateTime(2027, 1, 2, 19, 30, 0), stored.DataHora);
+        // Reserva por dia: guarda só a data, sem horário.
+        Assert.Equal(new DateTime(2027, 1, 2), stored.DataHora);
     }
 
     [Theory]

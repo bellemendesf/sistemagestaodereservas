@@ -1,0 +1,137 @@
+﻿
+@{
+    ViewData["Title"] = "Painel do Restaurante";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>@ViewData["Title"] - Santa Massa</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap"
+          rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="~/css/Areas.css"
+          asp-append-version="true">
+</head>
+
+<body class="area-page">
+    <main class="area-container">
+
+        <a asp-controller="Home"
+           asp-action="Index"
+           class="back-link">
+            ← Voltar ao início
+        </a>
+
+        <header class="area-header">
+            <img src="~/images/logosantamassa.jpg"
+                 alt="Logo Santa Massa"
+                 class="area-logo">
+
+            <p class="area-kicker">
+                SANTA MASSA · RIO PRETO
+            </p>
+
+            <h1>Área do Restaurante</h1>
+
+            <p>Gerencie as operações do restaurante.</p>
+        </header>
+
+        <section class="area-grid"
+                 aria-label="Opções de gerenciamento">
+
+            <a asp-controller="Funcionario"
+               asp-action="Create"
+               class="area-card">
+
+                <div>
+                    <h2>Funcionários</h2>
+                    <p>Cadastre os funcionários do restaurante.</p>
+                </div>
+
+                <span class="card-link">Cadastrar</span>
+            </a>
+
+            @* NOVO: acesso à listagem (Index) de todos os funcionários cadastrados. *@
+            <a asp-controller="Funcionario"
+               asp-action="Index"
+               class="area-card">
+
+                <div>
+                    <h2>Funcionários cadastrados</h2>
+                    <p>Consulte todos os funcionários do restaurante.</p>
+                </div>
+
+                <span class="card-link">Ver funcionários</span>
+            </a>
+
+            @* NOVO: acesso à listagem (Index) de clientes, agora só pela área do restaurante. *@
+            <a asp-controller="Cliente"
+               asp-action="Index"
+               class="area-card">
+
+                <div>
+                    <h2>Clientes</h2>
+                    <p>Consulte todos os clientes cadastrados.</p>
+                </div>
+
+                <span class="card-link">Ver clientes</span>
+            </a>
+
+            <a asp-controller="AreaRestaurante"
+               asp-action="Reservas"
+               class="area-card">
+
+                <div>
+                    <h2>Reservas</h2>
+                    <p>Consulte e gerencie os agendamentos.</p>
+                </div>
+
+                <span class="card-link">Gerenciar</span>
+            </a>
+
+            <a asp-controller="Mesa"
+               asp-action="Index"
+               class="area-card">
+
+                <div>
+                    <h2>Mesas</h2>
+                    <p>Consulte e organize as mesas cadastradas.</p>
+                </div>
+
+                <span class="card-link">Acessar mesas</span>
+            </a>
+
+            <a asp-controller="Ambiente"
+               asp-action="Index"
+               class="area-card">
+
+                <div>
+                    <h2>Ambientes</h2>
+                    <p>Gerencie os espaços do restaurante.</p>
+                </div>
+
+                <span class="card-link">Acessar ambientes</span>
+            </a>
+
+        </section>
+
+        <footer class="area-footer">
+            Santa Massa · Painel de gerenciamento
+        </footer>
+
+    </main>
+</body>
+</html>

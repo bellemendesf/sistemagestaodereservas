@@ -1,87 +1,126 @@
+﻿@* Tipo de dado (modelo) que esta view recebe do controller *@
 @model GestaoReservas.Models.Ambiente
 
+@* Bloco C#: configurações da view (título, layout e variáveis) *@
 @{
     ViewData["Title"] = "Cadastrar Ambiente";
+    // Atribui Layout
     Layout = null;
 }
 
+@* Tipo do documento (HTML5) *@
 <!DOCTYPE html>
+@* Início do documento HTML *@
 <html lang="pt-BR">
+@* Cabeçalho do documento (título, fontes e estilos) *@
 <head>
+    @* Configuração da página *@
     <meta charset="UTF-8">
+    @* Configuração da página *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @* Título da aba *@
     <title>@ViewData["Title"] - Santa Massa</title>
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    @* Arquivo de estilo/fonte externo *@
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="stylesheet" href="~/css/DetalhesEdicao.css" asp-append-version="true">
 </head>
 
+@* Corpo da página *@
 <body class="detalhes-edicao-page">
+    @* Conteúdo principal *@
     <main class="detalhes-edicao-container">
 
+        @* Link (asp-action Index) *@
         <a asp-controller="Ambiente" asp-action="Index"
            class="detalhes-edicao-voltar">
             ← Voltar aos ambientes
         </a>
 
+        @* Seção da página *@
         <section class="detalhes-edicao-card">
 
+            @* Cabeçalho *@
             <header class="detalhes-edicao-header">
+                @* Parágrafo de texto *@
                 <p class="detalhes-edicao-kicker">
                     Santa Massa · Rio Preto
                 </p>
 
+                @* Título principal *@
                 <h1>Cadastrar ambiente</h1>
 
+                @* Parágrafo de texto *@
                 <p class="detalhes-edicao-descricao">
                     Cadastre um novo espaço do restaurante e informe sua capacidade.
                 </p>
             </header>
 
+            @* Bloco (classe detalhes-edicao-conteudo) *@
             <div class="detalhes-edicao-conteudo">
 
+                @* Formulário (asp-action Create) *@
                 <form asp-controller="Ambiente" asp-action="Create"
                       method="post" class="detalhes-edicao-form">
 
+                    @* Resumo dos erros de validação *@
                     <div asp-validation-summary="All"
                          class="detalhes-edicao-erros">
                     </div>
 
+                    @* Bloco (classe detalhes-edicao-campo) *@
                     <div class="detalhes-edicao-campo">
+                        @* Rótulo do campo (asp-for Nome) *@
                         <label asp-for="Nome">Nome do ambiente</label>
+                        @* Campo de entrada (asp-for Nome) *@
                         <input asp-for="Nome"
                                placeholder="Ex.: Salão interno" />
+                        @* Texto destacado *@
                         <span asp-validation-for="Nome"
                               class="detalhes-edicao-erros"></span>
                     </div>
 
+                    @* Bloco (classe detalhes-edicao-campo) *@
                     <div class="detalhes-edicao-campo">
+                        @* Rótulo do campo (asp-for Capacidade) *@
                         <label asp-for="Capacidade">Capacidade de pessoas</label>
+                        @* Campo de entrada (asp-for Capacidade) *@
                         <input asp-for="Capacidade"
                                type="number"
                                min="1"
                                placeholder="Ex.: 30" />
+                        @* Texto destacado *@
                         <span asp-validation-for="Capacidade"
                               class="detalhes-edicao-erros"></span>
                     </div>
 
+                    @* Bloco (classe detalhes-edicao-campo) *@
                     <div class="detalhes-edicao-campo">
+                        @* Rótulo do campo (asp-for Status) *@
                         <label asp-for="Status">Status do ambiente</label>
+                        @* Campo de entrada (asp-for Status) *@
                         <input asp-for="Status"
                                placeholder="Ex.: Disponível" />
+                        @* Texto destacado *@
                         <span asp-validation-for="Status"
                               class="detalhes-edicao-erros"></span>
                     </div>
 
+                    @* Bloco (classe detalhes-edicao-acoes) *@
                     <div class="detalhes-edicao-acoes">
+                        @* Botão *@
                         <button type="submit"
                                 class="detalhes-edicao-botao detalhes-edicao-botao-principal">
                             Cadastrar ambiente
                         </button>
 
+                        @* Link (asp-action Index) *@
                         <a asp-controller="Ambiente" asp-action="Index"
                            class="detalhes-edicao-botao detalhes-edicao-botao-secundario">
                             Cancelar
@@ -91,6 +130,7 @@
                 </form>
             </div>
 
+            @* Rodapé *@
             <footer class="detalhes-edicao-rodape">
                 Santa Massa · Painel de gerenciamento
             </footer>

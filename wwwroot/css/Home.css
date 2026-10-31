@@ -1,21 +1,24 @@
-
+﻿
+/* Variáveis de cores do site */
 :root {
-    --preto: #090909;
-    --preto-card: #151515;
-    --preto-hover: #201c14;
-    --dourado: #C6A45C;
-    --dourado-claro: #E8D5A3;
-    --branco: #F7F3EA;
-    --cinza: #BDB7AA;
+    --preto: #090909; /* variável de cor --preto */
+    --preto-card: #151515; /* variável de cor --preto-card */
+    --preto-hover: #201c14; /* variável de cor --preto-hover */
+    --dourado: #C6A45C; /* variável de cor --dourado */
+    --dourado-claro: #E8D5A3; /* variável de cor --dourado-claro */
+    --branco: #F7F3EA; /* variável de cor --branco */
+    --cinza: #BDB7AA; /* variável de cor --cinza */
 }
 
+/* Estilo de: * */
 * {
-    box-sizing: border-box;
+    box-sizing: border-box; /* cálculo do tamanho */
 }
 
+/* Estilo de: body.home */
 body.home {
-    margin: 0;
-    min-height: 100vh;
+    margin: 0; /* espaçamento externo */
+    min-height: 100vh; /* altura mínima */
     background:
         radial-gradient(
             ellipse at 50% 0%,
@@ -23,118 +26,129 @@ body.home {
             #11100d 35%,
             var(--preto) 75%
         );
-    color: var(--branco);
-    font-family: "Poppins", sans-serif;
+    color: var(--branco); /* cor do texto */
+    font-family: "Poppins", sans-serif; /* fonte */
 }
 
 /* Brilho dourado discreto no fundo */
+/* Estilo de: .home-glow */
 .home-glow {
-    position: fixed;
-    width: 380px;
-    height: 380px;
-    right: -160px;
-    bottom: -170px;
-    border-radius: 50%;
-    background: rgba(198, 164, 92, 0.12);
-    filter: blur(90px);
-    pointer-events: none;
-    z-index: 0;
+    position: fixed; /* posicionamento */
+    width: 380px; /* largura */
+    height: 380px; /* altura */
+    right: -160px; /* distância da direita */
+    bottom: -170px; /* distância do rodapé */
+    border-radius: 50%; /* cantos arredondados */
+    background: rgba(198, 164, 92, 0.12); /* fundo */
+    filter: blur(90px); /* propriedade filter */
+    pointer-events: none; /* eventos do mouse */
+    z-index: 0; /* camada */
 }
 
 /* Cabeçalho centralizado */
+/* Estilo de: .home-top */
 .home-top {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 14px;
-    width: 100%;
-    padding: 42px 20px 10px;
-    text-align: center;
+    position: relative; /* posicionamento */
+    z-index: 1; /* camada */
+    display: flex; /* tipo de exibição */
+    flex-direction: column; /* direção dos itens */
+    align-items: center; /* alinhamento vertical */
+    justify-content: center; /* alinhamento horizontal */
+    gap: 14px; /* espaço entre itens */
+    width: 100%; /* largura */
+    padding: 42px 20px 10px; /* espaçamento interno */
+    text-align: center; /* alinhamento do texto */
 }
 
+/* Estilo de: .home-logo */
 .home-logo {
-    width: 145px;
-    height: 145px;
-    object-fit: contain;
-    display: block;
-    transition: transform 0.3s ease;
+    width: 145px; /* largura */
+    height: 145px; /* altura */
+    object-fit: contain; /* ajuste da imagem */
+    display: block; /* tipo de exibição */
+    transition: transform 0.3s ease; /* animação suave */
 }
 
+/* Estilo de: .home-logo:hover */
 .home-logo:hover {
-    transform: scale(1.04);
+    transform: scale(1.04); /* transformação (movimento) */
 }
 
+/* Estilo de: .home-brand */
 .home-brand {
-    color: var(--dourado);
-    font-family: "Josefin Sans", sans-serif;
-    font-weight: 700;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    color: var(--dourado); /* cor do texto */
+    font-family: "Josefin Sans", sans-serif; /* fonte */
+    font-weight: 700; /* peso da fonte */
+    letter-spacing: 0.18em; /* espaço entre letras */
+    text-transform: uppercase; /* maiúsculas/minúsculas */
+    font-size: clamp(1.6rem, 4vw, 2.2rem); /* tamanho da fonte */
 }
 
 /* Conteúdo principal */
+/* Estilo de: .home-hero */
 .home-hero {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 38px 24px 70px;
-    text-align: center;
+    position: relative; /* posicionamento */
+    z-index: 1; /* camada */
+    width: 100%; /* largura */
+    max-width: 900px; /* largura máxima */
+    margin: 0 auto; /* espaçamento externo */
+    padding: 38px 24px 70px; /* espaçamento interno */
+    text-align: center; /* alinhamento do texto */
 }
 
+/* Estilo de: .home-kicker */
 .home-kicker {
-    margin: 0 0 18px;
-    color: var(--dourado);
-    font-size: 0.76rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
-    line-height: 1.8;
-    text-transform: uppercase;
+    margin: 0 0 18px; /* espaçamento externo */
+    color: var(--dourado); /* cor do texto */
+    font-size: 0.76rem; /* tamanho da fonte */
+    font-weight: 500; /* peso da fonte */
+    letter-spacing: 0.18em; /* espaço entre letras */
+    line-height: 1.8; /* altura da linha */
+    text-transform: uppercase; /* maiúsculas/minúsculas */
 }
 
+/* Estilo de: .home-hero h1 */
 .home-hero h1 {
-    margin: 0 0 18px;
-    color: var(--branco);
-    font-family: "Josefin Sans", sans-serif;
-    font-weight: 600;
-    font-size: clamp(2.2rem, 5vw, 3.6rem);
-    line-height: 1.15;
+    margin: 0 0 18px; /* espaçamento externo */
+    color: var(--branco); /* cor do texto */
+    font-family: "Josefin Sans", sans-serif; /* fonte */
+    font-weight: 600; /* peso da fonte */
+    font-size: clamp(2.2rem, 5vw, 3.6rem); /* tamanho da fonte */
+    line-height: 1.15; /* altura da linha */
 }
 
+/* Estilo de: .home-lead */
 .home-lead {
-    max-width: 500px;
-    margin: 0 auto 38px;
-    color: var(--cinza);
-    font-size: 1rem;
-    line-height: 1.8;
+    max-width: 500px; /* largura máxima */
+    margin: 0 auto 38px; /* espaçamento externo */
+    color: var(--cinza); /* cor do texto */
+    font-size: 1rem; /* tamanho da fonte */
+    line-height: 1.8; /* altura da linha */
 }
 
 /* Cartões de acesso */
+/* Estilo de: .home-actions */
 .home-actions {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 22px;
-    max-width: 720px;
-    margin: 0 auto;
+    display: grid; /* tipo de exibição */
+    grid-template-columns: repeat(2, minmax(0, 1fr)); /* colunas da grade */
+    gap: 22px; /* espaço entre itens */
+    max-width: 720px; /* largura máxima */
+    margin: 0 auto; /* espaçamento externo */
 }
 
+/* Estilo de: .home-card */
 .home-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 225px;
-    padding: 30px 24px;
-    border: 1px solid rgba(198, 164, 92, 0.42);
-    border-radius: 12px;
-    background: rgba(21, 21, 21, 0.88);
-    color: var(--branco);
-    text-decoration: none;
+    display: flex; /* tipo de exibição */
+    flex-direction: column; /* direção dos itens */
+    align-items: center; /* alinhamento vertical */
+    justify-content: center; /* alinhamento horizontal */
+    min-height: 225px; /* altura mínima */
+    padding: 30px 24px; /* espaçamento interno */
+    border: 1px solid rgba(198, 164, 92, 0.42); /* borda */
+    border-radius: 12px; /* cantos arredondados */
+    background: rgba(21, 21, 21, 0.88); /* fundo */
+    color: var(--branco); /* cor do texto */
+    text-decoration: none; /* decoração do texto */
     transition:
         transform 0.25s ease,
         border-color 0.25s ease,
@@ -142,317 +156,368 @@ body.home {
         box-shadow 0.25s ease;
 }
 
+/* Estilo de: .home-card h2 */
 .home-card h2 {
-    margin: 0 0 14px;
-    color: var(--dourado-claro);
-    font-family: "Josefin Sans", sans-serif;
-    font-size: 1.45rem;
-    font-weight: 600;
-    line-height: 1.3;
+    margin: 0 0 14px; /* espaçamento externo */
+    color: var(--dourado-claro); /* cor do texto */
+    font-family: "Josefin Sans", sans-serif; /* fonte */
+    font-size: 1.45rem; /* tamanho da fonte */
+    font-weight: 600; /* peso da fonte */
+    line-height: 1.3; /* altura da linha */
 }
 
+/* Estilo de: .home-card p */
 .home-card p {
-    margin: 0 0 22px;
-    color: var(--cinza);
-    font-size: 0.9rem;
-    line-height: 1.7;
+    margin: 0 0 22px; /* espaçamento externo */
+    color: var(--cinza); /* cor do texto */
+    font-size: 0.9rem; /* tamanho da fonte */
+    line-height: 1.7; /* altura da linha */
 }
 
+/* Estilo de: .home-card span */
 .home-card span {
-    margin-top: auto;
-    color: var(--dourado);
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
+    margin-top: auto; /* margem superior */
+    color: var(--dourado); /* cor do texto */
+    font-size: 0.85rem; /* tamanho da fonte */
+    font-weight: 600; /* peso da fonte */
+    letter-spacing: 0.04em; /* espaço entre letras */
 }
 
+/* Estilo de: .home-card:hover */
 .home-card:hover {
-    transform: translateY(-5px);
-    border-color: var(--dourado);
-    background: var(--preto-hover);
-    color: var(--branco);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+    transform: translateY(-5px); /* transformação (movimento) */
+    border-color: var(--dourado); /* cor da borda */
+    background: var(--preto-hover); /* fundo */
+    color: var(--branco); /* cor do texto */
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3); /* sombra */
 }
 
 .home-card:hover h2,
+/* Estilo de: .home-card:hover span */
 .home-card:hover span {
-    color: var(--dourado-claro);
+    color: var(--dourado-claro); /* cor do texto */
 }
 
 /* Teclado e acessibilidade */
+/* Estilo de: .home-card:focus-visible */
 .home-card:focus-visible {
-    outline: 2px solid var(--dourado-claro);
-    outline-offset: 5px;
+    outline: 2px solid var(--dourado-claro); /* contorno de foco */
+    outline-offset: 5px; /* propriedade outline-offset */
 }
 
 /* Telas pequenas */
+/* Regras para telas que atendem: (max-width: 600px) */
 @media (max-width: 600px) {
+    /* Estilo de: .home-top */
     .home-top {
-        padding-top: 32px;
+        padding-top: 32px; /* propriedade padding-top */
     }
 
+    /* Estilo de: .home-logo */
     .home-logo {
-        width: 120px;
-        height: 120px;
+        width: 120px; /* largura */
+        height: 120px; /* altura */
     }
 
+    /* Estilo de: .home-brand */
     .home-brand {
-        letter-spacing: 0.12em;
+        letter-spacing: 0.12em; /* espaço entre letras */
     }
 
+    /* Estilo de: .home-hero */
     .home-hero {
-        padding: 35px 20px 50px;
+        padding: 35px 20px 50px; /* espaçamento interno */
     }
 
+    /* Estilo de: .home-kicker */
     .home-kicker {
-        font-size: 0.68rem;
-        letter-spacing: 0.1em;
+        font-size: 0.68rem; /* tamanho da fonte */
+        letter-spacing: 0.1em; /* espaço entre letras */
     }
 
+    /* Estilo de: .home-actions */
     .home-actions {
-        grid-template-columns: 1fr;
-        gap: 16px;
-        max-width: 380px;
+        grid-template-columns: 1fr; /* colunas da grade */
+        gap: 16px; /* espaço entre itens */
+        max-width: 380px; /* largura máxima */
     }
 
+    /* Estilo de: .home-card */
     .home-card {
-        min-height: 190px;
-        padding: 26px 20px;
+        min-height: 190px; /* altura mínima */
+        padding: 26px 20px; /* espaçamento interno */
     }
 }
 
+/* Regras para telas que atendem: (prefers-reduced-motion: reduce) */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
+    /* Estilo de: *::after */
     *::after {
-        transition: none !important;
+        transition: none !important; /* animação suave */
     }
 }
 
+/* Estilo de: .home-subbrand */
 .home-subbrand {
-    margin-top: -8px;
-    color: var(--cinza);
-    font-size: 0.7rem;
-    letter-spacing: 0.35em;
+    margin-top: -8px; /* margem superior */
+    color: var(--cinza); /* cor do texto */
+    font-size: 0.7rem; /* tamanho da fonte */
+    letter-spacing: 0.35em; /* espaço entre letras */
 }
 
+/* Estilo de: .home-divider */
 .home-divider {
-    width: 76px;
-    height: 1px;
-    margin-top: 8px;
-    background: var(--dourado);
+    width: 76px; /* largura */
+    height: 1px; /* altura */
+    margin-top: 8px; /* margem superior */
+    background: var(--dourado); /* fundo */
 }
 /* Cabeçalho com endereço e horário */
+/* Estilo de: .home-info-topo */
 .home-info-topo {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    padding: 15px 5%;
-    background: #181817;
-    border-bottom: 1px solid #49443A;
-    color: #F7F3EA;
-    font-family: "Poppins", sans-serif;
+    display: flex; /* tipo de exibição */
+    align-items: center; /* alinhamento vertical */
+    justify-content: space-between; /* alinhamento horizontal */
+    gap: 24px; /* espaço entre itens */
+    padding: 15px 5%; /* espaçamento interno */
+    background: #181817; /* fundo */
+    border-bottom: 1px solid #49443A; /* borda inferior */
+    color: #F7F3EA; /* cor do texto */
+    font-family: "Poppins", sans-serif; /* fonte */
 }
 
+/* Estilo de: .home-info-endereco */
 .home-info-endereco {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-width: 0;
+    display: flex; /* tipo de exibição */
+    align-items: center; /* alinhamento vertical */
+    gap: 12px; /* espaço entre itens */
+    min-width: 0; /* largura mínima */
 }
 
+/* Estilo de: .home-info-icone */
 .home-info-icone {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 36px;
-    height: 36px;
-    border: 1px solid #49443A;
-    border-radius: 50%;
-    color: #D3B779;
-    font-size: 1.25rem;
+    display: flex; /* tipo de exibição */
+    align-items: center; /* alinhamento vertical */
+    justify-content: center; /* alinhamento horizontal */
+    flex-shrink: 0; /* propriedade flex-shrink */
+    width: 36px; /* largura */
+    height: 36px; /* altura */
+    border: 1px solid #49443A; /* borda */
+    border-radius: 50%; /* cantos arredondados */
+    color: #D3B779; /* cor do texto */
+    font-size: 1.25rem; /* tamanho da fonte */
 }
 
+/* Estilo de: .home-info-label */
 .home-info-label {
-    display: block;
-    margin-bottom: 4px;
-    color: #D3B779;
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
+    display: block; /* tipo de exibição */
+    margin-bottom: 4px; /* margem inferior */
+    color: #D3B779; /* cor do texto */
+    font-size: 0.65rem; /* tamanho da fonte */
+    font-weight: 600; /* peso da fonte */
+    letter-spacing: 0.1em; /* espaço entre letras */
 }
 
 .home-info-endereco p,
+/* Estilo de: .home-info-horario p */
 .home-info-horario p {
-    margin: 0;
-    color: #F7F3EA;
-    font-size: 0.78rem;
-    line-height: 1.6;
+    margin: 0; /* espaçamento externo */
+    color: #F7F3EA; /* cor do texto */
+    font-size: 0.78rem; /* tamanho da fonte */
+    line-height: 1.6; /* altura da linha */
 }
 
+/* Estilo de: .home-info-horario */
 .home-info-horario {
-    flex-shrink: 0;
+    flex-shrink: 0; /* propriedade flex-shrink */
 }
 
+/* Estilo de: .home-info-horario p */
 .home-info-horario p {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    display: flex; /* tipo de exibição */
+    align-items: center; /* alinhamento vertical */
+    gap: 8px; /* espaço entre itens */
 }
 
+/* Estilo de: .home-info-ponto */
 .home-info-ponto {
-    width: 7px;
-    height: 7px;
-    flex-shrink: 0;
-    border-radius: 50%;
-    background: #7DB58A;
+    width: 7px; /* largura */
+    height: 7px; /* altura */
+    flex-shrink: 0; /* propriedade flex-shrink */
+    border-radius: 50%; /* cantos arredondados */
+    background: #7DB58A; /* fundo */
 }
+/* Estilo de: .home-info-topo */
 .home-info-topo {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 28px;
-    padding: 14px 5%;
-    background: #181817;
-    border-bottom: 1px solid #49443A;
-    color: #F7F3EA;
-    font-family: "Poppins", sans-serif;
+    display: flex; /* tipo de exibição */
+    align-items: center; /* alinhamento vertical */
+    justify-content: space-between; /* alinhamento horizontal */
+    gap: 28px; /* espaço entre itens */
+    padding: 14px 5%; /* espaçamento interno */
+    background: #181817; /* fundo */
+    border-bottom: 1px solid #49443A; /* borda inferior */
+    color: #F7F3EA; /* cor do texto */
+    font-family: "Poppins", sans-serif; /* fonte */
 }
 
+/* Estilo de: .home-info-esquerda */
 .home-info-esquerda {
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    min-width: 0;
+    display: flex; /* tipo de exibição */
+    align-items: center; /* alinhamento vertical */
+    gap: 24px; /* espaço entre itens */
+    min-width: 0; /* largura mínima */
 }
 
+/* Estilo de: .home-info-logo */
 .home-info-logo {
-    display: block;
-    width: 82px;
-    height: 68px;
-    flex-shrink: 0;
-    object-fit: contain;
-    border-radius: 6px;
+    display: block; /* tipo de exibição */
+    width: 82px; /* largura */
+    height: 68px; /* altura */
+    flex-shrink: 0; /* propriedade flex-shrink */
+    object-fit: contain; /* ajuste da imagem */
+    border-radius: 6px; /* cantos arredondados */
 }
 
+/* Estilo de: .home-info-endereco */
 .home-info-endereco {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    min-width: 0;
+    display: flex; /* tipo de exibição */
+    align-items: center; /* alinhamento vertical */
+    gap: 12px; /* espaço entre itens */
+    min-width: 0; /* largura mínima */
 }
 
+/* Estilo de: .home-info-icone */
 .home-info-icone {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    width: 36px;
-    height: 36px;
-    border: 1px solid #49443A;
-    border-radius: 50%;
-    color: #D3B779;
-    font-size: 1.25rem;
+    display: flex; /* tipo de exibição */
+    align-items: center; /* alinhamento vertical */
+    justify-content: center; /* alinhamento horizontal */
+    flex-shrink: 0; /* propriedade flex-shrink */
+    width: 36px; /* largura */
+    height: 36px; /* altura */
+    border: 1px solid #49443A; /* borda */
+    border-radius: 50%; /* cantos arredondados */
+    color: #D3B779; /* cor do texto */
+    font-size: 1.25rem; /* tamanho da fonte */
 }
 
+/* Estilo de: .home-info-label */
 .home-info-label {
-    display: block;
-    margin-bottom: 4px;
-    color: #D3B779;
-    font-size: 0.65rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
+    display: block; /* tipo de exibição */
+    margin-bottom: 4px; /* margem inferior */
+    color: #D3B779; /* cor do texto */
+    font-size: 0.65rem; /* tamanho da fonte */
+    font-weight: 600; /* peso da fonte */
+    letter-spacing: 0.1em; /* espaço entre letras */
 }
 
 .home-info-endereco p,
+/* Estilo de: .home-info-horario p */
 .home-info-horario p {
-    margin: 0;
-    color: #F7F3EA;
-    font-size: 0.78rem;
-    line-height: 1.6;
+    margin: 0; /* espaçamento externo */
+    color: #F7F3EA; /* cor do texto */
+    font-size: 0.78rem; /* tamanho da fonte */
+    line-height: 1.6; /* altura da linha */
 }
 
+/* Estilo de: .home-info-horario */
 .home-info-horario {
-    flex-shrink: 0;
+    flex-shrink: 0; /* propriedade flex-shrink */
 }
 
+/* Estilo de: .home-info-horario p */
 .home-info-horario p {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    display: flex; /* tipo de exibição */
+    align-items: center; /* alinhamento vertical */
+    gap: 8px; /* espaço entre itens */
 }
 
+/* Estilo de: .home-info-ponto */
 .home-info-ponto {
-    width: 7px;
-    height: 7px;
-    flex-shrink: 0;
-    border-radius: 50%;
-    background: #7DB58A;
+    width: 7px; /* largura */
+    height: 7px; /* altura */
+    flex-shrink: 0; /* propriedade flex-shrink */
+    border-radius: 50%; /* cantos arredondados */
+    background: #7DB58A; /* fundo */
 }
 
 /* Responsividade */
+/* Regras para telas que atendem: (max-width: 800px) */
 @media (max-width: 800px) {
+    /* Estilo de: .home-info-topo */
     .home-info-topo {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 18px;
-        padding: 18px 20px;
+        align-items: flex-start; /* alinhamento vertical */
+        flex-direction: column; /* direção dos itens */
+        gap: 18px; /* espaço entre itens */
+        padding: 18px 20px; /* espaçamento interno */
     }
 
+    /* Estilo de: .home-info-esquerda */
     .home-info-esquerda {
-        gap: 16px;
-        width: 100%;
+        gap: 16px; /* espaço entre itens */
+        width: 100%; /* largura */
     }
 
+    /* Estilo de: .home-info-logo */
     .home-info-logo {
-        width: 68px;
-        height: 60px;
+        width: 68px; /* largura */
+        height: 60px; /* altura */
     }
 
+    /* Estilo de: .home-info-endereco p */
     .home-info-endereco p {
-        overflow-wrap: anywhere;
+        overflow-wrap: anywhere; /* quebra de palavras longas */
     }
 
+    /* Estilo de: .home-info-horario */
     .home-info-horario {
-        padding-left: 84px;
+        padding-left: 84px; /* propriedade padding-left */
     }
 }
 
+/* Regras para telas que atendem: (max-width: 420px) */
 @media (max-width: 420px) {
+    /* Estilo de: .home-info-esquerda */
     .home-info-esquerda {
-        align-items: flex-start;
-        gap: 12px;
+        align-items: flex-start; /* alinhamento vertical */
+        gap: 12px; /* espaço entre itens */
     }
 
+    /* Estilo de: .home-info-logo */
     .home-info-logo {
-        width: 55px;
-        height: 52px;
+        width: 55px; /* largura */
+        height: 52px; /* altura */
     }
 
+    /* Estilo de: .home-info-icone */
     .home-info-icone {
-        display: none;
+        display: none; /* tipo de exibição */
     }
 
+    /* Estilo de: .home-info-horario */
     .home-info-horario {
-        padding-left: 67px;
+        padding-left: 67px; /* propriedade padding-left */
     }
 }
 /* Ajuste para celulares */
+/* Regras para telas que atendem: (max-width: 700px) */
 @media (max-width: 700px) {
+    /* Estilo de: .home-info-topo */
     .home-info-topo {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 16px;
-        padding: 18px 20px;
+        align-items: flex-start; /* alinhamento vertical */
+        flex-direction: column; /* direção dos itens */
+        gap: 16px; /* espaço entre itens */
+        padding: 18px 20px; /* espaçamento interno */
     }
 
+    /* Estilo de: .home-info-endereco p */
     .home-info-endereco p {
-        overflow-wrap: anywhere;
+        overflow-wrap: anywhere; /* quebra de palavras longas */
     }
 
+    /* Estilo de: .home-info-horario */
     .home-info-horario {
-        padding-left: 48px;
+        padding-left: 48px; /* propriedade padding-left */
     }
 }

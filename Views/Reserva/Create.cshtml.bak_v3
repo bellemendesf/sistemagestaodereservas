@@ -1,0 +1,166 @@
+﻿@model GestaoReservas.Models.Reserva
+
+@{
+    Layout = "~/Views/Shared/_ReservaLayout.cshtml";
+    ViewData["Title"] = "Nova reserva";
+}
+
+<section class="panel">
+    <form asp-action="Create" method="post">
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        <div class="form-section">
+            <h2>Dados do cliente</h2>
+            <p>Quem vai ocupar a mesa.</p>
+            <div class="form-grid">
+                <div class="field">
+                    <label asp-for="Cliente.Nome">Nome</label>
+                    <input asp-for="Cliente.Nome" placeholder="Nome completo" />
+                </div>
+                <div class="field">
+                    <label asp-for="Cliente.Cpf">CPF</label>
+                    <input asp-for="Cliente.Cpf" placeholder="000.000.000-00" />
+                </div>
+                <div class="field">
+                    <label asp-for="Cliente.Telefone">Telefone</label>
+                    <input asp-for="Cliente.Telefone" type="tel" placeholder="(17) 90000-0000" />
+                </div>
+                <div class="field">
+                    <label asp-for="Cliente.EmailPessoal">E-mail</label>
+                    <input asp-for="Cliente.EmailPessoal" type="email" placeholder="cliente@email.com" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>Detalhes da reserva</h2>
+            <p>Mesa, dia e quantidade de pessoas.</p>
+            <div class="form-grid">
+                <div class="field">
+                    <label asp-for="MesaId">Número da mesa</label>
+                    @* MAPA DE MESAS: o campo continua sendo o mesmo; ele é preenchido ao clicar numa mesa livre abaixo. *@
+                    <input asp-for="MesaId" type="number" min="1" readonly placeholder="Escolha no mapa abaixo" />
+                    <span asp-validation-for="MesaId" class="text-danger"></span>
+                </div>
+        
+                <div class="field">
+                    @* RESERVA SÓ À NOITE: o cliente escolhe apenas o dia; o horário (19h) é aplicado no controller. *@
+                    <label asp-for="DataHora">Data (jantar às 19h)</label>
+                    <input asp-for="DataHora" type="date" value="@(Model.DataHora == default ? "" : Model.DataHora.ToString("yyyy-MM-dd"))" />
+                </div>
+                <div class="field">
+                    <label asp-for="QtdPessoas">Quantidade de pessoas</label>
+                    <input asp-for="QtdPessoas" type="number" min="1" />
+                </div>
+                @* ALTERAÇÃO: o status não aparece mais durante o cadastro; a nova reserva fica Pendente
+                   e o status é exibido na tela de detalhes logo após salvar. *@
+            </div>
+        </div>
+
+        @* MAPA DE MESAS: imagem estática da disposição do salão (20 mesas) + seleção da mesa. *@
+        <div class="form-section">
+            <h2>Mapa de mesas</h2>
+            <p>Disposição do salão. Escolha o dia acima e depois selecione uma mesa livre.</p>
+
+            @* Passo 1: desenho estático do salão; as mesas 1 a 20 são posicionadas em 4 fileiras de 5. *@
+            <div class="mapa-salao" aria-hidden="true">
+                @* Áreas fixas do salão: entrada e janela no topo. *@
+                <div class="mapa-areas">
+                    <div class="mapa-area">Entrada</div>
+                    <div class="mapa-area janela">Janela</div>
+                </div>
+                <div class="mapa-grade">
+                    @for (int n = 1; n <= 20; n++)
+                    {
+                        <div class="mapa-mesa @(n % 2 == 0 ? "redonda" : "")">@n</div>
+                    }
+                </div>
+                @* Áreas fixas do salão: banheiros, cozinha e saída no fundo. *@
+                <div class="mapa-areas">
+                    <div class="mapa-area">Banheiros</div>
+                    <div class="mapa-area">Cozinha / Balcão</div>
+                    <div class="mapa-area saida">Saída</div>
+                </div>
+            </div>
+
+            @* Passo 2: legenda das cores usadas na seleção. *@
+            <div class="mapa-legenda">
+                <span><i class="leg livre"></i> Livre</span>
+                <span><i class="leg reservada"></i> Reservada / ocupada</span>
+                <span><i class="leg selecionada"></i> Selecionada</span>
+            </div>
+
+            @* Passo 3: área preenchida pelo JavaScript com as mesas cadastradas no banco. *@
+            <div id="selecao-mesas" class="selecao-mesas"
+                 data-url="@Url.Action("MesasDisponiveis", "Reserva")">
+                <p class="mapa-aviso">Informe o dia para ver as mesas disponíveis.</p>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-save">Salvar reserva</button>
+            <a asp-action="Index" class="btn-ghost">Cancelar</a>
+        </div>
+    </form>
+</section>
+
+<link rel="stylesheet" href="~/css/MapaMesas.css" asp-append-version="true" />
+
+<script>
+    // MAPA DE MESAS: busca as mesas no servidor e monta os botões de seleção.
+    (function () {
+        // Passo 1: elementos usados (campo de mesa, campo de data/hora e área da seleção).
+        const campoMesa = document.getElementById("MesaId");
+        const campoData = document.getElementById("DataHora");
+        const area = document.getElementById("selecao-mesas");
+
+        // Passo 2: consulta o endpoint JSON com a data/hora escolhida.
+        async function carregarMesas() {
+            if (!campoData.value) {
+                area.innerHTML = '<p class="mapa-aviso">Informe o dia para ver as mesas disponíveis.</p>';
+                return;
+            }
+            try {
+                const resposta = await fetch(area.dataset.url + "?dataHora=" + encodeURIComponent(campoData.value));
+                if (!resposta.ok) throw new Error();
+                desenhar(await resposta.json());
+            } catch {
+                area.innerHTML = '<p class="mapa-aviso">Não foi possível carregar as mesas. Verifique a conexão com o banco.</p>';
+            }
+        }
+
+        // Passo 3: cria um botão por mesa; somente as livres podem ser clicadas.
+        function desenhar(mesas) {
+            area.innerHTML = "";
+            if (mesas.length === 0) {
+                area.innerHTML = '<p class="mapa-aviso">Nenhuma mesa cadastrada.</p>';
+                return;
+            }
+            // Se a mesa escolhida antes deixou de estar livre, limpa o campo.
+            const atual = mesas.find(m => String(m.id) === campoMesa.value);
+            if (atual && atual.situacao !== "Livre") campoMesa.value = "";
+
+            mesas.forEach(m => {
+                const botao = document.createElement("button");
+                botao.type = "button";
+                const livre = m.situacao === "Livre";
+                botao.className = "mesa-opcao " + (livre ? "livre" : "reservada");
+                if (String(m.id) === campoMesa.value) botao.classList.add("selecionada");
+                botao.disabled = !livre;
+                botao.innerHTML = "<strong>Mesa " + m.numero + "</strong><small>" + m.lugares + " lugares · " +
+                    m.ambiente + "</small><small>" + m.situacao + "</small>";
+
+                // Passo 4: ao clicar numa mesa livre, preenche o campo MesaId do formulário.
+                botao.addEventListener("click", () => {
+                    campoMesa.value = m.id;
+                    area.querySelectorAll(".mesa-opcao").forEach(b => b.classList.remove("selecionada"));
+                    botao.classList.add("selecionada");
+                });
+                area.appendChild(botao);
+            });
+        }
+
+        // Passo 5: recarrega sempre que a data/hora mudar e já carrega ao abrir a página.
+        campoData.addEventListener("change", carregarMesas);
+        carregarMesas();
+    })();
+</script>

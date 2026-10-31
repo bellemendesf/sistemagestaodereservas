@@ -1,0 +1,146 @@
+﻿@* Tipo de dado (modelo) que esta view recebe do controller *@
+@model GestaoReservas.Models.Reserva
+
+@* Bloco C#: configurações da view (título, layout e variáveis) *@
+@{
+    ViewData["Title"] = "Editar Reserva";
+    // Atribui Layout
+    Layout = null;
+    // Variável restaurante
+    bool restaurante = string.Equals(ViewContext.RouteData.Values["controller"]?.ToString(), "AreaRestaurante", StringComparison.OrdinalIgnoreCase);
+    // Variável voltar
+    string voltar = restaurante ? "Reservas" : "Index";
+}
+
+@* Tipo do documento (HTML5) *@
+<!DOCTYPE html>
+@* Início do documento HTML *@
+<html lang="pt-BR">
+@* Cabeçalho do documento (título, fontes e estilos) *@
+<head>
+    @* Configuração da página *@
+    <meta charset="UTF-8">
+    @* Configuração da página *@
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @* Título da aba *@
+    <title>@ViewData["Title"]</title>
+
+    @* Arquivo de estilo/fonte externo *@
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    @* Arquivo de estilo/fonte externo *@
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    @* Arquivo de estilo/fonte externo *@
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    @* Arquivo de estilo/fonte externo *@
+    <link rel="stylesheet" href="~/css/DetalhesEdicao.css" asp-append-version="true">
+</head>
+@* Corpo da página *@
+<body class="detalhes-edicao-page">
+    @* Conteúdo principal *@
+    <main class="detalhes-edicao-container">
+        @* Link (asp-action @voltar) *@
+        <a asp-action="@voltar" class="detalhes-edicao-voltar">← Voltar às reservas</a>
+
+        @* Seção da página *@
+        <section class="detalhes-edicao-card">
+            @* Cabeçalho *@
+            <header class="detalhes-edicao-header">
+                @* Parágrafo de texto *@
+                <p class="detalhes-edicao-kicker">Santa Massa · Rio Preto</p>
+                @* Título principal *@
+                <h1>Editar reserva</h1>
+                @* Parágrafo de texto *@
+                <p class="detalhes-edicao-descricao">
+                    Altere os dados necessários e salve as modificações.
+                </p>
+            </header>
+
+            @* Bloco (classe detalhes-edicao-conteudo) *@
+            <div class="detalhes-edicao-conteudo">
+                @* Formulário (asp-action Edit, id @Model.Id) *@
+                <form asp-action="Edit" asp-route-id="@Model.Id" method="post" class="detalhes-edicao-form">
+                    @* Campo de entrada (asp-for Id) *@
+                    <input type="hidden" asp-for="Id" />
+
+                    @* Resumo dos erros de validação *@
+                    <div asp-validation-summary="All" class="detalhes-edicao-erros"></div>
+
+                    @* Bloco (classe detalhes-edicao-campo) *@
+                    <div class="detalhes-edicao-campo">
+                        @* Rótulo do campo *@
+                        <label>Número da mesa</label>
+                        @* Campo de entrada *@
+                        <input type="text" value="Mesa @Model.MesaId" readonly />
+                        @* Texto de ajuda *@
+                        <small class="detalhes-edicao-ajuda">
+                            O número da mesa não pode ser alterado.
+                        </small>
+                    </div>
+
+                    @* Bloco (classe detalhes-edicao-campo) *@
+                    <div class="detalhes-edicao-campo">
+                        @* RESERVA POR DIA: apenas o dia é editável, sem horário. *@
+                        <label asp-for="DataHora">Data</label>
+                        @* Campo de entrada (asp-for DataHora) *@
+                        <input asp-for="DataHora" type="date" readonly="@restaurante" />
+                        @* Texto destacado *@
+                        <span asp-validation-for="DataHora" class="detalhes-edicao-erros"></span>
+                    </div>
+
+                    @* Bloco (classe detalhes-edicao-campo) *@
+                    <div class="detalhes-edicao-campo">
+                        @* Rótulo do campo (asp-for QtdPessoas) *@
+                        <label asp-for="QtdPessoas">Quantidade de pessoas</label>
+                        @* Campo de entrada (asp-for QtdPessoas) *@
+                        <input asp-for="QtdPessoas" type="number" min="1" readonly="@restaurante" />
+                        @* Texto destacado *@
+                        <span asp-validation-for="QtdPessoas" class="detalhes-edicao-erros"></span>
+                    </div>
+
+
+@* Bloco (classe detalhes-edicao-campo) *@
+<div class="detalhes-edicao-campo">
+    @* Rótulo do campo (asp-for Status) *@
+    <label asp-for="Status">Status da reserva</label>
+
+    @* Lista de seleção (asp-for Status) *@
+    <select asp-for="Status">
+        @* Opção da lista *@
+        <option value="Pendente">Pendente</option>
+        @* Opção da lista *@
+        <option value="Confirmada">Confirmada</option>
+        @* Opção da lista *@
+        <option value="Cancelada">Cancelada</option>
+    </select>
+
+    @* Texto destacado *@
+    <span asp-validation-for="Status" class="detalhes-edicao-erros"></span>
+</div>
+
+
+                    @* Bloco (classe detalhes-edicao-acoes) *@
+                    <div class="detalhes-edicao-acoes">
+                        @* Botão *@
+                        <button type="submit"
+                                class="detalhes-edicao-botao detalhes-edicao-botao-principal">
+                            Salvar alterações
+                        </button>
+
+                        @* Link (asp-action @voltar) *@
+                        <a asp-action="@voltar"
+                           class="detalhes-edicao-botao detalhes-edicao-botao-secundario">
+                            Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            @* Rodapé *@
+            <footer class="detalhes-edicao-rodape">
+                Santa Massa · Painel de gerenciamento
+            </footer>
+        </section>
+    </main>
+</body>
+</html>

@@ -1,15 +1,24 @@
+﻿@* Importação usada pelas views *@
 @using GestaoReservas.Models
+@* Tipo de dado (modelo) que esta view recebe do controller *@
 @model Ambiente
 
+@* Bloco C#: configurações da view (título, layout e variáveis) *@
 @{
     ViewData["Title"] = "Informações do ambiente";
 }
 
+@* Título principal *@
 <h1>Detalhes do Ambiente</h1>
 
+  @* Parágrafo de texto *@
   <p><strong>ID:</strong> @Model.Id</p>
+    @* Parágrafo de texto *@
     <p><strong>Nome:</strong> @Model.Nome</p>
+    @* Parágrafo de texto *@
     <p><strong>Status:</strong> @Model.Status</p>
+    @* Parágrafo de texto *@
     <p><strong>Capacidade:</strong> @Model.Capacidade</p>
 
+@* Link (asp-action Index) *@
 <a asp-action="Index">Voltar</a>

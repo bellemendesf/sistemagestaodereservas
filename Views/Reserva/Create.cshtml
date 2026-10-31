@@ -1,63 +1,307 @@
+﻿@* Tipo de dado (modelo) que esta view recebe do controller *@
 @model GestaoReservas.Models.Reserva
 
+@* Bloco C#: configurações da view (título, layout e variáveis) *@
 @{
+    // Atribui Layout
     Layout = "~/Views/Shared/_ReservaLayout.cshtml";
     ViewData["Title"] = "Nova reserva";
 }
 
+@* Seção da página *@
 <section class="panel">
+    @* Formulário (asp-action Create) *@
     <form asp-action="Create" method="post">
+        @* Resumo dos erros de validação *@
         @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        @* Bloco (classe form-section) *@
         <div class="form-section">
+            @* Subtítulo *@
             <h2>Dados do cliente</h2>
+            @* Parágrafo de texto *@
             <p>Quem vai ocupar a mesa.</p>
+            @* Bloco (classe form-grid) *@
             <div class="form-grid">
+                @* Bloco (classe field) *@
                 <div class="field">
+                    @* Rótulo do campo (asp-for Cliente.Nome) *@
                     <label asp-for="Cliente.Nome">Nome</label>
+                    @* Campo de entrada (asp-for Cliente.Nome) *@
                     <input asp-for="Cliente.Nome" placeholder="Nome completo" />
                 </div>
+                @* Bloco (classe field) *@
                 <div class="field">
+                    @* Rótulo do campo (asp-for Cliente.Cpf) *@
                     <label asp-for="Cliente.Cpf">CPF</label>
+                    @* Campo de entrada (asp-for Cliente.Cpf) *@
                     <input asp-for="Cliente.Cpf" placeholder="000.000.000-00" />
                 </div>
+                @* Bloco (classe field) *@
                 <div class="field">
+                    @* Rótulo do campo (asp-for Cliente.Telefone) *@
                     <label asp-for="Cliente.Telefone">Telefone</label>
+                    @* Campo de entrada (asp-for Cliente.Telefone) *@
                     <input asp-for="Cliente.Telefone" type="tel" placeholder="(17) 90000-0000" />
                 </div>
+                @* Bloco (classe field) *@
                 <div class="field">
+                    @* Rótulo do campo (asp-for Cliente.EmailPessoal) *@
                     <label asp-for="Cliente.EmailPessoal">E-mail</label>
+                    @* Campo de entrada (asp-for Cliente.EmailPessoal) *@
                     <input asp-for="Cliente.EmailPessoal" type="email" placeholder="cliente@email.com" />
                 </div>
             </div>
         </div>
 
+        @* Bloco (classe form-section) *@
         <div class="form-section">
+            @* Subtítulo *@
             <h2>Detalhes da reserva</h2>
-            <p>Mesa, horário e quantidade de pessoas.</p>
+            @* Parágrafo de texto *@
+            <p>Mesa, dia e quantidade de pessoas.</p>
+            @* Bloco (classe form-grid) *@
             <div class="form-grid">
+                @* Bloco (classe field) *@
                 <div class="field">
+                    @* Rótulo do campo (asp-for MesaId) *@
                     <label asp-for="MesaId">Número da mesa</label>
-                    <input asp-for="MesaId" type="number" min="1" />
+                    @* MAPA DE MESAS: o campo continua sendo o mesmo; ele é preenchido ao clicar numa mesa livre abaixo. *@
+                    <input asp-for="MesaId" type="number" min="1" readonly placeholder="Escolha no mapa abaixo" />
+                    @* Texto destacado *@
+                    <span asp-validation-for="MesaId" class="text-danger"></span>
                 </div>
         
+                @* Bloco (classe field) *@
                 <div class="field">
-                    <label asp-for="DataHora">Data e hora</label>
-                    <input asp-for="DataHora" type="datetime-local" value="@(Model.DataHora == default ? "" : Model.DataHora.ToString("yyyy-MM-ddTHH:mm"))" />
+                    @* RESERVA POR DIA: o cliente escolhe apenas o dia, sem horário. *@
+                    <label asp-for="DataHora">Data</label>
+                    @* Campo de entrada (asp-for DataHora) *@
+                    <input asp-for="DataHora" type="date" value="@(Model.DataHora == default ? "" : Model.DataHora.ToString("yyyy-MM-dd"))" />
                 </div>
+                @* Bloco (classe field) *@
                 <div class="field">
+                    @* Rótulo do campo (asp-for QtdPessoas) *@
                     <label asp-for="QtdPessoas">Quantidade de pessoas</label>
+                    @* Campo de entrada (asp-for QtdPessoas) *@
                     <input asp-for="QtdPessoas" type="number" min="1" />
                 </div>
-                <div class="field full">
-                    <label asp-for="Status">Status</label>
-                    <input value="Pendente" readonly />
-                </div>
+                @* ALTERAÇÃO: o status não aparece mais durante o cadastro; a nova reserva fica Pendente
+                   e o status é exibido na tela de detalhes logo após salvar. *@
             </div>
         </div>
 
+        @* MAPA DE MESAS: o cliente escolhe a área, vê o desenho dela e seleciona uma mesa livre. *@
+        <div class="form-section">
+            @* Subtítulo *@
+            <h2>Mapa de mesas</h2>
+            @* Parágrafo de texto *@
+            <p>Escolha o dia acima, depois a área do restaurante e uma mesa livre.</p>
+
+            @* Passo 1: escolha da área (fixas por enquanto). Sem atributo name: não é enviada no formulário. *@
+            <div class="field">
+                @* Rótulo do campo *@
+                <label for="area-mapa">Área</label>
+                @* Lista de seleção (id area-mapa) *@
+                <select id="area-mapa">
+                    @* Opção da lista *@
+                    <option value="">Selecione a área</option>
+                    @* Opção da lista *@
+                    <option value="Externo">Externo</option>
+                    @* Opção da lista *@
+                    <option value="Interno">Interno</option>
+                    @* Opção da lista *@
+                    <option value="Sacada">Sacada</option>
+                </select>
+            </div>
+
+            @* Passo 2: desenho estático de cada área (só o da área escolhida fica visível). *@
+
+            @* Área Interno: 20 mesas em 4 fileiras de 5, com entrada, janela, banheiros, cozinha e saída. *@
+            <div class="mapa-salao" data-area="Interno" hidden aria-hidden="true">
+                @* Bloco (classe mapa-areas) *@
+                <div class="mapa-areas">
+                    @* Bloco (classe mapa-area) *@
+                    <div class="mapa-area">Entrada</div>
+                    @* Bloco (classe mapa-area janela) *@
+                    <div class="mapa-area janela">Janela</div>
+                </div>
+                @* Bloco (classe mapa-grade) *@
+                <div class="mapa-grade">
+                    @* Repete o bloco o número de vezes indicado *@
+                    @for (int n = 1; n <= 20; n++)
+                    {
+                        @* Bloco (classe mapa-mesa) *@
+                        <div class="mapa-mesa @(n % 2 == 0 ? "redonda" : "")">@n</div>
+                    }
+                </div>
+                @* Bloco (classe mapa-areas) *@
+                <div class="mapa-areas">
+                    @* Bloco (classe mapa-area) *@
+                    <div class="mapa-area">Banheiros</div>
+                    @* Bloco (classe mapa-area) *@
+                    <div class="mapa-area">Cozinha / Balcão</div>
+                    @* Bloco (classe mapa-area saida) *@
+                    <div class="mapa-area saida">Saída</div>
+                </div>
+            </div>
+
+            @* Área Externo: 12 mesas redondas em 3 fileiras de 4, ao redor do jardim. *@
+            <div class="mapa-salao" data-area="Externo" hidden aria-hidden="true">
+                @* Bloco (classe mapa-areas) *@
+                <div class="mapa-areas">
+                    @* Bloco (classe mapa-area) *@
+                    <div class="mapa-area">Calçada</div>
+                </div>
+                @* Bloco (classe mapa-grade quatro) *@
+                <div class="mapa-grade quatro">
+                    @* Repete o bloco o número de vezes indicado *@
+                    @for (int n = 1; n <= 12; n++)
+                    {
+                        @* Bloco (classe mapa-mesa redonda) *@
+                        <div class="mapa-mesa redonda">@n</div>
+                    }
+                </div>
+                @* Bloco (classe mapa-areas) *@
+                <div class="mapa-areas">
+                    @* Bloco (classe mapa-area janela) *@
+                    <div class="mapa-area janela">Jardim</div>
+                    @* Bloco (classe mapa-area saida) *@
+                    <div class="mapa-area saida">Saída</div>
+                </div>
+            </div>
+
+            @* Área Sacada: 8 mesas em 2 fileiras ao longo do parapeito com vista. *@
+            <div class="mapa-salao" data-area="Sacada" hidden aria-hidden="true">
+                @* Bloco (classe mapa-areas) *@
+                <div class="mapa-areas">
+                    @* Bloco (classe mapa-area janela) *@
+                    <div class="mapa-area janela">Vista / Parapeito</div>
+                </div>
+                @* Bloco (classe mapa-grade quatro) *@
+                <div class="mapa-grade quatro">
+                    @* Repete o bloco o número de vezes indicado *@
+                    @for (int n = 1; n <= 8; n++)
+                    {
+                        @* Bloco (classe mapa-mesa) *@
+                        <div class="mapa-mesa">@n</div>
+                    }
+                </div>
+                @* Bloco (classe mapa-areas) *@
+                <div class="mapa-areas">
+                    @* Bloco (classe mapa-area) *@
+                    <div class="mapa-area">Escada</div>
+                    @* Bloco (classe mapa-area saida) *@
+                    <div class="mapa-area saida">Saída</div>
+                </div>
+            </div>
+
+            @* Passo 3: legenda das cores usadas na seleção. *@
+            <div class="mapa-legenda">
+                @* Texto destacado *@
+                <span><i class="leg livre"></i> Livre</span>
+                @* Texto destacado *@
+                <span><i class="leg reservada"></i> Reservada / ocupada</span>
+                @* Texto destacado *@
+                <span><i class="leg selecionada"></i> Selecionada</span>
+            </div>
+
+            @* Passo 4: área preenchida pelo JavaScript com as mesas cadastradas no banco. *@
+            <div id="selecao-mesas" class="selecao-mesas"
+                 data-url="@Url.Action("MesasDisponiveis", "Reserva")">
+                @* Parágrafo de texto *@
+                <p class="mapa-aviso">Informe o dia para ver as mesas disponíveis.</p>
+            </div>
+        </div>
+
+        @* Bloco (classe form-actions) *@
         <div class="form-actions">
+            @* Botão *@
             <button type="submit" class="btn-save">Salvar reserva</button>
+            @* Link (asp-action Index) *@
             <a asp-action="Index" class="btn-ghost">Cancelar</a>
         </div>
     </form>
 </section>
+
+@* Arquivo de estilo/fonte externo *@
+<link rel="stylesheet" href="~/css/MapaMesas.css" asp-append-version="true" />
+
+@* Script desta página *@
+<script>
+    // MAPA DE MESAS: busca as mesas no servidor e monta os botões de seleção da área escolhida.
+    (function () {
+        // Passo 1: elementos usados (campo de mesa, campo do dia, seletor de área e área da seleção).
+        const campoMesa = document.getElementById("MesaId");
+        const campoData = document.getElementById("DataHora");
+        const campoArea = document.getElementById("area-mapa");
+        const area = document.getElementById("selecao-mesas");
+        let mesasDoDia = []; // última lista recebida do servidor
+
+        // Passo 2: consulta o endpoint JSON com o dia escolhido.
+        async function carregarMesas() {
+            if (!campoData.value) {
+                mesasDoDia = [];
+                area.innerHTML = '<p class="mapa-aviso">Informe o dia para ver as mesas disponíveis.</p>';
+                return;
+            }
+            try {
+                const resposta = await fetch(area.dataset.url + "?dataHora=" + encodeURIComponent(campoData.value));
+                if (!resposta.ok) throw new Error();
+                mesasDoDia = await resposta.json();
+                desenhar();
+            } catch {
+                area.innerHTML = '<p class="mapa-aviso">Não foi possível carregar as mesas. Verifique a conexão com o banco.</p>';
+            }
+        }
+
+        // Passo 3: mostra só o desenho da área escolhida.
+        function mostrarMapa() {
+            document.querySelectorAll(".mapa-salao").forEach(m => m.hidden = m.dataset.area !== campoArea.value);
+        }
+
+        // Passo 4: cria um botão por mesa da área escolhida; somente as livres podem ser clicadas.
+        function desenhar() {
+            if (!campoData.value) return;
+            if (!campoArea.value) {
+                area.innerHTML = '<p class="mapa-aviso">Selecione a área para ver as mesas.</p>';
+                return;
+            }
+            // Compara o nome do ambiente da mesa com a área escolhida (sem diferenciar maiúsculas).
+            const mesas = mesasDoDia.filter(m => (m.ambiente || "").toLowerCase() === campoArea.value.toLowerCase());
+            area.innerHTML = "";
+            if (mesas.length === 0) {
+                area.innerHTML = '<p class="mapa-aviso">Nenhuma mesa cadastrada nesta área.</p>';
+                campoMesa.value = "";
+                return;
+            }
+            // Se a mesa escolhida antes não está livre nesta área, limpa o campo.
+            const atual = mesas.find(m => String(m.id) === campoMesa.value);
+            if (!atual || atual.situacao !== "Livre") campoMesa.value = "";
+
+            mesas.forEach(m => {
+                const botao = document.createElement("button");
+                botao.type = "button";
+                const livre = m.situacao === "Livre";
+                botao.className = "mesa-opcao " + (livre ? "livre" : "reservada");
+                if (String(m.id) === campoMesa.value) botao.classList.add("selecionada");
+                botao.disabled = !livre;
+                botao.innerHTML = "<strong>Mesa " + m.numero + "</strong><small>" + m.lugares + " lugares · " +
+                    m.ambiente + "</small><small>" + m.situacao + "</small>";
+
+                // Passo 5: ao clicar numa mesa livre, preenche o campo MesaId do formulário.
+                botao.addEventListener("click", () => {
+                    campoMesa.value = m.id;
+                    area.querySelectorAll(".mesa-opcao").forEach(b => b.classList.remove("selecionada"));
+                    botao.classList.add("selecionada");
+                });
+                area.appendChild(botao);
+            });
+        }
+
+        // Passo 6: recarrega ao mudar o dia; redesenha ao mudar a área; carrega ao abrir a página.
+        campoData.addEventListener("change", carregarMesas);
+        campoArea.addEventListener("change", () => { mostrarMapa(); desenhar(); });
+        mostrarMapa();
+        carregarMesas();
+    })();
+</script>

@@ -1,31 +1,35 @@
-
+﻿
+/* Variáveis de cores do site */
 :root {
-    --preto: #0B0B0B;
-    --preto-card: #111111;
-    --dourado: #C6A45C;
-    --dourado-claro: #E0C989;
-    --texto: #F5F1E8;
-    --texto-secundario: #B7B1A5;
-    --campo: #151515;
-    --borda: #403A2E;
-    --erro: #E9A4A4;
+    --preto: #0B0B0B; /* variável de cor --preto */
+    --preto-card: #111111; /* variável de cor --preto-card */
+    --dourado: #C6A45C; /* variável de cor --dourado */
+    --dourado-claro: #E0C989; /* variável de cor --dourado-claro */
+    --texto: #F5F1E8; /* variável de cor --texto */
+    --texto-secundario: #B7B1A5; /* variável de cor --texto-secundario */
+    --campo: #151515; /* variável de cor --campo */
+    --borda: #403A2E; /* variável de cor --borda */
+    --erro: #E9A4A4; /* variável de cor --erro */
 }
 
+/* Estilo de: * */
 * {
-    box-sizing: border-box;
+    box-sizing: border-box; /* cálculo do tamanho */
 }
 
+/* Estilo de: html */
 html {
-    min-height: 100%;
+    min-height: 100%; /* altura mínima */
 }
 
+/* Estilo de: body.cadastro-page */
 body.cadastro-page {
-    min-height: 100vh;
-    margin: 0;
-    padding: 34px 18px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    min-height: 100vh; /* altura mínima */
+    margin: 0; /* espaçamento externo */
+    padding: 34px 18px 24px; /* espaçamento interno */
+    display: flex; /* tipo de exibição */
+    align-items: center; /* alinhamento vertical */
+    justify-content: center; /* alinhamento horizontal */
     background:
         radial-gradient(
             circle at 50% 0%,
@@ -33,231 +37,264 @@ body.cadastro-page {
             transparent 38%
         ),
         var(--preto);
-    color: var(--texto);
-    font-family: "Poppins", sans-serif;
+    color: var(--texto); /* cor do texto */
+    font-family: "Poppins", sans-serif; /* fonte */
 }
 
+/* Estilo de: .cadastro-container */
 .cadastro-container {
-    width: 100%;
-    max-width: 510px;
-    margin: auto;
+    width: 100%; /* largura */
+    max-width: 510px; /* largura máxima */
+    margin: auto; /* espaçamento externo */
 }
 
+/* Estilo de: .cadastro-voltar-topo */
 .cadastro-voltar-topo {
-    display: inline-block;
-    margin-bottom: 18px;
-    color: var(--texto-secundario);
-    font-size: 0.86rem;
-    text-decoration: none;
-    transition: color 0.2s ease;
+    display: inline-block; /* tipo de exibição */
+    margin-bottom: 18px; /* margem inferior */
+    color: var(--texto-secundario); /* cor do texto */
+    font-size: 0.86rem; /* tamanho da fonte */
+    text-decoration: none; /* decoração do texto */
+    transition: color 0.2s ease; /* animação suave */
 }
 
+/* Estilo de: .cadastro-voltar-topo:hover */
 .cadastro-voltar-topo:hover {
-    color: var(--dourado-claro);
+    color: var(--dourado-claro); /* cor do texto */
 }
 
+/* Estilo de: .cadastro-card */
 .cadastro-card {
-    padding: 34px 38px;
-    background: var(--preto-card);
-    border: 1px solid var(--borda);
-    border-radius: 5px;
-    box-shadow: 0 18px 55px rgba(0, 0, 0, 0.25);
+    padding: 34px 38px; /* espaçamento interno */
+    background: var(--preto-card); /* fundo */
+    border: 1px solid var(--borda); /* borda */
+    border-radius: 5px; /* cantos arredondados */
+    box-shadow: 0 18px 55px rgba(0, 0, 0, 0.25); /* sombra */
 }
 
+/* Estilo de: .cadastro-header */
 .cadastro-header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+    display: flex; /* tipo de exibição */
+    flex-direction: column; /* direção dos itens */
+    align-items: center; /* alinhamento vertical */
+    text-align: center; /* alinhamento do texto */
 }
 
+/* Estilo de: .cadastro-logo */
 .cadastro-logo {
-    display: block;
-    width: 92px;
-    height: 92px;
-    margin: 0 auto 22px;
-    object-fit: contain;
-    border-radius: 50%;
+    display: block; /* tipo de exibição */
+    width: 92px; /* largura */
+    height: 92px; /* altura */
+    margin: 0 auto 22px; /* espaçamento externo */
+    object-fit: contain; /* ajuste da imagem */
+    border-radius: 50%; /* cantos arredondados */
 }
 
+/* Estilo de: .cadastro-subtitulo */
 .cadastro-subtitulo {
-    margin: 0 0 10px;
-    color: var(--dourado);
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
+    margin: 0 0 10px; /* espaçamento externo */
+    color: var(--dourado); /* cor do texto */
+    font-size: 0.72rem; /* tamanho da fonte */
+    font-weight: 500; /* peso da fonte */
+    letter-spacing: 0.13em; /* espaço entre letras */
+    text-transform: uppercase; /* maiúsculas/minúsculas */
 }
 
+/* Estilo de: .cadastro-card h1 */
 .cadastro-card h1 {
-    margin: 0 0 12px;
-    color: var(--texto);
-    font-family: "Josefin Sans", sans-serif;
-    font-size: clamp(2rem, 5vw, 2.45rem);
-    font-weight: 600;
-    line-height: 1.15;
+    margin: 0 0 12px; /* espaçamento externo */
+    color: var(--texto); /* cor do texto */
+    font-family: "Josefin Sans", sans-serif; /* fonte */
+    font-size: clamp(2rem, 5vw, 2.45rem); /* tamanho da fonte */
+    font-weight: 600; /* peso da fonte */
+    line-height: 1.15; /* altura da linha */
 }
 
+/* Estilo de: .cadastro-descricao */
 .cadastro-descricao {
-    max-width: 350px;
-    margin: 0 0 28px;
-    color: var(--texto-secundario);
-    font-size: 0.88rem;
-    line-height: 1.7;
+    max-width: 350px; /* largura máxima */
+    margin: 0 0 28px; /* espaçamento externo */
+    color: var(--texto-secundario); /* cor do texto */
+    font-size: 0.88rem; /* tamanho da fonte */
+    line-height: 1.7; /* altura da linha */
 }
 
+/* Estilo de: .cadastro-form */
 .cadastro-form {
-    display: flex;
-    flex-direction: column;
-    gap: 19px;
+    display: flex; /* tipo de exibição */
+    flex-direction: column; /* direção dos itens */
+    gap: 19px; /* espaço entre itens */
 }
 
+/* Estilo de: .campo-cadastro */
 .campo-cadastro {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    display: flex; /* tipo de exibição */
+    flex-direction: column; /* direção dos itens */
+    gap: 8px; /* espaço entre itens */
 }
 
+/* Estilo de: .campo-cadastro label */
 .campo-cadastro label {
-    color: #E8E1D4;
-    font-size: 0.84rem;
-    font-weight: 500;
+    color: #E8E1D4; /* cor do texto */
+    font-size: 0.84rem; /* tamanho da fonte */
+    font-weight: 500; /* peso da fonte */
 }
 
+/* Estilo de: .campo-cadastro input */
 .campo-cadastro input {
-    width: 100%;
-    min-height: 47px;
-    padding: 12px 14px;
-    border: 1px solid var(--borda);
-    border-radius: 4px;
-    outline: none;
-    background: var(--campo);
-    color: var(--texto);
-    font-family: "Poppins", sans-serif;
-    font-size: 0.88rem;
+    width: 100%; /* largura */
+    min-height: 47px; /* altura mínima */
+    padding: 12px 14px; /* espaçamento interno */
+    border: 1px solid var(--borda); /* borda */
+    border-radius: 4px; /* cantos arredondados */
+    outline: none; /* contorno de foco */
+    background: var(--campo); /* fundo */
+    color: var(--texto); /* cor do texto */
+    font-family: "Poppins", sans-serif; /* fonte */
+    font-size: 0.88rem; /* tamanho da fonte */
     transition:
         border-color 0.2s ease,
         background-color 0.2s ease,
         box-shadow 0.2s ease;
 }
 
+/* Estilo de: .campo-cadastro input::placeholder */
 .campo-cadastro input::placeholder {
-    color: #777166;
+    color: #777166; /* cor do texto */
 }
 
+/* Estilo de: .campo-cadastro input:hover */
 .campo-cadastro input:hover {
-    border-color: #65563A;
+    border-color: #65563A; /* cor da borda */
 }
 
+/* Estilo de: .campo-cadastro input:focus */
 .campo-cadastro input:focus {
-    border-color: var(--dourado);
-    background: #181818;
-    box-shadow: 0 0 0 2px rgba(198, 164, 92, 0.12);
+    border-color: var(--dourado); /* cor da borda */
+    background: #181818; /* fundo */
+    box-shadow: 0 0 0 2px rgba(198, 164, 92, 0.12); /* sombra */
 }
 
+/* Estilo de: .cadastro-erros */
 .cadastro-erros {
-    margin: 0 0 22px;
-    padding: 12px 15px;
-    border: 1px solid rgba(233, 164, 164, 0.35);
-    border-radius: 4px;
-    background: rgba(120, 30, 30, 0.12);
-    color: var(--erro);
-    font-size: 0.84rem;
+    margin: 0 0 22px; /* espaçamento externo */
+    padding: 12px 15px; /* espaçamento interno */
+    border: 1px solid rgba(233, 164, 164, 0.35); /* borda */
+    border-radius: 4px; /* cantos arredondados */
+    background: rgba(120, 30, 30, 0.12); /* fundo */
+    color: var(--erro); /* cor do texto */
+    font-size: 0.84rem; /* tamanho da fonte */
 }
 
+/* Estilo de: .cadastro-erros:empty */
 .cadastro-erros:empty {
-    display: none;
+    display: none; /* tipo de exibição */
 }
 
+/* Estilo de: .cadastro-erros ul */
 .cadastro-erros ul {
-    margin: 0;
-    padding-left: 20px;
+    margin: 0; /* espaçamento externo */
+    padding-left: 20px; /* propriedade padding-left */
 }
 
+/* Estilo de: .cadastro-botoes */
 .cadastro-botoes {
-    display: flex;
-    flex-direction: column;
-    gap: 11px;
-    margin-top: 8px;
+    display: flex; /* tipo de exibição */
+    flex-direction: column; /* direção dos itens */
+    gap: 11px; /* espaço entre itens */
+    margin-top: 8px; /* margem superior */
 }
 
 .btn-cadastro-salvar,
+/* Estilo de: .btn-cadastro-voltar */
 .btn-cadastro-voltar {
-    display: flex;
-    width: 100%;
-    min-height: 47px;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 20px;
-    border-radius: 4px;
-    font-family: "Poppins", sans-serif;
-    font-size: 0.88rem;
-    font-weight: 600;
-    text-align: center;
-    text-decoration: none;
+    display: flex; /* tipo de exibição */
+    width: 100%; /* largura */
+    min-height: 47px; /* altura mínima */
+    align-items: center; /* alinhamento vertical */
+    justify-content: center; /* alinhamento horizontal */
+    padding: 12px 20px; /* espaçamento interno */
+    border-radius: 4px; /* cantos arredondados */
+    font-family: "Poppins", sans-serif; /* fonte */
+    font-size: 0.88rem; /* tamanho da fonte */
+    font-weight: 600; /* peso da fonte */
+    text-align: center; /* alinhamento do texto */
+    text-decoration: none; /* decoração do texto */
     transition:
         background-color 0.2s ease,
         border-color 0.2s ease,
         color 0.2s ease;
 }
 
+/* Estilo de: .btn-cadastro-salvar */
 .btn-cadastro-salvar {
-    border: 1px solid var(--dourado);
-    background: var(--dourado);
-    color: #111111;
-    cursor: pointer;
+    border: 1px solid var(--dourado); /* borda */
+    background: var(--dourado); /* fundo */
+    color: #111111; /* cor do texto */
+    cursor: pointer; /* tipo de cursor */
 }
 
+/* Estilo de: .btn-cadastro-salvar:hover */
 .btn-cadastro-salvar:hover {
-    border-color: var(--dourado-claro);
-    background: var(--dourado-claro);
-    color: #111111;
+    border-color: var(--dourado-claro); /* cor da borda */
+    background: var(--dourado-claro); /* fundo */
+    color: #111111; /* cor do texto */
 }
 
+/* Estilo de: .btn-cadastro-voltar */
 .btn-cadastro-voltar {
-    border: 1px solid var(--borda);
-    background: transparent;
-    color: var(--texto-secundario);
+    border: 1px solid var(--borda); /* borda */
+    background: transparent; /* fundo */
+    color: var(--texto-secundario); /* cor do texto */
 }
 
+/* Estilo de: .btn-cadastro-voltar:hover */
 .btn-cadastro-voltar:hover {
-    border-color: var(--dourado);
-    color: var(--dourado-claro);
+    border-color: var(--dourado); /* cor da borda */
+    color: var(--dourado-claro); /* cor do texto */
 }
 
+/* Estilo de: .cadastro-rodape */
 .cadastro-rodape {
-    margin-top: 20px;
-    color: #777166;
-    font-size: 0.74rem;
-    text-align: center;
-    letter-spacing: 0.04em;
+    margin-top: 20px; /* margem superior */
+    color: #777166; /* cor do texto */
+    font-size: 0.74rem; /* tamanho da fonte */
+    text-align: center; /* alinhamento do texto */
+    letter-spacing: 0.04em; /* espaço entre letras */
 }
 
+/* Regras para telas que atendem: (max-width: 576px) */
 @media (max-width: 576px) {
+    /* Estilo de: body.cadastro-page */
     body.cadastro-page {
-        padding: 22px 13px;
-        align-items: flex-start;
+        padding: 22px 13px; /* espaçamento interno */
+        align-items: flex-start; /* alinhamento vertical */
     }
 
+    /* Estilo de: .cadastro-container */
     .cadastro-container {
-        max-width: 100%;
+        max-width: 100%; /* largura máxima */
     }
 
+    /* Estilo de: .cadastro-card */
     .cadastro-card {
-        padding: 28px 21px;
+        padding: 28px 21px; /* espaçamento interno */
     }
 
+    /* Estilo de: .cadastro-logo */
     .cadastro-logo {
-        width: 78px;
-        height: 78px;
-        margin-bottom: 19px;
+        width: 78px; /* largura */
+        height: 78px; /* altura */
+        margin-bottom: 19px; /* margem inferior */
     }
 
+    /* Estilo de: .cadastro-descricao */
     .cadastro-descricao {
-        margin-bottom: 24px;
+        margin-bottom: 24px; /* margem inferior */
     }
 
+    /* Estilo de: .cadastro-form */
     .cadastro-form {
-        gap: 17px;
+        gap: 17px; /* espaço entre itens */
     }
 }

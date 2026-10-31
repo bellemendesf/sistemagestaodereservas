@@ -1,0 +1,135 @@
+
+@model Cliente
+
+@{
+    Layout = null;
+    ViewData["Title"] = "Cadastrar-se";
+}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>@ViewData["Title"]</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/Cadastro.css" asp-append-version="true">
+</head>
+
+<body class="cadastro-page">
+    <main class="cadastro-container">
+
+        <a class="cadastro-voltar-topo"
+           asp-controller="Home"
+           asp-action="Index">
+            ← Página inicial
+        </a>
+
+        <section class="cadastro-card">
+
+            <header class="cadastro-header">
+                <img src="~/images/logosantamassa.jpg"
+                     alt="Santa Massa"
+                     class="cadastro-logo">
+
+                <p class="cadastro-subtitulo">Santa Massa · Área do cliente</p>
+
+                <h1>Criar cadastro</h1>
+
+                <p class="cadastro-descricao">
+                    Preencha seus dados para cadastrar-se no nosso sistema
+                    de reservas.
+                </p>
+            </header>
+
+            @Html.ValidationSummary(false, "", new { @class = "cadastro-erros" })
+
+            <form asp-controller="Cliente"
+                  asp-action="Create"
+                  method="post"
+                  class="cadastro-form">
+
+                @Html.AntiForgeryToken()
+
+                <div class="campo-cadastro">
+                    <label for="Nome">Nome completo</label>
+                    <input id="Nome"
+                           name="Nome"
+                           type="text"
+                           value="@Model?.Nome"
+                           placeholder="Digite seu nome completo"
+                           autocomplete="name"
+                           required>
+                </div>
+
+                <div class="campo-cadastro">
+                    <label for="Cpf">CPF</label>
+                    <input id="Cpf"
+                           name="Cpf"
+                           type="text"
+                           value="@Model?.Cpf"
+                           placeholder="Digite seu CPF"
+                           autocomplete="off"
+                           required>
+                </div>
+
+                <div class="campo-cadastro">
+                    <label for="EmailPessoal">E-mail pessoal</label>
+                    <input id="EmailPessoal"
+                           name="EmailPessoal"
+                           type="email"
+                           value="@Model?.EmailPessoal"
+                           placeholder="voce@exemplo.com"
+                           autocomplete="email"
+                           required>
+                </div>
+
+                <div class="campo-cadastro">
+                    <label for="Telefone">Telefone</label>
+                    <input id="Telefone"
+                           name="Telefone"
+                           type="tel"
+                           value="@Model?.Telefone"
+                           placeholder="Digite seu telefone"
+                           autocomplete="tel"
+                           required>
+                </div>
+
+                <div class="campo-cadastro">
+                    <label for="Senha">Senha</label>
+                    <input id="Senha"
+                           name="Senha"
+                           type="password"
+                           placeholder="Crie uma senha"
+                           autocomplete="new-password"
+                           required>
+                </div>
+
+                <div class="cadastro-botoes">
+                    <button type="submit" class="btn-cadastro-salvar">
+                        Criar cadastro
+                    </button>
+
+                    <a asp-controller="Home"
+                       asp-action="Index"
+                       class="btn-cadastro-voltar">
+                        Voltar
+                    </a>
+                </div>
+
+            </form>
+        </section>
+
+        <footer class="cadastro-rodape">
+            Santa Massa - Rio Preto
+        </footer>
+
+    </main>
+</body>
+</html>

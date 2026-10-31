@@ -1,188 +1,243 @@
-
+﻿
+@* Tipo de dado (modelo) que esta view recebe do controller *@
 @model GestaoReservas.Models.Ambiente
 
+@* Bloco C#: configurações da view (título, layout e variáveis) *@
 @{
     ViewData["Title"] = "Excluir Ambiente";
+    // Atribui Layout
     Layout = null;
 }
 
+@* Tipo do documento (HTML5) *@
 <!DOCTYPE html>
+@* Início do documento HTML *@
 <html lang="pt-BR">
+@* Cabeçalho do documento (título, fontes e estilos) *@
 <head>
+    @* Configuração da página *@
     <meta charset="UTF-8">
+    @* Configuração da página *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @* Título da aba *@
     <title>@ViewData["Title"]</title>
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    @* Arquivo de estilo/fonte externo *@
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="stylesheet" href="~/css/DetalhesEdicao.css" asp-append-version="true">
 
+    @* Estilos desta página *@
     <style>
+        /* Estilo de: .excluir-alerta */
         .excluir-alerta {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            padding: 18px 20px;
-            margin-bottom: 25px;
-            background: rgb(180 35 24 / 9%);
-            border: 1px solid rgb(231 160 154 / 35%);
-            border-left: 3px solid #C96B62;
-            border-radius: 9px;
-            color: #E7A09A;
-            font-size: 12px;
-            line-height: 1.8;
+            display: flex; /* tipo de exibição */
+            flex-direction: column; /* direção dos itens */
+            gap: 6px; /* espaço entre itens */
+            padding: 18px 20px; /* espaçamento interno */
+            margin-bottom: 25px; /* margem inferior */
+            background: rgb(180 35 24 / 9%); /* fundo */
+            border: 1px solid rgb(231 160 154 / 35%); /* borda */
+            border-left: 3px solid #C96B62; /* borda esquerda */
+            border-radius: 9px; /* cantos arredondados */
+            color: #E7A09A; /* cor do texto */
+            font-size: 12px; /* tamanho da fonte */
+            line-height: 1.8; /* altura da linha */
         }
 
+        /* Estilo de: .excluir-alerta strong */
         .excluir-alerta strong {
-            color: #F0B4AD;
-            font-size: 13px;
-            font-weight: 600;
+            color: #F0B4AD; /* cor do texto */
+            font-size: 13px; /* tamanho da fonte */
+            font-weight: 600; /* peso da fonte */
         }
 
+        /* Estilo de: .excluir-identificacao */
         .excluir-identificacao {
-            padding: 23px 24px;
-            margin-bottom: 22px;
-            background: linear-gradient(135deg, #302C23, #26241F);
-            border: 1px solid #756442;
-            border-radius: 11px;
+            padding: 23px 24px; /* espaçamento interno */
+            margin-bottom: 22px; /* margem inferior */
+            background: linear-gradient(135deg, #302C23, #26241F); /* fundo */
+            border: 1px solid #756442; /* borda */
+            border-radius: 11px; /* cantos arredondados */
         }
 
+        /* Estilo de: .excluir-identificacao span */
         .excluir-identificacao span {
-            display: block;
-            margin-bottom: 9px;
-            color: #C8C0B1;
-            font-size: 11px;
-            letter-spacing: .4px;
+            display: block; /* tipo de exibição */
+            margin-bottom: 9px; /* margem inferior */
+            color: #C8C0B1; /* cor do texto */
+            font-size: 11px; /* tamanho da fonte */
+            letter-spacing: .4px; /* espaço entre letras */
         }
 
+        /* Estilo de: .excluir-identificacao strong */
         .excluir-identificacao strong {
-            display: block;
-            color: #E8D5A5;
-            font-family: "Josefin Sans", sans-serif;
-            font-size: 30px;
-            font-weight: 600;
-            overflow-wrap: anywhere;
+            display: block; /* tipo de exibição */
+            color: #E8D5A5; /* cor do texto */
+            font-family: "Josefin Sans", sans-serif; /* fonte */
+            font-size: 30px; /* tamanho da fonte */
+            font-weight: 600; /* peso da fonte */
+            overflow-wrap: anywhere; /* quebra de palavras longas */
         }
 
+        /* Estilo de: .excluir-identificacao::after */
         .excluir-identificacao::after {
-            content: "CONFIRMAÇÃO DE EXCLUSÃO";
-            display: block;
-            margin-top: 12px;
-            color: #A9A294;
-            font-size: 9px;
-            letter-spacing: 1.5px;
+            content: "CONFIRMAÇÃO DE EXCLUSÃO"; /* propriedade content */
+            display: block; /* tipo de exibição */
+            margin-top: 12px; /* margem superior */
+            color: #A9A294; /* cor do texto */
+            font-size: 9px; /* tamanho da fonte */
+            letter-spacing: 1.5px; /* espaço entre letras */
         }
 
+        /* Estilo de: .detalhes-edicao-conteudo .detalhes-edicao-grid */
         .detalhes-edicao-conteudo .detalhes-edicao-grid {
-            margin-bottom: 6px;
+            margin-bottom: 6px; /* margem inferior */
         }
 
+        /* Estilo de: .botao-excluir */
         .botao-excluir {
-            background: #A9322A;
-            border: 1px solid #A9322A;
-            color: #FFFFFF;
+            background: #A9322A; /* fundo */
+            border: 1px solid #A9322A; /* borda */
+            color: #FFFFFF; /* cor do texto */
         }
 
+        /* Estilo de: .botao-excluir:hover */
         .botao-excluir:hover {
-            background: #84251F;
-            border-color: #84251F;
-            color: #FFFFFF;
-            box-shadow: 0 5px 14px rgb(169 50 42 / 20%);
+            background: #84251F; /* fundo */
+            border-color: #84251F; /* cor da borda */
+            color: #FFFFFF; /* cor do texto */
+            box-shadow: 0 5px 14px rgb(169 50 42 / 20%); /* sombra */
         }
 
+        /* Estilo de: .detalhes-edicao-acoes .detalhes-edicao-botao-secundario */
         .detalhes-edicao-acoes .detalhes-edicao-botao-secundario {
-            background: transparent;
-            border: 1px solid #625640;
-            color: #E8D5A5;
+            background: transparent; /* fundo */
+            border: 1px solid #625640; /* borda */
+            color: #E8D5A5; /* cor do texto */
         }
 
+        /* Estilo de: .detalhes-edicao-acoes .detalhes-edicao-botao-secundario:hover */
         .detalhes-edicao-acoes .detalhes-edicao-botao-secundario:hover {
-            background: #34312B;
-            border-color: #D3B779;
-            color: #FFFFFF;
+            background: #34312B; /* fundo */
+            border-color: #D3B779; /* cor da borda */
+            color: #FFFFFF; /* cor do texto */
         }
 
+        /* Estilo de: .exclusao-erros */
         .exclusao-erros {
-            padding: 12px 15px;
-            margin-bottom: 8px;
-            background: rgb(180 35 24 / 9%);
-            border: 1px solid rgb(231 160 154 / 25%);
-            border-radius: 8px;
-            color: #E7A09A;
-            font-size: 12px;
+            padding: 12px 15px; /* espaçamento interno */
+            margin-bottom: 8px; /* margem inferior */
+            background: rgb(180 35 24 / 9%); /* fundo */
+            border: 1px solid rgb(231 160 154 / 25%); /* borda */
+            border-radius: 8px; /* cantos arredondados */
+            color: #E7A09A; /* cor do texto */
+            font-size: 12px; /* tamanho da fonte */
         }
 
+        /* Estilo de: .exclusao-erros:empty */
         .exclusao-erros:empty {
-            display: none;
+            display: none; /* tipo de exibição */
         }
 
+        /* Regras para telas que atendem: (max-width: 600px) */
         @@media (max-width: 600px) {
+            /* Estilo de: .excluir-identificacao */
             .excluir-identificacao {
-                padding: 20px;
+                padding: 20px; /* espaçamento interno */
             }
 
+            /* Estilo de: .excluir-identificacao strong */
             .excluir-identificacao strong {
-                font-size: 26px;
+                font-size: 26px; /* tamanho da fonte */
             }
         }
     </style>
 </head>
 
+@* Corpo da página *@
 <body class="detalhes-edicao-page">
+    @* Conteúdo principal *@
     <main class="detalhes-edicao-container">
 
+        @* Link (asp-action Index) *@
         <a asp-action="Index" class="detalhes-edicao-voltar">
             ← Voltar aos ambientes
         </a>
 
+        @* Seção da página *@
         <section class="detalhes-edicao-card">
 
+            @* Cabeçalho *@
             <header class="detalhes-edicao-header">
+                @* Parágrafo de texto *@
                 <p class="detalhes-edicao-kicker">
                     Santa Massa · Rio Preto
                 </p>
 
+                @* Título principal *@
                 <h1>Excluir ambiente</h1>
 
+                @* Parágrafo de texto *@
                 <p class="detalhes-edicao-descricao">
                     Confira os dados antes de confirmar a exclusão.
                 </p>
             </header>
 
+            @* Bloco (classe detalhes-edicao-conteudo) *@
             <div class="detalhes-edicao-conteudo">
 
+                @* Bloco (classe excluir-alerta) *@
                 <div class="excluir-alerta">
+                    @* Texto em negrito *@
                     <strong>Atenção!</strong>
+                    @* Texto destacado *@
                     <span>
                         Você está prestes a excluir este ambiente.
                         Essa ação pode ser irreversível.
                     </span>
                 </div>
 
+                @* Bloco (classe excluir-identificacao) *@
                 <div class="excluir-identificacao">
+                    @* Texto destacado *@
                     <span>Nome do ambiente</span>
+                    @* Texto em negrito *@
                     <strong>@Model.Nome</strong>
                 </div>
 
+                @* Bloco (classe detalhes-edicao-grid) *@
                 <div class="detalhes-edicao-grid">
 
+                    @* Bloco (classe detalhes-edicao-item) *@
                     <div class="detalhes-edicao-item">
+                        @* Texto destacado *@
                         <span>Código do ambiente</span>
+                        @* Texto em negrito *@
                         <strong>#@Model.Id</strong>
                     </div>
 
+                    @* Bloco (classe detalhes-edicao-item) *@
                     <div class="detalhes-edicao-item">
+                        @* Texto destacado *@
                         <span>Capacidade</span>
+                        @* Texto em negrito *@
                         <strong>
                             @Model.Capacidade
                             @(Model.Capacidade == 1 ? "pessoa" : "pessoas")
                         </strong>
                     </div>
 
+                    @* Bloco (classe detalhes-edicao-item) *@
                     <div class="detalhes-edicao-item">
+                        @* Texto destacado *@
                         <span>Status</span>
+                        @* Texto em negrito *@
                         <strong>
                             @(string.IsNullOrWhiteSpace(Model.Status)
                                 ? "Não informado"
@@ -192,6 +247,7 @@
 
                 </div>
 
+                @* Formulário *@
                 <form asp-controller="Ambiente"
                       asp-action="Delete"
                       asp-route-id="@Model.Id"
@@ -199,16 +255,21 @@
                       class="detalhes-edicao-form"
                       style="margin-top: 26px;">
 
+                    @* Resumo dos erros de validação *@
                     @Html.ValidationSummary(false, "", new { @class = "exclusao-erros" })
 
+                    @* Campo de entrada (asp-for Id) *@
                     <input type="hidden" asp-for="Id" />
 
+                    @* Bloco (classe detalhes-edicao-acoes) *@
                     <div class="detalhes-edicao-acoes">
+                        @* Botão *@
                         <button type="submit"
                                 class="detalhes-edicao-botao botao-excluir">
                             Confirmar exclusão
                         </button>
 
+                        @* Link *@
                         <a asp-controller="Ambiente"
                            asp-action="Index"
                            class="detalhes-edicao-botao detalhes-edicao-botao-secundario">
@@ -220,6 +281,7 @@
 
             </div>
 
+            @* Rodapé *@
             <footer class="detalhes-edicao-rodape">
                 Santa Massa · Painel de gerenciamento
             </footer>

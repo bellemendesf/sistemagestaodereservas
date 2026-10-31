@@ -1,0 +1,163 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using GestaoReservas.Models;
+
+public class ReservaController : Controller
+{
+    private readonly IReservaRepository repository;
+    // MAPA DE MESAS: repositório de mesas usado para montar o mapa e validar a mesa escolhida.
+    private readonly IMesaRepository mesaRepository;
+
+    public ReservaController(IReservaRepository repository, IMesaRepository mesaRepository)
+    {
+        this.repository = repository;
+        this.mesaRepository = mesaRepository;
+    }
+
+    // MAPA DE MESAS: retorna em JSON todas as mesas cadastradas e a situação de cada uma
+    // para a data escolhida. Uso: GET /Reserva/MesasDisponiveis?dataHora=2027-01-02T19:30
+    [HttpGet]
+    public ActionResult MesasDisponiveis(DateTime? dataHora)
+    {
+        // Passo 1: busca as mesas cadastradas no banco (status já vem como 'Livre' no lugar de 'Disponivel').
+        var mesas = mesaRepository.Read();
+
+        // Passo 2: busca as reservas não canceladas do mesmo dia da data informada.
+        var ocupadas = MesasReservadasNoDia(dataHora);
+
+        // Passo 3: monta a situação de cada mesa: só fica 'Livre' se o status da mesa for Livre
+        // e se não houver reserva ativa para ela no dia escolhido.
+        var resultado = mesas.Select(m => new
+        {
+            id = m.Id,
+            numero = m.Numero,
+            lugares = m.QtdLugares,
+            ambiente = m.AmbienteNome,
+            situacao = m.Status != "Livre" ? m.Status
+                : ocupadas.Contains(m.Id) ? "Reservada"
+                : "Livre"
+        });
+        return Json(resultado);
+    }
+
+    // MAPA DE MESAS: ids das mesas com reserva não cancelada no mesmo dia da data informada.
+    private HashSet<int> MesasReservadasNoDia(DateTime? dataHora)
+    {
+        if (dataHora == null) return new HashSet<int>();
+        return repository.Read()
+            .Where(r => r.Status != "Cancelada" && r.MesaId != null && r.DataHora.Date == dataHora.Value.Date)
+            .Select(r => r.MesaId!.Value)
+            .ToHashSet();
+    }
+
+    public ActionResult Index() => View(repository.Read());
+
+    [HttpGet]
+    public ActionResult Create() => View(new Reserva { QtdPessoas = 2, Status = "Pendente" });
+
+    [HttpPost]
+    public ActionResult Create(Reserva model)
+    {
+        model.Status = "Pendente";
+        ModelState.Remove(nameof(model.Status));
+        if (model.Cliente == null)
+            ModelState.AddModelError(nameof(model.Cliente), "Informe os dados do cliente.");
+        if (model.DataHora == default)
+            ModelState.AddModelError(nameof(model.DataHora), "Informe a data e hora.");
+        // MAPA DE MESAS: confere no servidor se a mesa escolhida está livre
+        // (status da mesa e reservas ativas no mesmo dia). Mesa não cadastrada segue o tratamento já existente do banco.
+        if (ModelState.IsValid && model.MesaId != null)
+        {
+            var mesa = mesaRepository.Read(model.MesaId.Value);
+            if (mesa != null && (mesa.Status != "Livre" || MesasReservadasNoDia(model.DataHora).Contains(mesa.Id)))
+                ModelState.AddModelError(nameof(model.MesaId), "Não foi possível cadastrar. A mesa escolhida não está livre nesta data.");
+        }
+        if (!ModelState.IsValid) return View(model);
+        try
+        {
+            repository.Create(model);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (SqlException ex)
+        {
+            string motivo = ex.Number == 547 ? "A mesa informada não está cadastrada."
+                : (ex.Number == 2627 || ex.Number == 2601) ? "Telefone ou e-mail já pertence a outro cliente com CPF diferente."
+                : "Verifique CPF, telefone, e mesa cadastrados e a conexão com o banco.";
+            ModelState.AddModelError("", "Não foi possível cadastrar. " + motivo);
+            return View(model);
+        }
+    }
+
+    [HttpGet]
+    public ActionResult Edit([FromRoute] int id)
+    {
+        var reserva = repository.Read(id);
+        if (reserva == null) return NotFound();
+        if (reserva.Status == "Cancelada") return BadRequest("Reserva cancelada não pode ser editada.");
+        return View(reserva);
+    }
+
+    [HttpPost]
+    public ActionResult Edit([FromRoute] int id, Reserva model)
+    {
+        var original = repository.Read(id);
+        if (original == null) return NotFound();
+        if (original.Status == "Cancelada") return BadRequest("Reserva cancelada não pode ser editada.");
+
+        model.Id = id;
+        model.Cliente = original.Cliente;
+        model.ClienteId = original.ClienteId;
+        model.Status = original.Status;
+        // Esses dados não fazem parte da edição pelo cliente.
+        foreach (var key in ModelState.Keys.Where(k =>
+            k == "Id" || k == "Cliente" || k.StartsWith("Cliente.") ||
+            k == "ClienteId" || k == "Status").ToList())
+            ModelState.Remove(key);
+        if (model.DataHora == default)
+            ModelState.AddModelError(nameof(model.DataHora), "Informe a data e hora.");
+        if (!ModelState.IsValid) return View(model);
+        try
+        {
+            repository.Update(model);
+            return RedirectToAction(nameof(Index));
+        }
+        catch (SqlException)
+        {
+            ModelState.AddModelError("", "Não foi possível salvar. Verifique a mesa informada e a conexão com o banco.");
+            return View(model);
+        }
+    }
+
+    [HttpGet]
+    public ActionResult Details(int id)
+    {
+        var model = repository.Read(id);
+        if (model == null) return NotFound();
+        return View(model);
+    }
+
+    [HttpGet]
+    public ActionResult Delete(int id)
+    {
+        var model = repository.Read(id);
+        if (model == null) return NotFound();
+        return View(model);
+    }
+
+    [HttpPost, ActionName("Delete")]
+    public ActionResult DeleteConfirmed([FromRoute] int id)
+    {
+        var model = repository.Read(id);
+        if (model == null) return NotFound();
+        try
+        {
+            repository.Delete(id); // Cancelamento lógico: preserva o histórico.
+            return RedirectToAction(nameof(Index));
+        }
+        catch (SqlException)
+        {
+            ModelState.AddModelError("", "Não foi possível cancelar. Verifique a conexão com o banco.");
+            return View("Delete", model);
+        }
+    }
+}

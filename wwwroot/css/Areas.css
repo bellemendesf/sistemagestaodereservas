@@ -1,239 +1,275 @@
-
+﻿
+/* Variáveis de cores do site */
 :root {
-    --preto: #0B0B0B;
-    --dourado: #C6A45C;
-    --dourado-suave: rgba(198, 164, 92, 0.28);
-    --branco: #F5F1E8;
-    --cinza: #B7B1A5;
+    --preto: #0B0B0B; /* variável de cor --preto */
+    --dourado: #C6A45C; /* variável de cor --dourado */
+    --dourado-suave: rgba(198, 164, 92, 0.28); /* variável de cor --dourado-suave */
+    --branco: #F5F1E8; /* variável de cor --branco */
+    --cinza: #B7B1A5; /* variável de cor --cinza */
 }
 
+/* Estilo de: * */
 * {
-    box-sizing: border-box;
+    box-sizing: border-box; /* cálculo do tamanho */
 }
 
+/* Estilo de: body.area-page */
 body.area-page {
-    margin: 0;
-    min-height: 100vh;
+    margin: 0; /* espaçamento externo */
+    min-height: 100vh; /* altura mínima */
     background:
         radial-gradient(
             ellipse at 50% 0%,
             #1B1914 0%,
             var(--preto) 58%
         );
-    color: var(--branco);
-    font-family: "Poppins", Arial, sans-serif;
+    color: var(--branco); /* cor do texto */
+    font-family: "Poppins", Arial, sans-serif; /* fonte */
 }
 
 /* Conteúdo */
+/* Estilo de: .area-container */
 .area-container {
-    width: min(760px, 90%);
-    margin: 0 auto;
-    padding: 28px 0 32px;
+    width: min(760px, 90%); /* largura */
+    margin: 0 auto; /* espaçamento externo */
+    padding: 28px 0 32px; /* espaçamento interno */
 }
 
 /* Voltar */
+/* Estilo de: .back-link */
 .back-link {
-    display: inline-block;
-    color: var(--cinza);
-    font-size: 0.85rem;
-    text-decoration: none;
-    transition: color 0.2s ease;
+    display: inline-block; /* tipo de exibição */
+    color: var(--cinza); /* cor do texto */
+    font-size: 0.85rem; /* tamanho da fonte */
+    text-decoration: none; /* decoração do texto */
+    transition: color 0.2s ease; /* animação suave */
 }
 
+/* Estilo de: .back-link:hover */
 .back-link:hover {
-    color: var(--dourado);
+    color: var(--dourado); /* cor do texto */
 }
 
 /* Cabeçalho */
+/* Estilo de: .area-header */
 .area-header {
-    padding: 35px 0 32px;
-    text-align: center;
+    padding: 35px 0 32px; /* espaçamento interno */
+    text-align: center; /* alinhamento do texto */
 }
 
+/* Estilo de: .area-logo */
 .area-logo {
-    display: block;
-    width: 105px;
-    height: 105px;
-    object-fit: contain;
-    margin: 0 auto 20px;
+    display: block; /* tipo de exibição */
+    width: 105px; /* largura */
+    height: 105px; /* altura */
+    object-fit: contain; /* ajuste da imagem */
+    margin: 0 auto 20px; /* espaçamento externo */
 }
 
+/* Estilo de: .area-kicker */
 .area-kicker {
-    margin: 0 0 14px;
-    color: var(--dourado);
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.18em;
+    margin: 0 0 14px; /* espaçamento externo */
+    color: var(--dourado); /* cor do texto */
+    font-size: 0.72rem; /* tamanho da fonte */
+    font-weight: 500; /* peso da fonte */
+    letter-spacing: 0.18em; /* espaço entre letras */
 }
 
+/* Estilo de: .area-header h1 */
 .area-header h1 {
-    margin: 0 0 12px;
-    color: var(--branco);
-    font-family: "Josefin Sans", sans-serif;
-    font-size: clamp(2rem, 5vw, 2.8rem);
-    font-weight: 600;
-    line-height: 1.2;
+    margin: 0 0 12px; /* espaçamento externo */
+    color: var(--branco); /* cor do texto */
+    font-family: "Josefin Sans", sans-serif; /* fonte */
+    font-size: clamp(2rem, 5vw, 2.8rem); /* tamanho da fonte */
+    font-weight: 600; /* peso da fonte */
+    line-height: 1.2; /* altura da linha */
 }
 
+/* Estilo de: .area-header > p:last-child */
 .area-header > p:last-child {
-    margin: 0;
-    color: var(--cinza);
-    font-size: 0.92rem;
-    line-height: 1.7;
+    margin: 0; /* espaçamento externo */
+    color: var(--cinza); /* cor do texto */
+    font-size: 0.92rem; /* tamanho da fonte */
+    line-height: 1.7; /* altura da linha */
 }
 
 /* Detalhe dourado discreto */
+/* Estilo de: .area-header::after */
 .area-header::after {
-    content: "";
-    display: block;
-    width: 48px;
-    height: 1px;
-    margin: 25px auto 0;
-    background: var(--dourado);
+    content: ""; /* propriedade content */
+    display: block; /* tipo de exibição */
+    width: 48px; /* largura */
+    height: 1px; /* altura */
+    margin: 25px auto 0; /* espaçamento externo */
+    background: var(--dourado); /* fundo */
 }
 
 /* Lista de opções */
+/* Estilo de: .area-grid */
 .area-grid {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 0;
+    display: flex; /* tipo de exibição */
+    flex-direction: column; /* direção dos itens */
+    width: 100%; /* largura */
+    gap: 0; /* espaço entre itens */
 }
 
 /* Cada opção funciona como um link */
+/* Estilo de: .area-card */
 .area-card {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    column-gap: 20px;
-    padding: 23px 10px;
-    border: none;
-    border-bottom: 1px solid var(--dourado-suave);
-    border-radius: 0;
-    background: transparent;
-    color: var(--branco);
-    text-decoration: none;
-    transition: background-color 0.2s ease;
+    display: grid; /* tipo de exibição */
+    grid-template-columns: minmax(0, 1fr) auto; /* colunas da grade */
+    align-items: center; /* alinhamento vertical */
+    column-gap: 20px; /* propriedade column-gap */
+    padding: 23px 10px; /* espaçamento interno */
+    border: none; /* borda */
+    border-bottom: 1px solid var(--dourado-suave); /* borda inferior */
+    border-radius: 0; /* cantos arredondados */
+    background: transparent; /* fundo */
+    color: var(--branco); /* cor do texto */
+    text-decoration: none; /* decoração do texto */
+    transition: background-color 0.2s ease; /* animação suave */
 }
 
+/* Estilo de: .area-card:first-child */
 .area-card:first-child {
-    border-top: 1px solid var(--dourado-suave);
+    border-top: 1px solid var(--dourado-suave); /* borda superior */
 }
 
+/* Estilo de: .area-card:hover */
 .area-card:hover {
-    background: rgba(198, 164, 92, 0.045);
-    color: var(--branco);
+    background: rgba(198, 164, 92, 0.045); /* fundo */
+    color: var(--branco); /* cor do texto */
 }
 
 /* Não usamos ícones nas opções */
+/* Estilo de: .area-icon */
 .area-icon {
-    display: none;
+    display: none; /* tipo de exibição */
 }
 
 /* Título e descrição */
+/* Estilo de: .area-card h2 */
 .area-card h2 {
-    margin: 0 0 7px;
-    color: var(--branco);
-    font-family: "Josefin Sans", sans-serif;
-    font-size: 1.25rem;
-    font-weight: 600;
-    line-height: 1.4;
-    transition: color 0.2s ease;
+    margin: 0 0 7px; /* espaçamento externo */
+    color: var(--branco); /* cor do texto */
+    font-family: "Josefin Sans", sans-serif; /* fonte */
+    font-size: 1.25rem; /* tamanho da fonte */
+    font-weight: 600; /* peso da fonte */
+    line-height: 1.4; /* altura da linha */
+    transition: color 0.2s ease; /* animação suave */
 }
 
+/* Estilo de: .area-card p */
 .area-card p {
-    margin: 0;
-    color: var(--cinza);
-    font-size: 0.85rem;
-    line-height: 1.65;
+    margin: 0; /* espaçamento externo */
+    color: var(--cinza); /* cor do texto */
+    font-size: 0.85rem; /* tamanho da fonte */
+    line-height: 1.65; /* altura da linha */
 }
 
+/* Estilo de: .area-card:hover h2 */
 .area-card:hover h2 {
-    color: var(--dourado);
+    color: var(--dourado); /* cor do texto */
 }
 
 /* Ação à direita */
+/* Estilo de: .card-link */
 .card-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--dourado);
-    font-size: 0.82rem;
-    white-space: nowrap;
-    transition: color 0.2s ease;
+    display: inline-flex; /* tipo de exibição */
+    align-items: center; /* alinhamento vertical */
+    gap: 8px; /* espaço entre itens */
+    color: var(--dourado); /* cor do texto */
+    font-size: 0.82rem; /* tamanho da fonte */
+    white-space: nowrap; /* quebra de linha do texto */
+    transition: color 0.2s ease; /* animação suave */
 }
 
+/* Estilo de: .card-link::after */
 .card-link::after {
-    content: "→";
-    font-size: 1rem;
+    content: "→"; /* propriedade content */
+    font-size: 1rem; /* tamanho da fonte */
 }
 
+/* Estilo de: .area-card:hover .card-link */
 .area-card:hover .card-link {
-    color: #E1C98F;
+    color: #E1C98F; /* cor do texto */
 }
 
 /* Foco pelo teclado */
 .area-card:focus-visible,
+/* Estilo de: .back-link:focus-visible */
 .back-link:focus-visible {
-    outline: 1px solid var(--dourado);
-    outline-offset: 4px;
+    outline: 1px solid var(--dourado); /* contorno de foco */
+    outline-offset: 4px; /* propriedade outline-offset */
 }
 
 /* Rodapé */
+/* Estilo de: .area-footer */
 .area-footer {
-    margin-top: 35px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(198, 164, 92, 0.15);
-    color: #898274;
-    font-size: 0.78rem;
-    line-height: 1.7;
-    text-align: center;
+    margin-top: 35px; /* margem superior */
+    padding-top: 20px; /* propriedade padding-top */
+    border-top: 1px solid rgba(198, 164, 92, 0.15); /* borda superior */
+    color: #898274; /* cor do texto */
+    font-size: 0.78rem; /* tamanho da fonte */
+    line-height: 1.7; /* altura da linha */
+    text-align: center; /* alinhamento do texto */
 }
 
 /* Celulares */
+/* Regras para telas que atendem: (max-width: 600px) */
 @media (max-width: 600px) {
+    /* Estilo de: .area-container */
     .area-container {
-        width: 88%;
-        padding-top: 22px;
+        width: 88%; /* largura */
+        padding-top: 22px; /* propriedade padding-top */
     }
 
+    /* Estilo de: .area-header */
     .area-header {
-        padding: 30px 0 28px;
+        padding: 30px 0 28px; /* espaçamento interno */
     }
 
+    /* Estilo de: .area-logo */
     .area-logo {
-        width: 90px;
-        height: 90px;
+        width: 90px; /* largura */
+        height: 90px; /* altura */
     }
 
+    /* Estilo de: .area-kicker */
     .area-kicker {
-        font-size: 0.66rem;
-        letter-spacing: 0.12em;
+        font-size: 0.66rem; /* tamanho da fonte */
+        letter-spacing: 0.12em; /* espaço entre letras */
     }
 
+    /* Estilo de: .area-card */
     .area-card {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 10px;
-        padding: 21px 6px;
+        grid-template-columns: minmax(0, 1fr); /* colunas da grade */
+        gap: 10px; /* espaço entre itens */
+        padding: 21px 6px; /* espaçamento interno */
     }
 
+    /* Estilo de: .area-card h2 */
     .area-card h2 {
-        font-size: 1.2rem;
+        font-size: 1.2rem; /* tamanho da fonte */
     }
 
+    /* Estilo de: .card-link */
     .card-link {
-        font-size: 0.8rem;
+        font-size: 0.8rem; /* tamanho da fonte */
     }
 
+    /* Estilo de: .area-footer */
     .area-footer {
-        margin-top: 28px;
+        margin-top: 28px; /* margem superior */
     }
 }
 
+/* Regras para telas que atendem: (prefers-reduced-motion: reduce) */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
+    /* Estilo de: *::after */
     *::after {
-        transition: none !important;
+        transition: none !important; /* animação suave */
     }
 }

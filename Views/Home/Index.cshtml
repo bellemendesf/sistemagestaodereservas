@@ -1,38 +1,59 @@
+﻿@* Bloco C#: configurações da view (título, layout e variáveis) *@
 @{
+    // Atribui Layout
     Layout = null;
     ViewData["Title"] = "Santa Massa Rio Preto";
 }
 
+@* Tipo do documento (HTML5) *@
 <!DOCTYPE html>
+@* Início do documento HTML *@
 <html lang="pt-br">
+@* Cabeçalho do documento (título, fontes e estilos) *@
 <head>
+    @* Configuração da página *@
     <meta charset="utf-8" />
+    @* Configuração da página *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @* Título da aba *@
     <title>@ViewData["Title"]</title>
 
+    @* Arquivo de estilo/fonte externo *@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
           crossorigin="anonymous" />
+    @* Arquivo de estilo/fonte externo *@
     <link rel="stylesheet" href="~/css/Home.css" />
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    @* Arquivo de estilo/fonte externo *@
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap"
           rel="stylesheet" />
 </head>
+@* Corpo da página *@
 <body class="home">
     
+@* Cabeçalho *@
 <header class="home-info-topo">
 
+    @* Bloco (classe home-info-esquerda) *@
     <div class="home-info-esquerda">
+        @* Imagem *@
         <img src="~/images/logosantamassa.jpg"
              alt="Logo Santa Massa"
              class="home-info-logo" />
 
+        @* Bloco (classe home-info-endereco) *@
         <div class="home-info-endereco">
 
+            @* Bloco *@
             <div>
+                @* Texto destacado *@
                 <span class="home-info-label">NOSSO ENDEREÇO</span>
+                @* Parágrafo de texto *@
                 <p>
                     R. XV de Novembro, 3411 - Centro,
                     São José do Rio Preto - SP, 15015-110
@@ -41,9 +62,13 @@
         </div>
     </div>
 
+    @* Bloco (classe home-info-horario) *@
     <div class="home-info-horario">
+        @* Texto destacado *@
         <span class="home-info-label">HORÁRIO DE FUNCIONAMENTO</span>
+        @* Parágrafo de texto *@
         <p>
+            @* Texto destacado *@
             <span class="home-info-ponto"></span>
             Segunda a sábado, das 18:30h às 23:30h
         </p>
@@ -51,45 +76,64 @@
 
 </header>
 
+    @* Bloco (classe home-glow) *@
     <div class="home-glow" aria-hidden="true"></div>
 
+@* Cabeçalho *@
 <header class="home-top">
+    @* Imagem *@
     <img src="~/images/logosantamassa.jpg"
          alt="Logo do restaurante Santa Massa"
          class="home-logo" />
 
+    @* Texto destacado *@
     <span class="home-brand">Santa Massa</span>
 
+    @* Texto destacado *@
     <span class="home-subbrand">RIO PRETO</span>
+    @* Bloco (classe home-divider) *@
     <div class="home-divider" aria-hidden="true"></div>
 </header>
 
 
+@* Conteúdo principal *@
 <main class="home-hero">
+    @* Parágrafo de texto *@
     <p class="home-kicker">
-        RESTAURANTE ITALIANO · SÃO JOSÉ DO RIO PRETO
+        RESTAURANTE ITALIANO - SÃO JOSÉ DO RIO PRETO
     </p>
 
-    <h1>Bem-vindo ao Santa Massa</h1>
+    @* Título principal *@
+    <h1>Bem-vindo ao Santa Massa!</h1>
 
+    @* Parágrafo de texto *@
     <p class="home-lead">
         Escolha como deseja acessar nosso sistema.
     </p>
 
+    @* Bloco (classe home-actions) *@
     <div class="home-actions">
+        @* Link *@
         <a asp-controller="AreaCliente"
            asp-action="Index"
            class="home-card">
+            @* Subtítulo *@
             <h2>Entrar como cliente</h2>
+            @* Parágrafo de texto *@
             <p>Faça uma reserva e consulte as opções disponíveis.</p>
+            @* Texto destacado *@
             <span>Continuar →</span>
         </a>
 
+        @* Link *@
         <a asp-controller="AreaRestaurante"
            asp-action="Index"
            class="home-card">
+            @* Subtítulo *@
             <h2>Entrar como funcionário</h2>
+            @* Parágrafo de texto *@
             <p>Gerencie reservas, mesas e ambientes.</p>
+            @* Texto destacado *@
             <span>Acessar painel →</span>
         </a>
     </div>

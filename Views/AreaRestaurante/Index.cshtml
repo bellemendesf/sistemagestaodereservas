@@ -1,107 +1,184 @@
-
+﻿
+@* Bloco C#: configurações da view (título, layout e variáveis) *@
 @{
     ViewData["Title"] = "Painel do Restaurante";
+    // Atribui Layout
     Layout = null;
 }
 
+@* Tipo do documento (HTML5) *@
 <!DOCTYPE html>
+@* Início do documento HTML *@
 <html lang="pt-BR">
+@* Cabeçalho do documento (título, fontes e estilos) *@
 <head>
+    @* Configuração da página *@
     <meta charset="UTF-8">
+    @* Configuração da página *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    @* Título da aba *@
     <title>@ViewData["Title"] - Santa Massa</title>
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+    @* Arquivo de estilo/fonte externo *@
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap"
           rel="stylesheet">
 
+    @* Arquivo de estilo/fonte externo *@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
           rel="stylesheet">
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="stylesheet"
           href="~/css/Areas.css"
           asp-append-version="true">
 </head>
 
+@* Corpo da página *@
 <body class="area-page">
+    @* Conteúdo principal *@
     <main class="area-container">
 
+        @* Link *@
         <a asp-controller="Home"
            asp-action="Index"
            class="back-link">
             ← Voltar ao início
         </a>
 
+        @* Cabeçalho *@
         <header class="area-header">
+            @* Imagem *@
             <img src="~/images/logosantamassa.jpg"
                  alt="Logo Santa Massa"
                  class="area-logo">
 
+            @* Parágrafo de texto *@
             <p class="area-kicker">
                 SANTA MASSA · RIO PRETO
             </p>
 
+            @* Título principal *@
             <h1>Área do Restaurante</h1>
 
+            @* Parágrafo de texto *@
             <p>Gerencie as operações do restaurante.</p>
         </header>
 
+        @* Seção da página *@
         <section class="area-grid"
                  aria-label="Opções de gerenciamento">
 
+            @* Link *@
             <a asp-controller="Funcionario"
                asp-action="Create"
                class="area-card">
 
+                @* Bloco *@
                 <div>
+                    @* Subtítulo *@
                     <h2>Funcionários</h2>
+                    @* Parágrafo de texto *@
                     <p>Cadastre os funcionários do restaurante.</p>
                 </div>
 
+                @* Texto destacado *@
                 <span class="card-link">Cadastrar</span>
             </a>
 
+            @* NOVO: acesso à listagem (Index) de todos os funcionários cadastrados. *@
+            <a asp-controller="Funcionario"
+               asp-action="Index"
+               class="area-card">
+
+                @* Bloco *@
+                <div>
+                    @* Subtítulo *@
+                    <h2>Funcionários cadastrados</h2>
+                    @* Parágrafo de texto *@
+                    <p>Consulte todos os funcionários do restaurante.</p>
+                </div>
+
+                @* Texto destacado *@
+                <span class="card-link">Ver funcionários</span>
+            </a>
+
+            @* NOVO: acesso à listagem (Index) de clientes, agora só pela área do restaurante. *@
+            <a asp-controller="Cliente"
+               asp-action="Index"
+               class="area-card">
+
+                @* Bloco *@
+                <div>
+                    @* Subtítulo *@
+                    <h2>Clientes</h2>
+                    @* Parágrafo de texto *@
+                    <p>Consulte todos os clientes cadastrados.</p>
+                </div>
+
+                @* Texto destacado *@
+                <span class="card-link">Ver clientes</span>
+            </a>
+
+            @* Link *@
             <a asp-controller="AreaRestaurante"
                asp-action="Reservas"
                class="area-card">
 
+                @* Bloco *@
                 <div>
+                    @* Subtítulo *@
                     <h2>Reservas</h2>
+                    @* Parágrafo de texto *@
                     <p>Consulte e gerencie os agendamentos.</p>
                 </div>
 
+                @* Texto destacado *@
                 <span class="card-link">Gerenciar</span>
             </a>
 
+            @* Link *@
             <a asp-controller="Mesa"
                asp-action="Index"
                class="area-card">
 
+                @* Bloco *@
                 <div>
+                    @* Subtítulo *@
                     <h2>Mesas</h2>
+                    @* Parágrafo de texto *@
                     <p>Consulte e organize as mesas cadastradas.</p>
                 </div>
 
+                @* Texto destacado *@
                 <span class="card-link">Acessar mesas</span>
             </a>
 
+            @* Link *@
             <a asp-controller="Ambiente"
                asp-action="Index"
                class="area-card">
 
+                @* Bloco *@
                 <div>
+                    @* Subtítulo *@
                     <h2>Ambientes</h2>
+                    @* Parágrafo de texto *@
                     <p>Gerencie os espaços do restaurante.</p>
                 </div>
 
+                @* Texto destacado *@
                 <span class="card-link">Acessar ambientes</span>
             </a>
 
         </section>
 
+        @* Rodapé *@
         <footer class="area-footer">
             Santa Massa · Painel de gerenciamento
         </footer>

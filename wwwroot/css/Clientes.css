@@ -1,0 +1,341 @@
+        /* Estilo de: .clientes-topo */
+        .clientes-topo {
+            display: flex; /* tipo de exibição */
+            align-items: center; /* alinhamento vertical */
+            justify-content: space-between; /* alinhamento horizontal */
+            flex-wrap: wrap; /* quebra de linha dos itens */
+            gap: 18px; /* espaço entre itens */
+        }
+
+        .clientes-voltar {
+        display: inline-flex; /* tipo de exibição */
+        align-items: center; /* alinhamento vertical */
+        gap: 10px; /* espaço entre itens */
+        margin-bottom: 24px; /* margem inferior */
+        color: var(--dourado-claro); /* cor do texto */
+        font-size: 0.88rem; /* tamanho da fonte */
+        text-decoration: none; /* decoração do texto */
+        transition: color 0.2s ease; /* animação suave */
+}
+
+/* Estilo de: .funcionarios-voltar:hover */
+.funcionarios-voltar:hover {
+    color: var(--texto); /* cor do texto */
+}
+
+
+        /* Estilo de: .clientes-contador */
+        .clientes-contador {
+            display: inline-flex; /* tipo de exibição */
+            align-items: center; /* alinhamento vertical */
+            justify-content: center; /* alinhamento horizontal */
+            min-height: 35px; /* altura mínima */
+            padding: 7px 14px; /* espaçamento interno */
+            border: 1px solid #756442; /* borda */
+            border-radius: 20px; /* cantos arredondados */
+            background: #302C23; /* fundo */
+            color: #E8D5A5; /* cor do texto */
+            font-size: 11px; /* tamanho da fonte */
+            font-weight: 600; /* peso da fonte */
+            white-space: nowrap; /* quebra de linha do texto */
+        }
+
+        /* Estilo de: .clientes-acoes-topo */
+        .clientes-acoes-topo {
+            display: flex; /* tipo de exibição */
+            justify-content: flex-end; /* alinhamento horizontal */
+            margin-bottom: 22px; /* margem inferior */
+        }
+
+        /* Estilo de: .clientes-botao-novo */
+        .clientes-botao-novo {
+            display: inline-flex; /* tipo de exibição */
+            align-items: center; /* alinhamento vertical */
+            justify-content: center; /* alinhamento horizontal */
+            min-height: 44px; /* altura mínima */
+            padding: 11px 19px; /* espaçamento interno */
+            border: 1px solid #D3B779; /* borda */
+            border-radius: 8px; /* cantos arredondados */
+            background: #D3B779; /* fundo */
+            color: #1F1F1D; /* cor do texto */
+            font-family: 'Poppins', sans-serif; /* fonte */
+            font-size: 12px; /* tamanho da fonte */
+            font-weight: 600; /* peso da fonte */
+            text-decoration: none; /* decoração do texto */
+            transition: all .2s ease; /* animação suave */
+        }
+
+        /* Estilo de: .clientes-botao-novo:hover */
+        .clientes-botao-novo:hover {
+            transform: translateY(-1px); /* transformação (movimento) */
+            border-color: #E8D5A5; /* cor da borda */
+            background: #E8D5A5; /* fundo */
+            color: #1F1F1D; /* cor do texto */
+        }
+
+        /* Estilo de: .clientes-tabela-wrap */
+        .clientes-tabela-wrap {
+            width: 100%; /* largura */
+            overflow-x: auto; /* rolagem horizontal */
+            border: 1px solid #49443A; /* borda */
+            border-radius: 10px; /* cantos arredondados */
+        }
+
+        /* Estilo de: .clientes-tabela */
+        .clientes-tabela {
+            width: 100%; /* largura */
+            min-width: 850px; /* largura mínima */
+            border-collapse: collapse; /* bordas da tabela unidas */
+            font-family: 'Poppins', sans-serif; /* fonte */
+            font-size: 12px; /* tamanho da fonte */
+        }
+
+        /* Estilo de: .clientes-tabela thead */
+        .clientes-tabela thead {
+            background: #302E28; /* fundo */
+        }
+
+        /* Estilo de: .clientes-tabela th */
+        .clientes-tabela th {
+            padding: 16px 15px; /* espaçamento interno */
+            color: #C8C0B1; /* cor do texto */
+            font-size: 10px; /* tamanho da fonte */
+            font-weight: 600; /* peso da fonte */
+            letter-spacing: 1px; /* espaço entre letras */
+            text-align: left; /* alinhamento do texto */
+            text-transform: uppercase; /* maiúsculas/minúsculas */
+            white-space: nowrap; /* quebra de linha do texto */
+            border-bottom: 1px solid #49443A; /* borda inferior */
+        }
+
+        /* Estilo de: .clientes-tabela td */
+        .clientes-tabela td {
+            padding: 16px 15px; /* espaçamento interno */
+            color: #F7F3EA; /* cor do texto */
+            border-bottom: 1px solid #3A3831; /* borda inferior */
+            vertical-align: middle; /* alinhamento vertical */
+        }
+
+        /* Estilo de: .clientes-tabela tbody tr */
+        .clientes-tabela tbody tr {
+            background: #24231F; /* fundo */
+            transition: background .2s ease; /* animação suave */
+        }
+
+    /* Estilo de: .clientes-tabela */
+    .clientes-tabela {
+        width: 100%; /* largura */
+        min-width: 0; /* largura mínima */
+        table-layout: fixed; /* layout da tabela */
+        border-collapse: collapse; /* bordas da tabela unidas */
+        font-family: 'Poppins', sans-serif; /* fonte */
+        font-size: 12px; /* tamanho da fonte */
+    }
+
+    .clientes-tabela th,
+    /* Estilo de: .clientes-tabela td */
+    .clientes-tabela td {
+        overflow-wrap: anywhere; /* quebra de palavras longas */
+        word-break: break-word; /* quebra de palavras */
+    }
+
+    /* Estilo de: .clientes-tabela-wrap */
+    .clientes-tabela-wrap {
+    width: 100%; /* largura */
+    overflow-x: hidden; /* rolagem horizontal */
+    border: 1px solid #49443A; /* borda */
+    border-radius: 10px; /* cantos arredondados */
+}
+
+        /* Estilo de: .cliente-id */
+        .cliente-id {
+            color: #A9A294 !important; /* cor do texto */
+            white-space: nowrap; /* quebra de linha do texto */
+        }
+
+        /* Estilo de: .cliente-nome */
+        .cliente-nome {
+            color: #E8D5A5 !important; /* cor do texto */
+            font-weight: 600; /* peso da fonte */
+            white-space: nowrap; /* quebra de linha do texto */
+        }
+
+        /* Estilo de: .cliente-email */
+        .cliente-email {
+            overflow-wrap: anywhere; /* quebra de palavras longas */
+        }
+
+        /* Estilo de: .cliente-acoes */
+        .cliente-acoes {
+            display: flex; /* tipo de exibição */
+            flex-wrap: wrap; /* quebra de linha dos itens */
+            align-items: center; /* alinhamento vertical */
+            gap: 7px; /* espaço entre itens */
+        }
+
+        /* Estilo de: .cliente-acoes a */
+        .cliente-acoes a {
+            display: inline-flex; /* tipo de exibição */
+            align-items: center; /* alinhamento vertical */
+            justify-content: center; /* alinhamento horizontal */
+            min-height: 31px; /* altura mínima */
+            padding: 6px 10px; /* espaçamento interno */
+            border: 1px solid #49443A; /* borda */
+            border-radius: 6px; /* cantos arredondados */
+            background: #302E28; /* fundo */
+            color: #E8D5A5; /* cor do texto */
+            font-size: 10px; /* tamanho da fonte */
+            font-weight: 500; /* peso da fonte */
+            text-decoration: none; /* decoração do texto */
+            white-space: nowrap; /* quebra de linha do texto */
+            transition: all .2s ease; /* animação suave */
+        }
+
+        /* Estilo de: .cliente-acoes a:hover */
+        .cliente-acoes a:hover {
+            border-color: #D3B779; /* cor da borda */
+            background: #3A352A; /* fundo */
+            color: #FFFFFF; /* cor do texto */
+        }
+
+        /* Estilo de: .cliente-acoes a.cliente-excluir */
+        .cliente-acoes a.cliente-excluir {
+            border-color: #633C37; /* cor da borda */
+            background: #332421; /* fundo */
+            color: #E7A09A; /* cor do texto */
+        }
+
+        /* Estilo de: .cliente-acoes a.cliente-excluir:hover */
+        .cliente-acoes a.cliente-excluir:hover {
+            border-color: #B85D53; /* cor da borda */
+            background: #432925; /* fundo */
+            color: #FFD3CE; /* cor do texto */
+        }
+
+        /* Estilo de: .clientes-vazio */
+        .clientes-vazio {
+            padding: 55px 24px; /* espaçamento interno */
+            text-align: center; /* alinhamento do texto */
+        }
+
+        /* Estilo de: .clientes-vazio-icone */
+        .clientes-vazio-icone {
+            display: flex; /* tipo de exibição */
+            align-items: center; /* alinhamento vertical */
+            justify-content: center; /* alinhamento horizontal */
+            width: 58px; /* largura */
+            height: 58px; /* altura */
+            margin: 0 auto 20px; /* espaçamento externo */
+            border: 1px solid #625640; /* borda */
+            border-radius: 16px; /* cantos arredondados */
+            background: #302C23; /* fundo */
+            color: #D3B779; /* cor do texto */
+            font-family: 'Josefin Sans', sans-serif; /* fonte */
+            font-size: 25px; /* tamanho da fonte */
+        }
+
+        /* Estilo de: .clientes-vazio h2 */
+        .clientes-vazio h2 {
+            margin: 0 0 12px; /* espaçamento externo */
+            color: #F7F3EA; /* cor do texto */
+            font-family: 'Josefin Sans', sans-serif; /* fonte */
+            font-size: 25px; /* tamanho da fonte */
+            font-weight: 600; /* peso da fonte */
+        }
+
+        /* Estilo de: .clientes-vazio p */
+        .clientes-vazio p {
+            max-width: 440px; /* largura máxima */
+            margin: 0 auto 25px; /* espaçamento externo */
+            color: #C8C0B1; /* cor do texto */
+            font-size: 12px; /* tamanho da fonte */
+            line-height: 1.8; /* altura da linha */
+        }
+
+        /* Estilo de: .clientes-rodape */
+        .clientes-rodape {
+            padding: 17px 25px; /* espaçamento interno */
+            border-top: 1px solid #49443A; /* borda superior */
+            color: #A9A294; /* cor do texto */
+            font-size: 10px; /* tamanho da fonte */
+            text-align: center; /* alinhamento do texto */
+            letter-spacing: .3px; /* espaço entre letras */
+        }
+
+        /* Regras para telas que atendem: (max-width: 650px) */
+        @media (max-width: 650px) {
+            /* Estilo de: .clientes-topo */
+            .clientes-topo {
+                align-items: flex-start; /* alinhamento vertical */
+            }
+
+            /* Estilo de: .clientes-acoes-topo */
+            .clientes-acoes-topo {
+                justify-content: stretch; /* alinhamento horizontal */
+            }
+
+            /* Estilo de: .clientes-botao-novo */
+            .clientes-botao-novo {
+                width: 100%; /* largura */
+            }
+
+            /* Estilo de: .clientes-vazio */
+            .clientes-vazio {
+                padding: 40px 20px; /* espaçamento interno */
+            }
+        }
+
+
+        /* AJUSTE VISUAL: página de clientes mais larga e tabela mais legível (mesmas cores do site). */
+        /* Estilo de: .detalhes-edicao-container */
+        .detalhes-edicao-container {
+            max-width: 1200px; /* largura máxima */
+            width: 94%; /* largura */
+        }
+
+        /* Estilo de: .clientes-tabela */
+        .clientes-tabela {
+            font-size: 14px; /* tamanho da fonte */
+        }
+
+        /* Estilo de: .clientes-tabela th */
+        .clientes-tabela th {
+            padding: 18px 20px; /* espaçamento interno */
+            font-size: 12px; /* tamanho da fonte */
+        }
+
+        /* Estilo de: .clientes-tabela td */
+        .clientes-tabela td {
+            padding: 18px 20px; /* espaçamento interno */
+            line-height: 1.5; /* altura da linha */
+        }
+
+        /* Larguras das colunas: ID, Nome, CPF, E-mail, Telefone, Ações */
+        .clientes-tabela th:nth-child(1) { width: 7%; }
+        .clientes-tabela th:nth-child(2) { width: 20%; }
+        .clientes-tabela th:nth-child(3) { width: 14%; }
+        .clientes-tabela th:nth-child(4) { width: 24%; }
+        .clientes-tabela th:nth-child(5) { width: 14%; }
+        .clientes-tabela th:nth-child(6) { width: 21%; }
+
+        /* Estilo de: .cliente-nome */
+        .cliente-nome {
+            white-space: normal; /* quebra de linha do texto */
+        }
+
+        /* Estilo de: .clientes-tabela tbody tr:hover */
+        .clientes-tabela tbody tr:hover {
+            background: #2B2925; /* fundo */
+        }
+
+        /* Estilo de: .cliente-acoes a */
+        .cliente-acoes a {
+            font-size: 12px; /* tamanho da fonte */
+            padding: 7px 12px; /* espaçamento interno */
+        }
+
+        /* Regras para telas que atendem: (max-width: 900px) */
+        @media (max-width: 900px) {
+            .clientes-tabela-wrap { overflow-x: auto; }
+            .clientes-tabela { min-width: 820px; }
+        }

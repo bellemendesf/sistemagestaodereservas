@@ -1,58 +1,82 @@
-
+﻿
+@* Bloco C#: configurações da view (título, layout e variáveis) *@
 @{
+    // Variável restaurante
     bool restaurante = string.Equals(
         ViewContext.RouteData.Values["controller"]?.ToString(),
         "AreaRestaurante",
         StringComparison.OrdinalIgnoreCase);
 
+    // Variável action
     var action = ViewContext.RouteData.Values["action"]?.ToString();
 
+    // Variável isList
     var isList =
         string.Equals(action, "Index", StringComparison.OrdinalIgnoreCase) ||
         string.Equals(action, "Reservas", StringComparison.OrdinalIgnoreCase);
 
+    // Variável isCreate
     var isCreate = string.Equals(
         action,
         "Create",
         StringComparison.OrdinalIgnoreCase);
 }
+@* Tipo do documento (HTML5) *@
 <!DOCTYPE html>
+@* Início do documento HTML *@
 <html lang="pt-br">
+@* Cabeçalho do documento (título, fontes e estilos) *@
 <head>
+    @* Configuração da página *@
     <meta charset="utf-8" />
+    @* Configuração da página *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    @* Título da aba *@
     <title>@ViewData["Title"] - Santa Massa</title>
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
+    @* Arquivo de estilo/fonte externo *@
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap"
           rel="stylesheet" />
 
+    @* Arquivo de estilo/fonte externo *@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
           crossorigin="anonymous" />
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="stylesheet" href="~/css/Reserva.css" asp-append-version="true" />
+    @* Arquivo de estilo/fonte externo *@
     <link rel="stylesheet" href="~/css/ReservasIndex.css" asp-append-version="true" />
 </head>
 
+@* Corpo da página *@
 <body class="page-reserva">
+    @* Bloco (classe page-glow) *@
     <div class="page-glow" aria-hidden="true"></div>
 
+    @* Cabeçalho *@
     <header class="page-top">
+        @* Link *@
         <a class="page-brand"
            asp-controller="Home"
            asp-action="Index">
+            @* Imagem *@
             <img src="~/images/logosantamassa.jpg"
                  alt="Logo do restaurante Santa Massa"
                  class="reserva-logo" />
 
+            @* Texto destacado *@
             <span>Santa Massa</span>
         </a>
 
+        @* Link *@
         <a class="page-home-link"
            asp-controller="Home"
            asp-action="Index">
@@ -60,12 +84,17 @@
         </a>
     </header>
 
+    @* Conteúdo principal *@
     <main class="page-shell">
+        @* Seção da página *@
         <section class="page-intro">
+            @* Parágrafo de texto *@
             <p class="page-kicker">SANTA MASSA · GESTÃO DE RESERVAS</p>
 
+            @* Título principal *@
             <h1>@ViewData["Title"]</h1>
 
+            @* Parágrafo de texto *@
             <p class="page-lead">
                 @(restaurante
                     ? "Acompanhe e organize as reservas do restaurante."
@@ -73,7 +102,9 @@
             </p>
         </section>
 
+        @* Navegação *@
         <nav class="page-tabs" aria-label="Seções de reservas">
+            @* Link *@
             <a asp-controller="@(restaurante ? "AreaRestaurante" : "Reserva")"
                asp-action="@(restaurante ? "Reservas" : "Index")"
                class="page-tab @(isList ? "is-active" : "")"
@@ -81,8 +112,10 @@
                 Listagem
             </a>
 
+            @* Mostra o bloco só se a condição for verdadeira *@
             @if (!restaurante)
             {
+                @* Link *@
                 <a asp-controller="Reserva"
                    asp-action="Create"
                    class="page-tab @(isCreate ? "is-active" : "")"
@@ -92,7 +125,9 @@
             }
         </nav>
 
+        @* Bloco (classe page-content) *@
         <div class="page-content">
+            @* Aqui entra o conteúdo de cada view *@
             @RenderBody()
         </div>
     </main>

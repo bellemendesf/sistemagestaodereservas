@@ -1,42 +1,47 @@
-
+﻿
+/* Variáveis de cores do site */
 :root {
-    --sm-fundo: #181817;
-    --sm-fundo-secundario: #22211F;
-    --sm-painel: #2B2925;
-    --sm-painel-claro: #34312B;
-    --sm-dourado: #D3B779;
-    --sm-dourado-claro: #E8D5A5;
-    --sm-texto: #F7F3EA;
-    --sm-texto-secundario: #C8C0B1;
-    --sm-borda: #49443A;
+    --sm-fundo: #181817; /* variável de cor --sm-fundo */
+    --sm-fundo-secundario: #22211F; /* variável de cor --sm-fundo-secundario */
+    --sm-painel: #2B2925; /* variável de cor --sm-painel */
+    --sm-painel-claro: #34312B; /* variável de cor --sm-painel-claro */
+    --sm-dourado: #D3B779; /* variável de cor --sm-dourado */
+    --sm-dourado-claro: #E8D5A5; /* variável de cor --sm-dourado-claro */
+    --sm-texto: #F7F3EA; /* variável de cor --sm-texto */
+    --sm-texto-secundario: #C8C0B1; /* variável de cor --sm-texto-secundario */
+    --sm-borda: #49443A; /* variável de cor --sm-borda */
 }
 
+/* Estilo de: * */
 * {
-    box-sizing: border-box;
+    box-sizing: border-box; /* cálculo do tamanho */
 }
 
+/* Estilo de: html */
 html {
-    min-height: 100%;
+    min-height: 100%; /* altura mínima */
 }
 
+/* Estilo de: body.page-reserva */
 body.page-reserva {
-    min-height: 100vh;
-    margin: 0;
+    min-height: 100vh; /* altura mínima */
+    margin: 0; /* espaçamento externo */
     background:
         radial-gradient(ellipse at 50% 0%, #393226 0%, transparent 48%),
         var(--sm-fundo);
-    color: var(--sm-texto);
-    font-family: "Poppins", sans-serif;
-    font-size: 15px;
+    color: var(--sm-texto); /* cor do texto */
+    font-family: "Poppins", sans-serif; /* fonte */
+    font-size: 15px; /* tamanho da fonte */
 }
 
 /* Fundo decorativo */
 
+/* Estilo de: .page-glow */
 .page-glow {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
+    position: fixed; /* posicionamento */
+    inset: 0; /* ocupa toda a área */
+    z-index: 0; /* camada */
+    pointer-events: none; /* eventos do mouse */
     background: linear-gradient(
         135deg,
         rgba(211, 183, 121, 0.035),
@@ -47,223 +52,258 @@ body.page-reserva {
 
 /* Cabeçalho */
 
+/* Estilo de: .page-top */
 .page-top {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    width: 100%;
-    padding: 18px 6%;
-    background: rgba(24, 24, 23, 0.88);
-    border-bottom: 1px solid rgba(211, 183, 121, 0.22);
+    position: relative; /* posicionamento */
+    z-index: 1; /* camada */
+    display: flex; /* tipo de exibição */
+    align-items: center; /* alinhamento vertical */
+    justify-content: space-between; /* alinhamento horizontal */
+    gap: 24px; /* espaço entre itens */
+    width: 100%; /* largura */
+    padding: 18px 6%; /* espaçamento interno */
+    background: rgba(24, 24, 23, 0.88); /* fundo */
+    border-bottom: 1px solid rgba(211, 183, 121, 0.22); /* borda inferior */
 }
 
+/* Estilo de: .page-brand */
 .page-brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 14px;
-    color: var(--sm-dourado-claro);
-    text-decoration: none;
-    font-family: "Josefin Sans", sans-serif;
-    font-size: 1.45rem;
-    font-weight: 600;
-    letter-spacing: 0.6px;
+    display: inline-flex; /* tipo de exibição */
+    align-items: center; /* alinhamento vertical */
+    gap: 14px; /* espaço entre itens */
+    color: var(--sm-dourado-claro); /* cor do texto */
+    text-decoration: none; /* decoração do texto */
+    font-family: "Josefin Sans", sans-serif; /* fonte */
+    font-size: 1.45rem; /* tamanho da fonte */
+    font-weight: 600; /* peso da fonte */
+    letter-spacing: 0.6px; /* espaço entre letras */
 }
 
+/* Estilo de: .page-brand:hover */
 .page-brand:hover {
-    color: #FFFFFF;
+    color: #FFFFFF; /* cor do texto */
 }
 
+/* Estilo de: .reserva-logo */
 .reserva-logo {
-    display: block;
-    width: 54px;
-    height: 54px;
-    object-fit: cover;
-    border: 1px solid rgba(211, 183, 121, 0.6);
-    border-radius: 50%;
+    display: block; /* tipo de exibição */
+    width: 54px; /* largura */
+    height: 54px; /* altura */
+    object-fit: cover; /* ajuste da imagem */
+    border: 1px solid rgba(211, 183, 121, 0.6); /* borda */
+    border-radius: 50%; /* cantos arredondados */
 }
 
+/* Estilo de: .page-home-link */
 .page-home-link {
-    padding: 10px 17px;
-    color: var(--sm-texto-secundario);
-    border: 1px solid var(--sm-borda);
-    border-radius: 7px;
-    text-decoration: none;
-    font-size: 0.88rem;
-    transition: 0.2s ease;
+    padding: 10px 17px; /* espaçamento interno */
+    color: var(--sm-texto-secundario); /* cor do texto */
+    border: 1px solid var(--sm-borda); /* borda */
+    border-radius: 7px; /* cantos arredondados */
+    text-decoration: none; /* decoração do texto */
+    font-size: 0.88rem; /* tamanho da fonte */
+    transition: 0.2s ease; /* animação suave */
 }
 
+/* Estilo de: .page-home-link:hover */
 .page-home-link:hover {
-    color: var(--sm-dourado-claro);
-    border-color: var(--sm-dourado);
-    background: rgba(211, 183, 121, 0.07);
+    color: var(--sm-dourado-claro); /* cor do texto */
+    border-color: var(--sm-dourado); /* cor da borda */
+    background: rgba(211, 183, 121, 0.07); /* fundo */
 }
 
 /* Conteúdo central */
 
+/* Estilo de: .page-shell */
 .page-shell {
-    position: relative;
-    z-index: 1;
-    width: min(1440px, 94%);
-    margin: 0 auto;
-    padding: 48px 0 64px;
+    position: relative; /* posicionamento */
+    z-index: 1; /* camada */
+    width: min(1440px, 94%); /* largura */
+    margin: 0 auto; /* espaçamento externo */
+    padding: 48px 0 64px; /* espaçamento interno */
 }
 
+/* Estilo de: .page-intro */
 .page-intro {
-    margin: 0 auto 30px;
-    text-align: center;
+    margin: 0 auto 30px; /* espaçamento externo */
+    text-align: center; /* alinhamento do texto */
 }
 
+/* Estilo de: .page-kicker */
 .page-kicker {
-    margin: 0 0 12px;
-    color: var(--sm-dourado);
-    font-size: 0.77rem;
-    font-weight: 600;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
+    margin: 0 0 12px; /* espaçamento externo */
+    color: var(--sm-dourado); /* cor do texto */
+    font-size: 0.77rem; /* tamanho da fonte */
+    font-weight: 600; /* peso da fonte */
+    letter-spacing: 2.5px; /* espaço entre letras */
+    text-transform: uppercase; /* maiúsculas/minúsculas */
 }
 
+/* Estilo de: .page-intro h1 */
 .page-intro h1 {
-    margin: 0;
-    color: var(--sm-texto);
-    font-family: "Josefin Sans", sans-serif;
-    font-size: clamp(2.3rem, 4vw, 3.4rem);
-    font-weight: 600;
-    letter-spacing: 0.3px;
+    margin: 0; /* espaçamento externo */
+    color: var(--sm-texto); /* cor do texto */
+    font-family: "Josefin Sans", sans-serif; /* fonte */
+    font-size: clamp(2.3rem, 4vw, 3.4rem); /* tamanho da fonte */
+    font-weight: 600; /* peso da fonte */
+    letter-spacing: 0.3px; /* espaço entre letras */
 }
 
+/* Estilo de: .page-lead */
 .page-lead {
-    max-width: 680px;
-    margin: 14px auto 0;
-    color: var(--sm-texto-secundario);
-    font-size: 1rem;
-    line-height: 1.8;
+    max-width: 680px; /* largura máxima */
+    margin: 14px auto 0; /* espaçamento externo */
+    color: var(--sm-texto-secundario); /* cor do texto */
+    font-size: 1rem; /* tamanho da fonte */
+    line-height: 1.8; /* altura da linha */
 }
 
 /* Navegação */
 
+/* Estilo de: .page-tabs */
 .page-tabs {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin: 0 auto 28px;
+    display: flex; /* tipo de exibição */
+    justify-content: center; /* alinhamento horizontal */
+    flex-wrap: wrap; /* quebra de linha dos itens */
+    gap: 10px; /* espaço entre itens */
+    margin: 0 auto 28px; /* espaçamento externo */
 }
 
+/* Estilo de: .page-tab */
 .page-tab {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    min-width: 150px;
-    padding: 12px 23px;
-    color: var(--sm-texto-secundario);
-    background: var(--sm-fundo-secundario);
-    border: 1px solid var(--sm-borda);
-    border-radius: 7px;
-    text-decoration: none;
-    font-size: 0.91rem;
-    font-weight: 500;
-    transition: 0.2s ease;
+    display: inline-flex; /* tipo de exibição */
+    justify-content: center; /* alinhamento horizontal */
+    align-items: center; /* alinhamento vertical */
+    min-width: 150px; /* largura mínima */
+    padding: 12px 23px; /* espaçamento interno */
+    color: var(--sm-texto-secundario); /* cor do texto */
+    background: var(--sm-fundo-secundario); /* fundo */
+    border: 1px solid var(--sm-borda); /* borda */
+    border-radius: 7px; /* cantos arredondados */
+    text-decoration: none; /* decoração do texto */
+    font-size: 0.91rem; /* tamanho da fonte */
+    font-weight: 500; /* peso da fonte */
+    transition: 0.2s ease; /* animação suave */
 }
 
+/* Estilo de: .page-tab:hover */
 .page-tab:hover {
-    color: var(--sm-dourado-claro);
-    border-color: var(--sm-dourado);
+    color: var(--sm-dourado-claro); /* cor do texto */
+    border-color: var(--sm-dourado); /* cor da borda */
 }
 
+/* Estilo de: .page-tab.is-active */
 .page-tab.is-active {
-    color: #211D15;
-    background: var(--sm-dourado);
-    border-color: var(--sm-dourado);
-    font-weight: 600;
+    color: #211D15; /* cor do texto */
+    background: var(--sm-dourado); /* fundo */
+    border-color: var(--sm-dourado); /* cor da borda */
+    font-weight: 600; /* peso da fonte */
 }
 
 /* Área em que cada View é carregada */
 
+/* Estilo de: .page-content */
 .page-content {
-    width: 100%;
-    min-width: 0;
+    width: 100%; /* largura */
+    min-width: 0; /* largura mínima */
 }
 
 /* Responsividade */
 
+/* Regras para telas que atendem: (min-width: 1600px) */
 @media (min-width: 1600px) {
+    /* Estilo de: .page-shell */
     .page-shell {
-        width: min(1500px, 92%);
+        width: min(1500px, 92%); /* largura */
     }
 }
 
+/* Regras para telas que atendem: (max-width: 768px) */
 @media (max-width: 768px) {
+    /* Estilo de: .page-top */
     .page-top {
-        padding: 15px 4%;
+        padding: 15px 4%; /* espaçamento interno */
     }
 
+    /* Estilo de: .page-brand */
     .page-brand {
-        gap: 9px;
-        font-size: 1.15rem;
+        gap: 9px; /* espaço entre itens */
+        font-size: 1.15rem; /* tamanho da fonte */
     }
 
+    /* Estilo de: .reserva-logo */
     .reserva-logo {
-        width: 43px;
-        height: 43px;
+        width: 43px; /* largura */
+        height: 43px; /* altura */
     }
 
+    /* Estilo de: .page-home-link */
     .page-home-link {
-        padding: 9px 11px;
-        font-size: 0.78rem;
+        padding: 9px 11px; /* espaçamento interno */
+        font-size: 0.78rem; /* tamanho da fonte */
     }
 
+    /* Estilo de: .page-shell */
     .page-shell {
-        width: 94%;
-        padding: 34px 0 44px;
+        width: 94%; /* largura */
+        padding: 34px 0 44px; /* espaçamento interno */
     }
 
+    /* Estilo de: .page-intro */
     .page-intro {
-        margin-bottom: 24px;
+        margin-bottom: 24px; /* margem inferior */
     }
 
+    /* Estilo de: .page-lead */
     .page-lead {
-        font-size: 0.9rem;
+        font-size: 0.9rem; /* tamanho da fonte */
     }
 
+    /* Estilo de: .page-tabs */
     .page-tabs {
-        margin-bottom: 22px;
+        margin-bottom: 22px; /* margem inferior */
     }
 
+    /* Estilo de: .page-tab */
     .page-tab {
-        min-width: 130px;
-        padding: 11px 16px;
+        min-width: 130px; /* largura mínima */
+        padding: 11px 16px; /* espaçamento interno */
     }
 }
 
+/* Regras para telas que atendem: (max-width: 420px) */
 @media (max-width: 420px) {
+    /* Estilo de: .page-top */
     .page-top {
-        gap: 10px;
+        gap: 10px; /* espaço entre itens */
     }
 
+    /* Estilo de: .page-brand */
     .page-brand {
-        font-size: 1rem;
+        font-size: 1rem; /* tamanho da fonte */
     }
 
+    /* Estilo de: .reserva-logo */
     .reserva-logo {
-        width: 36px;
-        height: 36px;
+        width: 36px; /* largura */
+        height: 36px; /* altura */
     }
 
+    /* Estilo de: .page-home-link */
     .page-home-link {
-        padding: 8px;
-        font-size: 0.72rem;
+        padding: 8px; /* espaçamento interno */
+        font-size: 0.72rem; /* tamanho da fonte */
     }
 
+    /* Estilo de: .page-intro h1 */
     .page-intro h1 {
-        font-size: 2.1rem;
+        font-size: 2.1rem; /* tamanho da fonte */
     }
 
+    /* Estilo de: .page-kicker */
     .page-kicker {
-        font-size: 0.68rem;
-        letter-spacing: 1.5px;
+        font-size: 0.68rem; /* tamanho da fonte */
+        letter-spacing: 1.5px; /* espaço entre letras */
     }
 }
 
@@ -271,34 +311,37 @@ body.page-reserva {
    NOVA RESERVA — SANTA MASSA
    ===================================== */
 
+/* Estilo de: .page-content form */
 .page-content form {
-    width: 100%;
-    max-width: 920px;
-    margin: 0 auto;
-    padding: 36px 40px;
-    background: #2B2925;
-    border: 1px solid #49443A;
-    border-radius: 12px;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+    width: 100%; /* largura */
+    max-width: 920px; /* largura máxima */
+    margin: 0 auto; /* espaçamento externo */
+    padding: 36px 40px; /* espaçamento interno */
+    background: #2B2925; /* fundo */
+    border: 1px solid #49443A; /* borda */
+    border-radius: 12px; /* cantos arredondados */
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18); /* sombra */
 }
 
 /* Grupos dos campos */
 
 .page-content form .mb-3,
+/* Estilo de: .page-content form .form-group */
 .page-content form .form-group {
-    margin-bottom: 24px !important;
+    margin-bottom: 24px !important; /* margem inferior */
 }
 
 /* Labels */
 
 .page-content form label,
+/* Estilo de: .page-content form .form-label */
 .page-content form .form-label {
-    display: block;
-    margin-bottom: 9px;
-    color: #E8D5A5;
-    font-family: "Poppins", sans-serif;
-    font-size: 0.88rem;
-    font-weight: 500;
+    display: block; /* tipo de exibição */
+    margin-bottom: 9px; /* margem inferior */
+    color: #E8D5A5; /* cor do texto */
+    font-family: "Poppins", sans-serif; /* fonte */
+    font-size: 0.88rem; /* tamanho da fonte */
+    font-weight: 500; /* peso da fonte */
 }
 
 /* Campos de texto, data, quantidade e seletores */
@@ -307,26 +350,28 @@ body.page-reserva {
 .page-content form .form-select,
 .page-content form input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
 .page-content form select,
+/* Estilo de: .page-content form textarea */
 .page-content form textarea {
-    width: 100%;
-    min-height: 50px;
-    padding: 12px 15px;
-    color: #F7F3EA;
-    background-color: #201F1D;
-    border: 1px solid #514B40;
-    border-radius: 7px;
-    font-family: "Poppins", sans-serif;
-    font-size: 0.9rem;
-    box-shadow: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    width: 100%; /* largura */
+    min-height: 50px; /* altura mínima */
+    padding: 12px 15px; /* espaçamento interno */
+    color: #F7F3EA; /* cor do texto */
+    background-color: #201F1D; /* cor de fundo */
+    border: 1px solid #514B40; /* borda */
+    border-radius: 7px; /* cantos arredondados */
+    font-family: "Poppins", sans-serif; /* fonte */
+    font-size: 0.9rem; /* tamanho da fonte */
+    box-shadow: none; /* sombra */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease; /* animação suave */
 }
 
 /* Texto de orientação */
 
 .page-content form input::placeholder,
+/* Estilo de: .page-content form textarea::placeholder */
 .page-content form textarea::placeholder {
-    color: #A9A193;
-    opacity: 1;
+    color: #A9A193; /* cor do texto */
+    opacity: 1; /* transparência */
 }
 
 /* Foco */
@@ -335,64 +380,72 @@ body.page-reserva {
 .page-content form .form-select:focus,
 .page-content form input:focus,
 .page-content form select:focus,
+/* Estilo de: .page-content form textarea:focus */
 .page-content form textarea:focus {
-    color: #F7F3EA;
-    background-color: #25231F;
-    border-color: #D3B779;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(211, 183, 121, 0.12);
+    color: #F7F3EA; /* cor do texto */
+    background-color: #25231F; /* cor de fundo */
+    border-color: #D3B779; /* cor da borda */
+    outline: none; /* contorno de foco */
+    box-shadow: 0 0 0 3px rgba(211, 183, 121, 0.12); /* sombra */
 }
 
 /* Opções dos seletores */
 
+/* Estilo de: .page-content form select option */
 .page-content form select option {
-    color: #F7F3EA;
-    background-color: #201F1D;
+    color: #F7F3EA; /* cor do texto */
+    background-color: #201F1D; /* cor de fundo */
 }
 
 /* Validação */
 
 .page-content form .text-danger,
+/* Estilo de: .page-content form .field-validation-error */
 .page-content form .field-validation-error {
-    display: block;
-    margin-top: 6px;
-    color: #F09B95 !important;
-    font-size: 0.8rem;
+    display: block; /* tipo de exibição */
+    margin-top: 6px; /* margem superior */
+    color: #F09B95 !important; /* cor do texto */
+    font-size: 0.8rem; /* tamanho da fonte */
 }
 
 /* Botões */
 
 .page-content form button[type="submit"],
+/* Estilo de: .page-content form input[type="submit"] */
 .page-content form input[type="submit"] {
-    min-height: 47px;
-    padding: 12px 24px;
-    color: #211D15;
-    background: #D3B779;
-    border: 1px solid #D3B779;
-    border-radius: 7px;
-    font-family: "Poppins", sans-serif;
-    font-size: 0.9rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s ease, transform 0.2s ease;
+    min-height: 47px; /* altura mínima */
+    padding: 12px 24px; /* espaçamento interno */
+    color: #211D15; /* cor do texto */
+    background: #D3B779; /* fundo */
+    border: 1px solid #D3B779; /* borda */
+    border-radius: 7px; /* cantos arredondados */
+    font-family: "Poppins", sans-serif; /* fonte */
+    font-size: 0.9rem; /* tamanho da fonte */
+    font-weight: 600; /* peso da fonte */
+    cursor: pointer; /* tipo de cursor */
+    transition: background 0.2s ease, transform 0.2s ease; /* animação suave */
 }
 
 .page-content form button[type="submit"]:hover,
+/* Estilo de: .page-content form input[type="submit"]:hover */
 .page-content form input[type="submit"]:hover {
-    background: #E8D5A5;
-    border-color: #E8D5A5;
-    transform: translateY(-1px);
+    background: #E8D5A5; /* fundo */
+    border-color: #E8D5A5; /* cor da borda */
+    transform: translateY(-1px); /* transformação (movimento) */
 }
 
 /* Layout em celular */
 
+/* Regras para telas que atendem: (max-width: 600px) */
 @media (max-width: 600px) {
+    /* Estilo de: .page-content form */
     .page-content form {
-        padding: 24px 18px;
+        padding: 24px 18px; /* espaçamento interno */
     }
 
     .page-content form .mb-3,
+    /* Estilo de: .page-content form .form-group */
     .page-content form .form-group {
-        margin-bottom: 19px !important;
+        margin-bottom: 19px !important; /* margem inferior */
     }
 }

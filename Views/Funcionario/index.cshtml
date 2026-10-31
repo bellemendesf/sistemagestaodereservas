@@ -1,78 +1,108 @@
-```cshtml
+﻿@* Tipo de dado (modelo) que esta view recebe do controller *@
 @model List<GestaoReservas.Models.Funcionario>
 
+@* Bloco C#: configurações da view (título, layout e variáveis) *@
 @{
+    // Atribui Layout
     Layout = null;
     ViewData["Title"] = "Funcionários";
 }
 
+@* Tipo do documento (HTML5) *@
 <!DOCTYPE html>
+@* Início do documento HTML *@
 <html lang="pt-BR">
+@* Cabeçalho do documento (título, fontes e estilos) *@
 <head>
+    @* Configuração da página *@
     <meta charset="UTF-8">
+    @* Configuração da página *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    @* Título da aba *@
     <title>@ViewData["Title"] - Santa Massa</title>
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+    @* Arquivo de estilo/fonte externo *@
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap"
           rel="stylesheet">
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="stylesheet"
           href="~/css/Funcionarios.css"
           asp-append-version="true">
 </head>
 
+@* Corpo da página *@
 <body class="funcionarios-page">
 
+    @* Conteúdo principal *@
     <main class="funcionarios-container">
 
+        @* Link *@
         <a asp-controller="AreaRestaurante"
            asp-action="Index"
            class="funcionarios-voltar">
             ← Voltar à área do restaurante
         </a>
 
+        @* Seção da página *@
         <section class="funcionarios-card">
 
+            @* Cabeçalho *@
             <header class="funcionarios-header">
+                @* Bloco (classe funcionarios-titulos) *@
                 <div class="funcionarios-titulos">
+                    @* Parágrafo de texto *@
                     <p class="funcionarios-kicker">
                         Santa Massa · Rio Preto
                     </p>
 
+                    @* Título principal *@
                     <h1>Equipe do restaurante</h1>
 
+                    @* Parágrafo de texto *@
                     <p class="funcionarios-descricao">
                         Consulte e gerencie os funcionários cadastrados.
                     </p>
                 </div>
 
+                @* Link *@
                 <a asp-controller="Funcionario"
                    asp-action="Create"
                    class="funcionarios-botao funcionarios-botao-principal">
+                    @* Texto destacado *@
                     <span aria-hidden="true">+</span>
                     Cadastrar funcionário
                 </a>
             </header>
 
+            @* Bloco (classe funcionarios-conteudo) *@
             <div class="funcionarios-conteudo">
 
+                @* Mostra o bloco só se a condição for verdadeira *@
                 @if (Model == null || Model.Count == 0)
                 {
+                    @* Bloco (classe funcionarios-vazio) *@
                     <div class="funcionarios-vazio">
+                        @* Bloco (classe funcionarios-vazio-icone) *@
                         <div class="funcionarios-vazio-icone" aria-hidden="true">
                             ♧
                         </div>
 
+                        @* Subtítulo *@
                         <h2>Nenhum funcionário cadastrado</h2>
 
+                        @* Parágrafo de texto *@
                         <p>
                             Os funcionários cadastrados aparecerão nesta lista.
                         </p>
 
+                        @* Link *@
                         <a asp-controller="Funcionario"
                            asp-action="Create"
                            class="funcionarios-botao funcionarios-botao-principal">
@@ -80,19 +110,25 @@
                         </a>
                     </div>
                 }
+                @* Caso contrário, mostra este bloco *@
                 else
                 {
+                    @* Bloco (classe funcionarios-resumo) *@
                     <div class="funcionarios-resumo">
+                        @* Bloco *@
                         <div>
+                            @* Texto destacado *@
                             <span class="funcionarios-resumo-label">
                                 Funcionários cadastrados
                             </span>
 
+                            @* Texto em negrito *@
                             <strong class="funcionarios-resumo-numero">
                                 @Model.Count.ToString("D2")
                             </strong>
                         </div>
 
+                        @* Texto destacado *@
                         <span class="funcionarios-resumo-legenda">
                             @(Model.Count == 1
                                 ? "1 registro encontrado"
@@ -100,29 +136,37 @@
                         </span>
                     </div>
 
+                    @* Bloco (classe funcionarios-lista) *@
                     <div class="funcionarios-lista">
+                        @* Repete o bloco para cada item da lista *@
                         @foreach (var item in Model)
                         {
                             <article class="funcionario-item">
 
+                                @* Bloco (classe funcionario-identificacao) *@
                                 <div class="funcionario-identificacao">
+                                    @* Bloco (classe funcionario-avatar) *@
                                     <div class="funcionario-avatar" aria-hidden="true">
                                         @(string.IsNullOrWhiteSpace(item.Nome)
                                             ? "?"
                                             : item.Nome.Trim().Substring(0, 1).ToUpper())
                                     </div>
 
+                                    @* Bloco (classe funcionario-informacoes) *@
                                     <div class="funcionario-informacoes">
+                                        @* Texto destacado *@
                                         <span class="funcionario-id">
                                             FUNCIONÁRIO #@item.Id
                                         </span>
 
+                                        @* Subtítulo *@
                                         <h2 class="funcionario-nome">
                                             @(string.IsNullOrWhiteSpace(item.Nome)
                                                 ? "Nome não informado"
                                                 : item.Nome)
                                         </h2>
 
+                                        @* Parágrafo de texto *@
                                         <p class="funcionario-cpf">
                                             CPF:
                                             @(string.IsNullOrWhiteSpace(item.Cpf)
@@ -132,10 +176,14 @@
                                     </div>
                                 </div>
 
+                                @* Bloco (classe funcionario-contatos) *@
                                 <div class="funcionario-contatos">
+                                    @* Bloco (classe funcionario-contato) *@
                                     <div class="funcionario-contato">
+                                        @* Texto destacado *@
                                         <span>E-mail institucional</span>
 
+                                        @* Parágrafo de texto *@
                                         <p>
                                             @(string.IsNullOrWhiteSpace(item.EmailInstitucional)
                                                 ? "Não informado"
@@ -144,7 +192,9 @@
                                     </div>
                                 </div>
 
+                                @* Bloco (classe funcionario-acoes) *@
                                 <div class="funcionario-acoes">
+                                    @* Link *@
                                     <a asp-controller="Funcionario"
                                        asp-action="Details"
                                        asp-route-id="@item.Id"
@@ -152,6 +202,7 @@
                                         Detalhes
                                     </a>
 
+                                    @* Link *@
                                     <a asp-controller="Funcionario"
                                        asp-action="Edit"
                                        asp-route-id="@item.Id"
@@ -159,6 +210,7 @@
                                         Editar
                                     </a>
 
+                                    @* Link *@
                                     <a asp-controller="Funcionario"
                                        asp-action="Delete"
                                        asp-route-id="@item.Id"
@@ -174,8 +226,11 @@
 
             </div>
 
+            @* Rodapé *@
             <footer class="funcionarios-footer">
+                @* Texto destacado *@
                 <span>Santa Massa</span>
+                @* Texto destacado *@
                 <span>Painel de gerenciamento</span>
             </footer>
 

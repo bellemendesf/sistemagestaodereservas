@@ -1,184 +1,245 @@
-
+﻿
+@* Tipo de dado (modelo) que esta view recebe do controller *@
 @model GestaoReservas.Models.Reserva
 
+@* Bloco C#: configurações da view (título, layout e variáveis) *@
 @{
     ViewData["Title"] = "Cancelar reserva";
+    // Atribui Layout
     Layout = null;
 }
 
+@* Tipo do documento (HTML5) *@
 <!DOCTYPE html>
+@* Início do documento HTML *@
 <html lang="pt-BR">
+@* Cabeçalho do documento (título, fontes e estilos) *@
 <head>
+    @* Configuração da página *@
     <meta charset="UTF-8">
+    @* Configuração da página *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    @* Título da aba *@
     <title>Cancelar reserva </title>
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    @* Arquivo de estilo/fonte externo *@
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="stylesheet"
           href="~/css/DetalhesEdicao.css"
           asp-append-version="true">
 
+    @* Estilos desta página *@
     <style>
+        /* Estilo de: .reserva-excluir-alerta */
         .reserva-excluir-alerta {
-            padding: 14px 16px;
-            margin-bottom: 24px;
-            border: 1px solid #F2C7C3;
-            border-radius: 10px;
-            background: #FFF1F0;
-            color: #B42318;
-            font-size: 13px;
-            line-height: 1.6;
+            padding: 14px 16px; /* espaçamento interno */
+            margin-bottom: 24px; /* margem inferior */
+            border: 1px solid #F2C7C3; /* borda */
+            border-radius: 10px; /* cantos arredondados */
+            background: #FFF1F0; /* fundo */
+            color: #B42318; /* cor do texto */
+            font-size: 13px; /* tamanho da fonte */
+            line-height: 1.6; /* altura da linha */
         }
 
+        /* Estilo de: .reserva-excluir-acoes */
         .reserva-excluir-acoes {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 28px;
+            display: flex; /* tipo de exibição */
+            flex-wrap: wrap; /* quebra de linha dos itens */
+            gap: 12px; /* espaço entre itens */
+            margin-top: 28px; /* margem superior */
         }
 
+        /* Estilo de: .reserva-excluir-botao */
         .reserva-excluir-botao {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 44px;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 9px;
-            font-family: "Poppins", sans-serif;
-            font-size: 13px;
-            font-weight: 600;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background .2s;
+            display: inline-flex; /* tipo de exibição */
+            align-items: center; /* alinhamento vertical */
+            justify-content: center; /* alinhamento horizontal */
+            min-height: 44px; /* altura mínima */
+            padding: 12px 20px; /* espaçamento interno */
+            border: none; /* borda */
+            border-radius: 9px; /* cantos arredondados */
+            font-family: "Poppins", sans-serif; /* fonte */
+            font-size: 13px; /* tamanho da fonte */
+            font-weight: 600; /* peso da fonte */
+            text-decoration: none; /* decoração do texto */
+            cursor: pointer; /* tipo de cursor */
+            transition: background .2s; /* animação suave */
         }
 
+        /* Estilo de: .reserva-excluir-confirmar */
         .reserva-excluir-confirmar {
-            background: #B42318;
-            color: #fff;
+            background: #B42318; /* fundo */
+            color: #fff; /* cor do texto */
         }
 
+        /* Estilo de: .reserva-excluir-confirmar:hover */
         .reserva-excluir-confirmar:hover {
-            background: #8F1D14;
+            background: #8F1D14; /* fundo */
         }
 
+        /* Estilo de: .reserva-excluir-cancelar */
         .reserva-excluir-cancelar {
-            background: #F3E4B8;
-            color: #1F1F1F;
+            background: #F3E4B8; /* fundo */
+            color: #1F1F1F; /* cor do texto */
         }
 
+        /* Estilo de: .reserva-excluir-cancelar:hover */
         .reserva-excluir-cancelar:hover {
-            background: #E9D59A;
+            background: #E9D59A; /* fundo */
         }
 
+        /* Estilo de: .reserva-excluir-dado */
         .reserva-excluir-dado {
-            margin-bottom: 18px;
+            margin-bottom: 18px; /* margem inferior */
         }
 
+        /* Estilo de: .reserva-excluir-dado dt */
         .reserva-excluir-dado dt {
-            margin-bottom: 5px;
-            color: #77736A;
-            font-size: 12px;
-            font-weight: 600;
+            margin-bottom: 5px; /* margem inferior */
+            color: #77736A; /* cor do texto */
+            font-size: 12px; /* tamanho da fonte */
+            font-weight: 600; /* peso da fonte */
         }
 
+        /* Estilo de: .reserva-excluir-dado dd */
         .reserva-excluir-dado dd {
-            margin: 0;
-            color: #1F1F1F;
-            font-size: 14px;
-            font-weight: 500;
-            overflow-wrap: anywhere;
+            margin: 0; /* espaçamento externo */
+            color: #1F1F1F; /* cor do texto */
+            font-size: 14px; /* tamanho da fonte */
+            font-weight: 500; /* peso da fonte */
+            overflow-wrap: anywhere; /* quebra de palavras longas */
         }
 
+        /* Regras para telas que atendem: (max-width: 480px) */
         @@media (max-width: 480px) {
+            /* Estilo de: .reserva-excluir-acoes */
             .reserva-excluir-acoes {
-                flex-direction: column;
+                flex-direction: column; /* direção dos itens */
             }
 
+            /* Estilo de: .reserva-excluir-botao */
             .reserva-excluir-botao {
-                width: 100%;
+                width: 100%; /* largura */
             }
         }
     </style>
 </head>
 
+@* Corpo da página *@
 <body class="detalhes-edicao-page">
+    @* Conteúdo principal *@
     <main class="detalhes-edicao-container">
 
+        @* Link *@
         <a asp-controller="Reserva"
            asp-action="Index"
            class="detalhes-edicao-voltar">
             ← Voltar para reservas
         </a>
 
+        @* Seção da página *@
         <section class="detalhes-edicao-card">
 
+            @* Cabeçalho *@
             <header class="detalhes-edicao-header">
+                @* Parágrafo de texto *@
                 <p class="detalhes-edicao-kicker">
                     Santa Massa · Rio Preto
                 </p>
 
+                @* Título principal *@
                 <h1>Cancelar reserva</h1>
 
+                @* Parágrafo de texto *@
                 <p class="detalhes-edicao-descricao">
                     Confira os dados antes de confirmar a cancelamento.
                 </p>
             </header>
 
+            @* Bloco (classe detalhes-edicao-conteudo) *@
             <div class="detalhes-edicao-conteudo">
 
+                @* Bloco (classe reserva-excluir-alerta) *@
                 <div class="reserva-excluir-alerta">
+                    @* Texto em negrito *@
                     <strong>Atenção!</strong>
                     Essa ação marcará a reserva como cancelada, preservando seu histórico. Não será possível reativá-la.
                 </div>
 
+                @* Lista de dados *@
                 <dl>
+                    @* Bloco (classe reserva-excluir-dado) *@
                     <div class="reserva-excluir-dado">
+                        @* Nome do dado *@
                         <dt>Código da reserva</dt>
+                        @* Valor do dado *@
                         <dd>#@Model.Id</dd>
                     </div>
 
+                    @* Bloco (classe reserva-excluir-dado) *@
                     <div class="reserva-excluir-dado">
+                        @* Nome do dado *@
                         <dt>Mesa</dt>
+                        @* Valor do dado *@
                         <dd>@Model.MesaId</dd>
                     </div>
 
 
+                    @* Bloco (classe reserva-excluir-dado) *@
                     <div class="reserva-excluir-dado">
+                        @* Nome do dado *@
                         <dt>Data e horário</dt>
-                        <dd>@Model.DataHora.ToString("dd/MM/yyyy 'às' HH:mm")</dd>
+                        @* Valor do dado *@
+                        <dd>@Model.DataHora.ToString("dd/MM/yyyy")</dd>
                     </div>
 
+                    @* Bloco (classe reserva-excluir-dado) *@
                     <div class="reserva-excluir-dado">
+                        @* Nome do dado *@
                         <dt>Quantidade de pessoas</dt>
+                        @* Valor do dado *@
                         <dd>@Model.QtdPessoas</dd>
                     </div>
 
+                    @* Bloco (classe reserva-excluir-dado) *@
                     <div class="reserva-excluir-dado">
+                        @* Nome do dado *@
                         <dt>Status</dt>
+                        @* Valor do dado *@
                         <dd>@Model.Status</dd>
                     </div>
                 </dl>
 
+                @* Formulário *@
                 <form asp-controller="Reserva"
                       asp-action="Delete" asp-route-id="@Model.Id"
                       method="post">
+        @* Resumo dos erros de validação *@
         @Html.ValidationSummary(false, "", new { @class = "text-danger" })
 
+                    @* Token antifalsificação do formulário *@
                     @Html.AntiForgeryToken()
 
+                    @* Campo de entrada (asp-for Id) *@
                     <input type="hidden" asp-for="Id" />
 
+                    @* Bloco (classe reserva-excluir-acoes) *@
                     <div class="reserva-excluir-acoes">
+                        @* Botão *@
                         <button type="submit"
                                 class="reserva-excluir-botao reserva-excluir-confirmar">
                             Confirmar cancelamento
                         </button>
 
+                        @* Link *@
                         <a asp-controller="Reserva"
                            asp-action="Index"
                            class="reserva-excluir-botao reserva-excluir-cancelar">
@@ -189,6 +250,7 @@
 
             </div>
 
+            @* Rodapé *@
             <footer class="detalhes-edicao-rodape">
                 Santa Massa · Painel de gerenciamento
             </footer>

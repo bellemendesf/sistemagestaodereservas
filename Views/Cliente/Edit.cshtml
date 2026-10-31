@@ -1,45 +1,77 @@
+﻿@* Tipo de dado (modelo) que esta view recebe do controller *@
 @model Cliente
 @* View Edit de Cliente: apresenta os campos do DER via model MVC.
    As alterações passam pelo controller e pela interface do repositório. *@
+@* Tipo do documento (HTML5) *@
 <!DOCTYPE html>
+@* Início do documento HTML *@
 <html lang="pt-BR">
+@* Cabeçalho do documento (título, fontes e estilos) *@
 <head>
+    @* Configuração da página *@
     <meta charset="UTF-8">
+    @* Configuração da página *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    @* Título da aba *@
     <title>Edit - Cliente</title>
+    @* Arquivo de estilo/fonte externo *@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+@* Corpo da página *@
 <body class="container py-4">
+    @* Navegação *@
     <nav class="mb-4">
+        @* Link *@
         <a href="/Cliente/Index">Clientes</a> |
+        @* Link *@
         <a href="/Funcionario/Index">Funcionários</a>
     </nav>
+    @* Título principal *@
     <h1>Editar Cliente</h1>
+    @* Resumo dos erros de validação *@
     @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    @* Formulário *@
     <form action="/Cliente/Edit/@Model.Id" method="POST">
+        @* Token antifalsificação do formulário *@
         @Html.AntiForgeryToken()
+        @* Bloco (classe mb-3) *@
         <div class="mb-3">
+            @* Rótulo do campo *@
             <label for="Nome" class="form-label">Nome</label>
+            @* Campo de entrada (id Nome) *@
             <input id="Nome" name="Nome" type="text" value="@Model.Nome" class="form-control" required>
         </div>
+        @* Bloco (classe mb-3) *@
         <div class="mb-3">
+            @* Rótulo do campo *@
             <label for="Cpf" class="form-label">CPF</label>
+            @* Campo de entrada (id Cpf) *@
             <input id="Cpf" name="Cpf" type="text" value="@Model.Cpf" class="form-control" required>
         </div>
+        @* Bloco (classe mb-3) *@
         <div class="mb-3">
+            @* Rótulo do campo *@
             <label for="EmailPessoal" class="form-label">E-mail pessoal</label>
+            @* Campo de entrada (id EmailPessoal) *@
             <input id="EmailPessoal" name="EmailPessoal" type="email" value="@Model.EmailPessoal" class="form-control" required>
         </div>
+        @* Bloco (classe mb-3) *@
         <div class="mb-3">
+            @* Rótulo do campo *@
             <label for="Telefone" class="form-label">Telefone</label>
+            @* Campo de entrada (id Telefone) *@
             <input id="Telefone" name="Telefone" type="tel" value="@Model.Telefone" class="form-control" required>
         </div>
         @* Nunca preenchemos a senha com o valor armazenado pelo controller. *@
         <div class="mb-3">
+            @* Rótulo do campo *@
             <label for="Senha" class="form-label">Senha (deixe em branco para manter a atual)</label>
+            @* Campo de entrada (id Senha) *@
             <input id="Senha" name="Senha" type="password" autocomplete="new-password" class="form-control" >
         </div>
+        @* Botão *@
         <button type="submit" class="btn btn-primary">Salvar</button>
+        @* Link *@
         <a href="/Cliente/Index" class="btn btn-secondary">Voltar</a>
     </form>
 </body>

@@ -1,107 +1,150 @@
-
+﻿
+@* Bloco C#: configurações da view (título, layout e variáveis) *@
 @{
     ViewData["Title"] = "Área do Cliente";
+    // Atribui Layout
     Layout = null;
 }
 
+@* Tipo do documento (HTML5) *@
 <!DOCTYPE html>
+@* Início do documento HTML *@
 <html lang="pt-BR">
+@* Cabeçalho do documento (título, fontes e estilos) *@
 <head>
+    @* Configuração da página *@
     <meta charset="UTF-8">
+    @* Configuração da página *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    @* Título da aba *@
     <title>@ViewData["Title"] - Santa Massa</title>
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+    @* Arquivo de estilo/fonte externo *@
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap"
           rel="stylesheet">
 
+    @* Arquivo de estilo/fonte externo *@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
           rel="stylesheet">
 
+    @* Arquivo de estilo/fonte externo *@
     <link rel="stylesheet"
           href="~/css/Areas.css"
           asp-append-version="true">
 </head>
 
+@* Corpo da página *@
 <body class="area-page">
+    @* Conteúdo principal *@
     <main class="area-container">
 
+        @* Link *@
         <a asp-controller="Home"
            asp-action="Index"
            class="back-link">
             ← Voltar ao início
         </a>
 
+        @* Cabeçalho *@
         <header class="area-header">
+            @* Imagem *@
             <img src="~/images/logosantamassa.jpg"
                  alt="Logo Santa Massa"
                  class="area-logo">
 
+            @* Parágrafo de texto *@
             <p class="area-kicker">
                 SANTA MASSA · RIO PRETO
             </p>
 
+            @* Título principal *@
             <h1>Área do Cliente</h1>
 
+            @* Parágrafo de texto *@
             <p>Como podemos ajudar você?</p>
         </header>
 
+        @* Seção da página *@
         <section class="area-grid"
                  aria-label="Opções do cliente">
 
+            @* Link *@
             <a asp-controller="Cliente"
                asp-action="Create"
                class="area-card">
 
+                @* Bloco *@
                 <div>
+                    @* Subtítulo *@
                     <h2>Meu cadastro</h2>
+                    @* Parágrafo de texto *@
                     <p>Cadastre seus dados para utilizar o sistema.</p>
                 </div>
 
+                @* Texto destacado *@
                 <span class="card-link">Fazer cadastro</span>
             </a>
 
+            @* Link *@
             <a asp-controller="Reserva"
                asp-action="Create"
                class="area-card">
 
+                @* Bloco *@
                 <div>
+                    @* Subtítulo *@
                     <h2>Fazer uma reserva</h2>
+                    @* Parágrafo de texto *@
                     <p>Organize sua próxima visita ao restaurante.</p>
                 </div>
 
+                @* Texto destacado *@
                 <span class="card-link">Nova reserva</span>
             </a>
 
+            @* Link *@
             <a asp-controller="Reserva"
                asp-action="Index"
                class="area-card">
 
+                @* Bloco *@
                 <div>
+                    @* Subtítulo *@
                     <h2>Minhas reservas</h2>
+                    @* Parágrafo de texto *@
                     <p>Consulte as reservas disponíveis no sistema.</p>
                 </div>
 
+                @* Texto destacado *@
                 <span class="card-link">Consultar</span>
             </a>
 
+            @* Link *@
             <a asp-controller="Reserva"
                asp-action="Index"
                class="area-card">
 
+                @* Bloco *@
                 <div>
+                    @* Subtítulo *@
                     <h2>Cancelar uma reserva</h2>
+                    @* Parágrafo de texto *@
                     <p>Acesse suas reservas para verificar as opções de cancelamento.</p>
                 </div>
 
+                @* Texto destacado *@
                 <span class="card-link">Ver reservas</span>
             </a>
 
         </section>
 
+        @* Rodapé *@
         <footer class="area-footer">
             Santa Massa · São José do Rio Preto
         </footer>

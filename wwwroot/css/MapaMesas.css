@@ -1,0 +1,155 @@
+﻿/* =====================================
+   MAPA DE MESAS — SANTA MASSA
+   (mesmas cores do Reserva.css)
+   ===================================== */
+
+/* Desenho estático do salão */
+/* Estilo de: .mapa-salao */
+.mapa-salao {
+    margin: 18px 0; /* espaçamento externo */
+    padding: 18px; /* espaçamento interno */
+    background: #201F1D; /* fundo */
+    border: 1px solid #514B40; /* borda */
+    border-radius: 10px; /* cantos arredondados */
+    text-align: center; /* alinhamento do texto */
+}
+
+.mapa-entrada,
+/* Estilo de: .mapa-cozinha */
+.mapa-cozinha {
+    color: #A9A193; /* cor do texto */
+    font-size: 0.75rem; /* tamanho da fonte */
+    letter-spacing: 2px; /* espaço entre letras */
+    text-transform: uppercase; /* maiúsculas/minúsculas */
+}
+
+/* Estilo de: .mapa-grade */
+.mapa-grade {
+    display: grid; /* tipo de exibição */
+    grid-template-columns: repeat(5, 1fr); /* colunas da grade */
+    gap: 18px; /* espaço entre itens */
+    margin: 16px 0; /* espaçamento externo */
+}
+
+/* Estilo de: .mapa-mesa */
+.mapa-mesa {
+    display: flex; /* tipo de exibição */
+    align-items: center; /* alinhamento vertical */
+    justify-content: center; /* alinhamento horizontal */
+    height: 48px; /* altura */
+    color: #E8D5A5; /* cor do texto */
+    background: #34312B; /* fundo */
+    border: 1px solid #49443A; /* borda */
+    border-radius: 7px; /* cantos arredondados */
+    font-weight: 600; /* peso da fonte */
+}
+
+/* Estilo de: .mapa-mesa.redonda */
+.mapa-mesa.redonda {
+    width: 48px; /* largura */
+    margin: 0 auto; /* espaçamento externo */
+    border-radius: 50%; /* cantos arredondados */
+}
+
+/* Legenda */
+/* Estilo de: .mapa-legenda */
+.mapa-legenda {
+    display: flex; /* tipo de exibição */
+    flex-wrap: wrap; /* quebra de linha dos itens */
+    gap: 18px; /* espaço entre itens */
+    margin-bottom: 14px; /* margem inferior */
+    color: #C8C0B1; /* cor do texto */
+    font-size: 0.82rem; /* tamanho da fonte */
+}
+
+/* Estilo de: .mapa-legenda .leg */
+.mapa-legenda .leg {
+    display: inline-block; /* tipo de exibição */
+    width: 12px; /* largura */
+    height: 12px; /* altura */
+    margin-right: 5px; /* margem direita */
+    border-radius: 3px; /* cantos arredondados */
+    vertical-align: middle; /* alinhamento vertical */
+}
+
+.leg.livre { background: #6FA77A; }
+.leg.reservada { background: #8A4B47; }
+.leg.selecionada { background: #D3B779; }
+
+/* Botões de seleção (gerados pelo JavaScript) */
+/* Estilo de: .selecao-mesas */
+.selecao-mesas {
+    display: grid; /* tipo de exibição */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* colunas da grade */
+    gap: 12px; /* espaço entre itens */
+}
+
+/* Estilo de: .mesa-opcao */
+.mesa-opcao {
+    display: flex; /* tipo de exibição */
+    flex-direction: column; /* direção dos itens */
+    gap: 2px; /* espaço entre itens */
+    padding: 12px; /* espaçamento interno */
+    color: #F7F3EA; /* cor do texto */
+    background: #201F1D; /* fundo */
+    border: 1px solid #514B40; /* borda */
+    border-radius: 7px; /* cantos arredondados */
+    font-family: "Poppins", sans-serif; /* fonte */
+    text-align: left; /* alinhamento do texto */
+    transition: 0.2s ease; /* animação suave */
+}
+
+.mesa-opcao small { color: #C8C0B1; font-size: 0.75rem; }
+.mesa-opcao.livre { border-left: 4px solid #6FA77A; cursor: pointer; }
+.mesa-opcao.livre:hover { border-color: #D3B779; }
+.mesa-opcao.reservada { border-left: 4px solid #8A4B47; opacity: 0.55; cursor: not-allowed; }
+.mesa-opcao.selecionada { border-color: #D3B779; background: rgba(211, 183, 121, 0.12); }
+
+.mapa-aviso { grid-column: 1 / -1; color: #A9A193; font-size: 0.85rem; margin: 0; }
+
+/* Regras para telas que atendem: (max-width: 600px) */
+@media (max-width: 600px) {
+    .mapa-grade { gap: 10px; }
+}
+
+/* Áreas fixas do salão (Entrada, Janela, Banheiros, Cozinha, Saída) */
+/* Estilo de: .mapa-areas */
+.mapa-areas {
+    display: flex; /* tipo de exibição */
+    gap: 10px; /* espaço entre itens */
+}
+
+/* Estilo de: .mapa-area */
+.mapa-area {
+    flex: 1; /* proporção do item */
+    padding: 8px; /* espaçamento interno */
+    color: #A9A193; /* cor do texto */
+    background: #2B2925; /* fundo */
+    border: 1px dashed #49443A; /* borda */
+    border-radius: 7px; /* cantos arredondados */
+    font-size: 0.72rem; /* tamanho da fonte */
+    letter-spacing: 2px; /* espaço entre letras */
+    text-transform: uppercase; /* maiúsculas/minúsculas */
+}
+
+.mapa-area.janela { flex: 3; color: #E8D5A5; border-style: solid; border-color: #D3B779; }
+.mapa-area.saida { color: #6FA77A; border-color: #6FA77A; }
+
+/* Grade com 4 colunas (áreas Externo e Sacada) */
+/* Estilo de: .mapa-grade.quatro */
+.mapa-grade.quatro {
+    grid-template-columns: repeat(4, 1fr); /* colunas da grade */
+}
+
+/* Seletor de área e desenho escondido */
+.form-section .field + .mapa-salao,
+/* Estilo de: .mapa-salao[hidden] */
+.mapa-salao[hidden] {
+    margin-top: 18px; /* margem superior */
+}
+
+/* Estilo de: .mapa-salao[hidden] */
+.mapa-salao[hidden] {
+    display: none; /* tipo de exibição */
+}
+
