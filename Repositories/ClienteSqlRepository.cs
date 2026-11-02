@@ -277,25 +277,4 @@ public class ClienteSqlRepository : DataConnection, IClienteRepository
             }
         }
     }
-    public Cliente Login(LoginViewModel model)
-    {
-        SqlCommand cmd = new SqlCommand();
-        cmd.Connection = conn;
-        cmd.CommandText = "SELECT * FROM Usuario WHERE Email = @email AND Senha = @senha";
-        cmd.Parameters.AddWithValue("email", model.Email);
-        cmd.Parameters.AddWithValue("senha", model.Senha);
-
-        SqlDataReader reader = cmd.ExecuteReader();
-
-        if (reader.Read())
-        {
-            return new Cliente
-            {
-                EmailPessoal = (string)reader["Email"],
-                Nome = (string)reader["Nome"]
-            };
-        }
-
-        return null;
-    }
 }
