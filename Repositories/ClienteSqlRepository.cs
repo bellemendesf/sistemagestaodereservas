@@ -9,45 +9,83 @@ public class ClienteSqlRepository : DataConnection, IClienteRepository
     // Construtor: repassa a configuração para a classe base
     public ClienteSqlRepository(IConfiguration configuration) : base(configuration) { }
 
-    // Insere um novo registro no banco
+    // Insere cliente: reutiliza pessoa existente (ex.: funcionário com mesmo CPF)
     public void Create(Cliente cliente)
     {
-        // UNIÃO: persiste os campos de A nas tabelas relacionadas de B.
-        using (var cmd = new SqlCommand())
+        conn.Open();
+        try
         {
-            // Associa o comando à conexão
-            cmd.Connection = conn;
-            // Texto SQL que será executado
-            cmd.CommandText = @"SET XACT_ABORT ON; BEGIN TRANSACTION;
-                INSERT INTO pessoas (nome, cpf, senha) VALUES (@Nome, @Cpf,  @Senha);
-                INSERT INTO clientes (pessoa_id, email_pessoal, telefone) VALUES (CAST(SCOPE_IDENTITY() AS INT), @Email_pessoal, @Telefone);
-                COMMIT TRANSACTION;";
-            // Preenche o parâmetro @Nome (evita SQL injection)
-            cmd.Parameters.AddWithValue("@Nome", cliente.Nome);
-            // Preenche o parâmetro @Cpf (evita SQL injection)
-            cmd.Parameters.AddWithValue("@Cpf", cliente.Cpf);
-            // Preenche o parâmetro @Email_pessoal (evita SQL injection)
-            cmd.Parameters.AddWithValue("@Email_pessoal", cliente.EmailPessoal);
-            // Preenche o parâmetro @Senha (evita SQL injection)
-            cmd.Parameters.AddWithValue("@Senha", cliente.Senha ?? "");
-            // Preenche o parâmetro @Telefone (evita SQL injection)
-            cmd.Parameters.AddWithValue("@Telefone", cliente.Telefone);
+            int? pessoaId = ObterPessoaIdPorCpf(cliente.Cpf);
 
-            // Abre a conexão com o banco
-            conn.Open();
-            // Tenta executar; erros são tratados abaixo
+            using var tx = conn.BeginTransaction();
             try
             {
-                // Executa o comando (INSERT/UPDATE/DELETE)
-                cmd.ExecuteNonQuery();
+                if (pessoaId == null)
+                {
+                    var senhaHash = PasswordHasherUtil.HashPassword(cliente.Senha ?? "");
+                    using (var cmdPessoa = new SqlCommand(
+                               @"INSERT INTO pessoas (nome, cpf, senha) VALUES (@Nome, @Cpf, @Senha);
+                                 SELECT CAST(SCOPE_IDENTITY() AS INT);", conn, tx))
+                    {
+                        cmdPessoa.Parameters.AddWithValue("@Nome", cliente.Nome);
+                        cmdPessoa.Parameters.AddWithValue("@Cpf", cliente.Cpf);
+                        cmdPessoa.Parameters.AddWithValue("@Senha", senhaHash);
+                        pessoaId = (int)cmdPessoa.ExecuteScalar()!;
+                    }
+                }
+                else
+                {
+                    if (JaEhCliente(pessoaId.Value, tx))
+                        throw new InvalidOperationException("Este CPF já está cadastrado como cliente.");
+
+                    using (var cmdNome = new SqlCommand(
+                               "UPDATE pessoas SET nome = @Nome WHERE id = @Id", conn, tx))
+                    {
+                        cmdNome.Parameters.AddWithValue("@Nome", cliente.Nome);
+                        cmdNome.Parameters.AddWithValue("@Id", pessoaId.Value);
+                        cmdNome.ExecuteNonQuery();
+                    }
+                }
+
+                using (var cmdCliente = new SqlCommand(
+                           @"INSERT INTO clientes (pessoa_id, email_pessoal, telefone)
+                             VALUES (@PessoaId, @Email_pessoal, @Telefone)", conn, tx))
+                {
+                    cmdCliente.Parameters.AddWithValue("@PessoaId", pessoaId.Value);
+                    cmdCliente.Parameters.AddWithValue("@Email_pessoal", cliente.EmailPessoal);
+                    cmdCliente.Parameters.AddWithValue("@Telefone", cliente.Telefone);
+                    cmdCliente.ExecuteNonQuery();
+                }
+
+                tx.Commit();
             }
-            // Sempre executa, com ou sem erro
-            finally
+            catch
             {
-                // Fecha a conexão com o banco
-                conn.Close();
+                tx.Rollback();
+                throw;
             }
         }
+        finally
+        {
+            conn.Close();
+        }
+    }
+
+    // Busca id da pessoa pelo CPF (null se não existir)
+    private int? ObterPessoaIdPorCpf(string cpf)
+    {
+        using var cmd = new SqlCommand("SELECT id FROM pessoas WHERE cpf = @Cpf", conn);
+        cmd.Parameters.AddWithValue("@Cpf", cpf);
+        var resultado = cmd.ExecuteScalar();
+        return resultado == null || resultado == DBNull.Value ? null : Convert.ToInt32(resultado);
+    }
+
+    // Verifica se a pessoa já possui cadastro de cliente
+    private static bool JaEhCliente(int pessoaId, SqlTransaction tx)
+    {
+        using var cmd = new SqlCommand("SELECT 1 FROM clientes WHERE pessoa_id = @Id", tx.Connection, tx);
+        cmd.Parameters.AddWithValue("@Id", pessoaId);
+        return cmd.ExecuteScalar() != null;
     }
 
     // Lê todos os registros do banco

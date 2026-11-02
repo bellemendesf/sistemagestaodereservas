@@ -74,6 +74,17 @@ body.home {
     transform: scale(1.04); /* transformação (movimento) */
 }
 
+/* Nome do funcionário autenticado no header da home */
+.home-usuario-logado {
+    margin: 0 0 8px;
+    padding: 8px 14px;
+    border: 1px solid rgba(198, 164, 92, 0.35);
+    border-radius: 999px;
+    background: rgba(198, 164, 92, 0.1);
+    color: var(--dourado-claro, #E0C989);
+    font-size: 0.86rem;
+}
+
 /* Estilo de: .home-brand */
 .home-brand {
     color: var(--dourado); /* cor do texto */

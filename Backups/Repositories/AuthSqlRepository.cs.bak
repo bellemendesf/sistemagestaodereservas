@@ -1,0 +1,146 @@
+// Importa os modelos do projeto
+using GestaoReservas.Models;
+// Importa as classes de acesso ao SQL Server
+using Microsoft.Data.SqlClient;
+// Importa os utilitários de hash de senha do ASP.NET Core
+using Microsoft.AspNetCore.Identity;
+
+// Repositório que autentica funcionários no SQL Server
+public class AuthSqlRepository : DataConnection, IAuthRepository
+{
+    // Instância do PasswordHasher para validar senhas com hash
+    private readonly PasswordHasher<Funcionario> _passwordHasher;
+
+    // Construtor: repassa a configuração para a classe base e inicializa o hasher
+    public AuthSqlRepository(IConfiguration configuration) : base(configuration)
+    {
+        _passwordHasher = new PasswordHasher<Funcionario>();
+    }
+
+    // Autentica um funcionário verificando CPF e senha no banco
+    public Funcionario? AuthenticateFuncionario(string cpf, string senha)
+    {
+        // funcionario começa nulo (não autenticado)
+        Funcionario? funcionario = null;
+
+        // Cria o comando SQL (descartado ao final)
+        using (var cmd = new SqlCommand())
+        {
+            // Associa o comando à conexão
+            cmd.Connection = conn;
+            
+            // Texto SQL que busca o funcionário com o CPF fornecido
+            // A consulta une as tabelas pessoas e funcionarios para obter todos os dados
+            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, p.senha, f.email_institucional 
+                                FROM pessoas p 
+                                INNER JOIN funcionarios f ON p.id = f.pessoa_id 
+                                WHERE p.cpf = @Cpf";
+            
+            // Preenche o parâmetro @Cpf (evita SQL injection)
+            cmd.Parameters.AddWithValue("@Cpf", cpf);
+
+            // Abre a conexão com o banco
+            conn.Open();
+            
+            // Tenta executar; erros são tratados abaixo
+            try
+            {
+                // Executa a consulta e abre o leitor de resultados
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    // Se encontrou a linha, valida a senha
+                    if (reader.Read())
+                    {
+                        // Monta o objeto Funcionario temporário com os dados da linha
+                        var funcionarioTemp = new Funcionario
+                        {
+                            Id = reader.GetInt32(0),
+                            Nome = reader.GetString(1),
+                            Cpf = reader.GetString(2),
+                            Senha = reader.GetString(3),
+                            EmailInstitucional = reader.GetString(4)
+                        };
+
+                        // Valida a senha fornecida contra o hash armazenado no banco
+                        // O PasswordHasher retorna Success, SuccessRehashNeeded ou Failed
+                        var result = _passwordHasher.VerifyHashedPassword(funcionarioTemp, funcionarioTemp.Senha, senha);
+
+                        // Se a senha for válida (Success ou SuccessRehashNeeded)
+                        if (result != PasswordVerificationResult.Failed)
+                        {
+                            // Não retorna a senha para o frontend por segurança
+                            funcionarioTemp.Senha = "";
+                            funcionario = funcionarioTemp;
+                        }
+                    }
+                }
+            }
+            // Sempre executa, com ou sem erro
+            finally
+            {
+                // Fecha a conexão com o banco
+                conn.Close();
+            }
+        }
+
+        // Devolve o resultado (Funcionario se autenticado, null se não)
+        return funcionario;
+    }
+
+    // Busca um funcionário pelo ID para recuperar dados da sessão
+    public Funcionario? GetFuncionarioById(int id)
+    {
+        // funcionario começa nulo (não encontrado)
+        Funcionario? funcionario = null;
+
+        // Cria o comando SQL (descartado ao final)
+        using (var cmd = new SqlCommand())
+        {
+            // Associa o comando à conexão
+            cmd.Connection = conn;
+            
+            // Texto SQL que busca o funcionário pelo ID
+            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, p.senha, f.email_institucional 
+                                FROM pessoas p 
+                                INNER JOIN funcionarios f ON p.id = f.pessoa_id 
+                                WHERE p.id = @Id";
+            
+            // Preenche o parâmetro @Id (evita SQL injection)
+            cmd.Parameters.AddWithValue("@Id", id);
+
+            // Abre a conexão com o banco
+            conn.Open();
+            
+            // Tenta executar; erros são tratados abaixo
+            try
+            {
+                // Executa a consulta e abre o leitor de resultados
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    // Se encontrou a linha, monta o objeto
+                    if (reader.Read())
+                    {
+                        // Monta o objeto Funcionario com os dados da linha
+                        funcionario = new Funcionario
+                        {
+                            Id = reader.GetInt32(0),
+                            Nome = reader.GetString(1),
+                            Cpf = reader.GetString(2),
+                            Senha = "", // Não retorna a senha por segurança
+                            EmailInstitucional = reader.GetString(4)
+                        };
+                    }
+                }
+            }
+            // Sempre executa, com ou sem erro
+            finally
+            {
+                // Fecha a conexão com o banco
+                conn.Close();
+            }
+        }
+
+        // Devolve o resultado
+        return funcionario;
+    }
+}

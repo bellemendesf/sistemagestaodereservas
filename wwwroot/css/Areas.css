@@ -204,15 +204,50 @@ body.area-page {
 }
 
 /* Rodapé */
-/* Estilo de: .area-footer */
+/* Nome do funcionário autenticado no header do painel */
+.area-usuario-logado {
+    margin: 14px 0 0;
+    padding: 8px 14px;
+    border: 1px solid rgba(198, 164, 92, 0.35);
+    border-radius: 999px;
+    background: rgba(198, 164, 92, 0.08);
+    color: var(--dourado);
+    font-size: 0.86rem;
+}
+
+/* Rodapé do painel + botão Sair (logout de autenticação) */
 .area-footer {
-    margin-top: 35px; /* margem superior */
-    padding-top: 20px; /* propriedade padding-top */
-    border-top: 1px solid rgba(198, 164, 92, 0.15); /* borda superior */
-    color: #898274; /* cor do texto */
-    font-size: 0.78rem; /* tamanho da fonte */
-    line-height: 1.7; /* altura da linha */
-    text-align: center; /* alinhamento do texto */
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 35px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(198, 164, 92, 0.15);
+    color: #898274;
+    font-size: 0.78rem;
+    line-height: 1.7;
+}
+
+.area-logout-form {
+    margin: 0;
+}
+
+.area-logout-btn {
+    border: 1px solid var(--dourado);
+    background: transparent;
+    color: var(--dourado);
+    padding: 8px 14px;
+    border-radius: 4px;
+    font-family: "Poppins", Arial, sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.area-logout-btn:hover {
+    background: var(--dourado-suave);
 }
 
 /* Celulares */

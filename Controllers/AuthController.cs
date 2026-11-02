@@ -1,0 +1,154 @@
+// Importa as classes do ASP.NET MVC (Controller, ActionResult...)
+using Microsoft.AspNetCore.Mvc;
+// Importa SignInAsync / SignOutAsync para criar e encerrar o cookie de login
+using Microsoft.AspNetCore.Authentication;
+// Importa tipos auxiliares de autenticação por cookie
+using Microsoft.AspNetCore.Authentication.Cookies;
+// Importa Claims para guardar id, nome e perfil do funcionário autenticado
+using System.Security.Claims;
+// Importa o modelo Funcionario usado no cadastro público
+using GestaoReservas.Models;
+// Importa AllowAnonymous: login e cadastro não exigem estar autenticado
+using Microsoft.AspNetCore.Authorization;
+// Importa exceções SQL para tratar erro de cadastro
+using Microsoft.Data.SqlClient;
+
+// Controller de autenticação: login, cadastro inicial e logout de funcionários
+public class AuthController : Controller
+{
+    // Repositório que valida CPF/senha contra o banco (login)
+    private readonly IAuthRepository authRepository;
+    // Repositório que grava novo funcionário (cadastro antes do primeiro login)
+    private readonly IFuncionarioRepository funcionarioRepository;
+
+    // Injeção dos repositórios de autenticação e de funcionário
+    public AuthController(IAuthRepository authRepository, IFuncionarioRepository funcionarioRepository)
+    {
+        this.authRepository = authRepository;
+        this.funcionarioRepository = funcionarioRepository;
+    }
+
+    // GET /Auth/Login — exibe abas Entrar e Cadastrar (aba opcional via query string)
+    [AllowAnonymous]
+    [HttpGet]
+    public IActionResult Login(string? aba)
+    {
+        // "login" ou "cadastro" controla qual aba fica visível na view
+        ViewData["AbaAtiva"] = string.Equals(aba, "cadastro", StringComparison.OrdinalIgnoreCase)
+            ? "cadastro"
+            : "login";
+        // Modelo vazio para o formulário de cadastro na mesma página
+        return View(new Funcionario());
+    }
+
+    // POST /Auth/Login — recebe CPF e senha, autentica e cria cookie de sessão
+    [AllowAnonymous]
+    [HttpPost]
+    public async Task<IActionResult> Login(string cpf, string senha)
+    {
+        // CPF obrigatório para tentativa de login
+        if (string.IsNullOrWhiteSpace(cpf))
+        {
+            ModelState.AddModelError("", "Informe o CPF.");
+            ViewData["AbaAtiva"] = "login";
+            return View(new Funcionario());
+        }
+
+        // Senha obrigatória para tentativa de login
+        if (string.IsNullOrWhiteSpace(senha))
+        {
+            ModelState.AddModelError("", "Informe a senha.");
+            ViewData["AbaAtiva"] = "login";
+            return View(new Funcionario());
+        }
+
+        // Consulta SQL: funcionário com este CPF e validação de hash da senha
+        var funcionario = authRepository.AuthenticateFuncionario(cpf, senha);
+
+        // Credenciais inválidas ou usuário que não é funcionário
+        if (funcionario == null)
+        {
+            ModelState.AddModelError("", "CPF ou senha inválidos.");
+            ViewData["AbaAtiva"] = "login";
+            return View(new Funcionario());
+        }
+
+        // Monta as claims que identificam o funcionário logado
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, funcionario.Id.ToString()),
+            new Claim(ClaimTypes.Name, funcionario.Nome),
+            new Claim("cpf", funcionario.Cpf),
+            new Claim("email", funcionario.EmailInstitucional),
+            new Claim(ClaimTypes.Role, "Funcionario")
+        };
+
+        // Identidade ligada ao esquema de cookie FuncionarioScheme
+        var identity = new ClaimsIdentity(claims, "FuncionarioScheme");
+        var principal = new ClaimsPrincipal(identity);
+
+        // Propriedades do cookie de autenticação (expiração e persistência)
+        var authProperties = new AuthenticationProperties
+        {
+            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(5),
+            IsPersistent = false
+        };
+
+        // Grava o cookie FuncionarioAuth no navegador
+        await HttpContext.SignInAsync("FuncionarioScheme", principal, authProperties);
+
+        // Após login, envia para o painel do restaurante
+        return RedirectToAction("Index", "AreaRestaurante");
+    }
+
+    // POST /Auth/Cadastro — cadastro público para quem ainda não tem login
+    [AllowAnonymous]
+    [HttpPost]
+    public IActionResult Cadastro(Funcionario model)
+    {
+        ViewData["AbaAtiva"] = "cadastro";
+
+        if (string.IsNullOrWhiteSpace(model.EmailInstitucional))
+            ModelState.AddModelError(nameof(model.EmailInstitucional), "Informe o e-mail institucional.");
+
+        if (string.IsNullOrWhiteSpace(model.Senha))
+            ModelState.AddModelError(nameof(model.Senha), "Informe a senha.");
+
+        if (!ModelState.IsValid)
+            return View("Login", model);
+
+        try
+        {
+            // Create grava senha já em hash (FuncionarioSqlRepository)
+            funcionarioRepository.Create(model);
+            TempData["CadastroSucesso"] = "Cadastro realizado! Faça login com seu CPF e senha.";
+            return RedirectToAction(nameof(Login));
+        }
+        catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError("", ex.Message);
+            return View("Login", model);
+        }
+        catch (SqlException)
+        {
+            ModelState.AddModelError("", "Não foi possível cadastrar. Verifique CPF, e-mail ou duplicidades.");
+            return View("Login", model);
+        }
+    }
+
+    // POST /Auth/Logout — remove cookie e encerra sessão
+    [HttpPost]
+    [Authorize(AuthenticationSchemes = "FuncionarioScheme")]
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync("FuncionarioScheme");
+        return RedirectToAction("Index", "Home");
+    }
+
+    // GET /Auth/AccessDenied — usuário sem permissão ou não autenticado
+    [AllowAnonymous]
+    public IActionResult AccessDenied()
+    {
+        return View();
+    }
+}

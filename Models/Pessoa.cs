@@ -17,9 +17,8 @@ public class Pessoa
     [Required(ErrorMessage = "Informe o CPF."), StringLength(20)]
     // Propriedade Cpf
     public string Cpf { get; set; } = "";
-    // Validação: tamanho máximo do texto
-    // CORREÇÃO: mesmo tamanho da coluna senha varchar(30) do banco.
-    [StringLength(30)]
-    // Propriedade Senha
+    // Validação: tamanho máximo compatível com hash de senha no banco (varchar 256)
+    [StringLength(256)]
+    // Propriedade Senha (texto puro só na tela; no banco fica o hash)
     public string Senha { get; set; } = "";
 }

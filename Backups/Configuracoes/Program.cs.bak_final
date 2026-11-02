@@ -1,0 +1,80 @@
+﻿// Variável builder
+var builder = WebApplication.CreateBuilder(args);
+
+// Habilita MVC com views
+builder.Services.AddControllersWithViews(options =>
+{
+    // Exige token antifalsificação em todos os POST
+    options.Filters.Add(new Microsoft.AspNetCore.Mvc.AutoValidateAntiforgeryTokenAttribute());
+}).AddMvcOptions(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
+
+// Configura autenticação com cookie para funcionários
+builder.Services.AddAuthentication("FuncionarioScheme")
+    .AddCookie("FuncionarioScheme", options =>
+    {
+        // Rota para redirecionamento quando usuário não autenticado tenta acessar página protegida
+        options.LoginPath = "/Auth/Login";
+        // Rota para redirecionamento quando usuário não tem permissão para acessar página protegida
+        options.AccessDeniedPath = "/Auth/AccessDenied";
+        // Nome do cookie que armazena a informação de autenticação
+        options.Cookie.Name = "FuncionarioAuth";
+        // Tempo de expiração do cookie (30 minutos de inatividade)
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+        // Define se o cookie deve ser transmitido apenas via HTTPS (apenas em produção)
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        // Define se o cookie só pode ser acessado via HTTP (evita acesso via JavaScript)
+        options.Cookie.HttpOnly = true;
+    });
+
+// Configura autorização: define a política padrão para exigir autenticação
+builder.Services.AddAuthorization();
+    
+// UNIÃO: os Controllers da versão A utilizam os repositórios SQL da versão B.
+// AddScoped: uma nova instância (e conexão) a cada requisição — ideal para acesso a banco.
+builder.Services.AddScoped<IAmbienteRepository, AmbienteSqlRepository>();
+// Registra ClienteSqlRepository como implementação de IClienteRepository
+builder.Services.AddScoped<IClienteRepository, ClienteSqlRepository>();
+// Registra FuncionarioSqlRepository como implementação de IFuncionarioRepository
+builder.Services.AddScoped<IFuncionarioRepository, FuncionarioSqlRepository>();
+// Registra MesaSqlRepository como implementação de IMesaRepository
+builder.Services.AddScoped<IMesaRepository, MesaSqlRepository>();
+// Registra ReservaSqlRepository como implementação de IReservaRepository
+builder.Services.AddScoped<IReservaRepository, ReservaSqlRepository>();
+// Registra AuthSqlRepository como implementação de IAuthRepository para autenticação
+builder.Services.AddScoped<IAuthRepository, AuthSqlRepository>();
+
+// Variável app
+var app = builder.Build();
+
+// O perfil HTTP local funciona sem certificado de desenvolvimento.
+if (!app.Environment.IsDevelopment())
+{
+    // Página de erro em produção
+    app.UseExceptionHandler("/Home/Error");
+    // Ativa HSTS em produção
+    app.UseHsts();
+    // Redireciona para HTTPS
+    app.UseHttpsRedirection();
+}
+
+// Libera os arquivos de wwwroot (css, imagens)
+app.UseStaticFiles();
+
+// Ativa o roteamento
+app.UseRouting();
+
+// Ativa autenticação (verifica se o usuário está autenticado pelo cookie)
+app.UseAuthentication();
+
+// Ativa autorização (verifica as permissões do usuário autenticado)
+app.UseAuthorization();
+
+// Rota padrão controller/action/id
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Inicia o servidor
+app.Run();
+// Permite inicialização da aplicação pelos testes de integração.
+public partial class Program { }

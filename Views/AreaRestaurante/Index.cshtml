@@ -2,8 +2,8 @@
 @* Bloco C#: configurações da view (título, layout e variáveis) *@
 @{
     ViewData["Title"] = "Painel do Restaurante";
-    // Atribui Layout
     Layout = null;
+    var nomeFuncionarioLogado = User?.Identity?.Name;
 }
 
 @* Tipo do documento (HTML5) *@
@@ -68,13 +68,37 @@
 
             @* Parágrafo de texto *@
             <p>Gerencie as operações do restaurante.</p>
+
+            @if (!string.IsNullOrWhiteSpace(nomeFuncionarioLogado))
+            {
+                <p class="area-usuario-logado">
+                    Conectado: <strong>@nomeFuncionarioLogado</strong>
+                </p>
+            }
         </header>
 
         @* Seção da página *@
         <section class="area-grid"
                  aria-label="Opções de gerenciamento">
 
-            @* Link *@
+            @* Funcionário logado pode virar cliente com o mesmo CPF *@
+            <a asp-controller="Cliente"
+               asp-action="Create"
+               class="area-card">
+
+                @* Bloco *@
+                <div>
+                    @* Subtítulo *@
+                    <h2>Área do cliente</h2>
+                    @* Parágrafo de texto *@
+                    <p>Cadastre-se como cliente usando o mesmo CPF.</p>
+                </div>
+
+                @* Texto destacado *@
+                <span class="card-link">Cadastrar</span>
+            </a>
+
+            @* Cadastro interno (funcionário já autenticado) *@
             <a asp-controller="Funcionario"
                asp-action="Create"
                class="area-card">
@@ -178,9 +202,16 @@
 
         </section>
 
-        @* Rodapé *@
+        @* Rodapé com logout (encerra cookie de autenticação) *@
         <footer class="area-footer">
-            Santa Massa · Painel de gerenciamento
+            <span>Santa Massa · Painel de gerenciamento</span>
+            <form asp-controller="Auth"
+                  asp-action="Logout"
+                  method="post"
+                  class="area-logout-form">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="area-logout-btn">Sair</button>
+            </form>
         </footer>
 
     </main>

@@ -232,6 +232,20 @@
                 <span>Santa Massa</span>
                 @* Texto destacado *@
                 <span>Painel de gerenciamento</span>
+                
+                @* Bloco com botão de logout *@
+                <form asp-controller="Auth" 
+                      asp-action="Logout" 
+                      method="post" 
+                      style="display: inline;">
+                    @* Token antifalsificação *@
+                    @Html.AntiForgeryToken()
+                    @* Botão de logout *@
+                    <button type="submit" 
+                            style="background: none; border: none; color: #999; cursor: pointer; font-size: 0.85rem; text-decoration: underline;">
+                        Logout
+                    </button>
+                </form>
             </footer>
 
         </section>

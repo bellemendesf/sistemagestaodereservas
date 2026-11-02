@@ -9,43 +9,80 @@ public class FuncionarioSqlRepository : DataConnection, IFuncionarioRepository
     // Construtor: repassa a configuração para a classe base
     public FuncionarioSqlRepository(IConfiguration configuration) : base(configuration) { }
 
-    // Insere um novo registro no banco
+    // Insere funcionário: reutiliza pessoa existente (ex.: cliente com mesmo CPF)
     public void Create(Funcionario funcionario)
     {
-        // UNIÃO: persiste os campos de A nas tabelas relacionadas de B.
-        using (var cmd = new SqlCommand())
+        conn.Open();
+        try
         {
-            // Associa o comando à conexão
-            cmd.Connection = conn;
-            // Texto SQL que será executado
-            cmd.CommandText = @"SET XACT_ABORT ON; BEGIN TRANSACTION;
-                INSERT INTO pessoas (nome, cpf, senha) VALUES (@Nome, @Cpf, @Senha);
-                INSERT INTO funcionarios (pessoa_id, email_institucional) VALUES (CAST(SCOPE_IDENTITY() AS INT), @EmailInstitucional);
-                COMMIT TRANSACTION;";
-            // Preenche o parâmetro @Nome (evita SQL injection)
-            cmd.Parameters.AddWithValue("@Nome", funcionario.Nome);
-            // Preenche o parâmetro @Cpf (evita SQL injection)
-            cmd.Parameters.AddWithValue("@Cpf", funcionario.Cpf);
-            // Preenche o parâmetro @Senha (evita SQL injection)
-            cmd.Parameters.AddWithValue("@Senha", funcionario.Senha ?? "");
-            // Preenche o parâmetro @EmailInstitucional (evita SQL injection)
-            cmd.Parameters.AddWithValue("@EmailInstitucional", funcionario.EmailInstitucional);
+            int? pessoaId = ObterPessoaIdPorCpf(funcionario.Cpf);
 
-            // Abre a conexão com o banco
-            conn.Open();
-            // Tenta executar; erros são tratados abaixo
+            using var tx = conn.BeginTransaction();
             try
             {
-                // Executa o comando (INSERT/UPDATE/DELETE)
-                cmd.ExecuteNonQuery();
+                if (pessoaId == null)
+                {
+                    var senhaHashCreate = PasswordHasherUtil.HashPassword(funcionario.Senha ?? "");
+                    using (var cmdPessoa = new SqlCommand(
+                               @"INSERT INTO pessoas (nome, cpf, senha) VALUES (@Nome, @Cpf, @Senha);
+                                 SELECT CAST(SCOPE_IDENTITY() AS INT);", conn, tx))
+                    {
+                        cmdPessoa.Parameters.AddWithValue("@Nome", funcionario.Nome);
+                        cmdPessoa.Parameters.AddWithValue("@Cpf", funcionario.Cpf);
+                        cmdPessoa.Parameters.AddWithValue("@Senha", senhaHashCreate);
+                        pessoaId = (int)cmdPessoa.ExecuteScalar()!;
+                    }
+                }
+                else
+                {
+                    if (JaEhFuncionario(pessoaId.Value, tx))
+                        throw new InvalidOperationException("Este CPF já está cadastrado como funcionário.");
+
+                    using (var cmdNome = new SqlCommand(
+                               "UPDATE pessoas SET nome = @Nome WHERE id = @Id", conn, tx))
+                    {
+                        cmdNome.Parameters.AddWithValue("@Nome", funcionario.Nome);
+                        cmdNome.Parameters.AddWithValue("@Id", pessoaId.Value);
+                        cmdNome.ExecuteNonQuery();
+                    }
+                }
+
+                using (var cmdFunc = new SqlCommand(
+                           @"INSERT INTO funcionarios (pessoa_id, email_institucional)
+                             VALUES (@PessoaId, @EmailInstitucional)", conn, tx))
+                {
+                    cmdFunc.Parameters.AddWithValue("@PessoaId", pessoaId.Value);
+                    cmdFunc.Parameters.AddWithValue("@EmailInstitucional", funcionario.EmailInstitucional);
+                    cmdFunc.ExecuteNonQuery();
+                }
+
+                tx.Commit();
             }
-            // Sempre executa, com ou sem erro
-            finally
+            catch
             {
-                // Fecha a conexão com o banco
-                conn.Close();
+                tx.Rollback();
+                throw;
             }
         }
+        finally
+        {
+            conn.Close();
+        }
+    }
+
+    private int? ObterPessoaIdPorCpf(string cpf)
+    {
+        using var cmd = new SqlCommand("SELECT id FROM pessoas WHERE cpf = @Cpf", conn);
+        cmd.Parameters.AddWithValue("@Cpf", cpf);
+        var resultado = cmd.ExecuteScalar();
+        return resultado == null || resultado == DBNull.Value ? null : Convert.ToInt32(resultado);
+    }
+
+    private static bool JaEhFuncionario(int pessoaId, SqlTransaction tx)
+    {
+        using var cmd = new SqlCommand("SELECT 1 FROM funcionarios WHERE pessoa_id = @Id", tx.Connection, tx);
+        cmd.Parameters.AddWithValue("@Id", pessoaId);
+        return cmd.ExecuteScalar() != null;
     }
 
     // Lê todos os registros do banco
@@ -82,8 +119,8 @@ public class FuncionarioSqlRepository : DataConnection, IFuncionarioRepository
                             Nome = reader.GetString(1),
                             // Lê a coluna 2 para Cpf
                             Cpf = reader.GetString(2),
-                            // Lê a coluna 3 para Senha
-                            Senha = reader.GetString(3),
+                            // Não expõe hash de senha nas listagens
+                            Senha = "",
                             // Lê a coluna 4 para EmailInstitucional
                             EmailInstitucional = reader.GetString(4)
                         });
@@ -138,8 +175,8 @@ public class FuncionarioSqlRepository : DataConnection, IFuncionarioRepository
                             Nome = reader.GetString(1),
                             // Lê a coluna 2 para Cpf
                             Cpf = reader.GetString(2),
-                            // Lê a coluna 3 para Senha
-                            Senha = reader.GetString(3),
+                            // Não expõe hash de senha na edição (campo senha fica vazio na tela)
+                            Senha = "",
                             // Lê a coluna 4 para EmailInstitucional
                             EmailInstitucional = reader.GetString(4)
                         };
@@ -175,8 +212,12 @@ public class FuncionarioSqlRepository : DataConnection, IFuncionarioRepository
             cmd.Parameters.AddWithValue("@Nome", funcionario.Nome);
             // Preenche o parâmetro @Cpf (evita SQL injection)
             cmd.Parameters.AddWithValue("@Cpf", funcionario.Cpf);
+            // Se informou nova senha, grava hash; senão mantém a senha atual no banco
+            var senhaParaGravar = string.IsNullOrWhiteSpace(funcionario.Senha)
+                ? ""
+                : PasswordHasherUtil.HashPassword(funcionario.Senha);
             // Preenche o parâmetro @Senha (evita SQL injection)
-            cmd.Parameters.AddWithValue("@Senha", funcionario.Senha ?? "");
+            cmd.Parameters.AddWithValue("@Senha", senhaParaGravar);
             // Preenche o parâmetro @Email_Institucional (evita SQL injection)
             cmd.Parameters.AddWithValue("@Email_Institucional", funcionario.EmailInstitucional);
             // Preenche o parâmetro @Id (evita SQL injection)

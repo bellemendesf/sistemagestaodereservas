@@ -1,0 +1,400 @@
+═══════════════════════════════════════════════════════════════════════════════
+  ESTRUTURA DO SISTEMA DE AUTENTICAÇÃO - GESTAO RESERVAS
+═══════════════════════════════════════════════════════════════════════════════
+
+ARQUITETURA:
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                           NAVEGADOR DO USUÁRIO                              │
+│                                                                              │
+│  http://localhost:5004/Auth/Login                                          │
+│  ↓ (POST CPF + Senha)                                                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    ↓
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         ASP.NET CORE MVC                                     │
+│                                                                              │
+│  Program.cs:                                                               │
+│  ├─ AddAuthentication("FuncionarioScheme")                                 │
+│  ├─ AddCookie configuration                                               │
+│  ├─ AddAuthorization()                                                     │
+│  ├─ UseAuthentication()                                                    │
+│  ├─ UseAuthorization()                                                     │
+│  └─ AddScoped<IAuthRepository, AuthSqlRepository>()                       │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    ↓
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       CONTROLLERS                                            │
+│                                                                              │
+│  AuthController.cs:                                                        │
+│  ├─ [HttpGet] Login() → Exibe formulário                                   │
+│  ├─ [HttpPost] Login(cpf, senha)                                           │
+│  │  ├─ Valida campos vazios                                                │
+│  │  ├─ Chama repository.AuthenticateFuncionario()                         │
+│  │  ├─ Se válido: SignInAsync() → Redireciona /Funcionario/Index          │
+│  │  └─ Se inválido: Mostra erro                                            │
+│  ├─ [HttpPost] Logout()                                                    │
+│  │  ├─ Executa SignOutAsync()                                              │
+│  │  └─ Redireciona /Home/Index                                             │
+│  └─ AccessDenied() → Página de acesso negado                              │
+│                                                                              │
+│  FuncionarioController.cs:                                                 │
+│  └─ [Authorize(AuthenticationSchemes = "FuncionarioScheme")]              │
+│     ├─ Index() → Lista funcionários                                        │
+│     ├─ Create() → Cria funcionário                                         │
+│     ├─ Edit() → Edita funcionário                                          │
+│     ├─ Delete() → Deleta funcionário                                       │
+│     └─ Details() → Mostra detalhes                                         │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    ↓
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       REPOSITORIES (Acesso a Dados)                         │
+│                                                                              │
+│  IAuthRepository.cs (Interface):                                           │
+│  ├─ AuthenticateFuncionario(cpf, senha) → Funcionario?                    │
+│  └─ GetFuncionarioById(id) → Funcionario?                                 │
+│                                                                              │
+│  AuthSqlRepository.cs (Implementação):                                     │
+│  ├─ AuthenticateFuncionario(cpf, senha)                                   │
+│  │  ├─ Query: SELECT FROM pessoas WHERE cpf = @Cpf                        │
+│  │  ├─ Valida se existe em funcionarios                                   │
+│  │  ├─ PasswordHasher.VerifyHashedPassword()                              │
+│  │  └─ Retorna Funcionario ou null                                         │
+│  └─ GetFuncionarioById(id)                                                 │
+│     ├─ Query: SELECT FROM pessoas WHERE id = @Id                          │
+│     └─ Retorna Funcionario ou null                                         │
+│                                                                              │
+│  FuncionarioSqlRepository.cs:                                              │
+│  ├─ Create(funcionario) → INSERT                                           │
+│  ├─ Read() → SELECT LIST                                                   │
+│  ├─ Read(id) → SELECT BY ID                                                │
+│  ├─ Update(funcionario) → UPDATE                                           │
+│  └─ Delete(id) → DELETE                                                    │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    ↓
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       UTILITIES (Utilitários)                               │
+│                                                                              │
+│  PasswordHasherUtil.cs:                                                    │
+│  ├─ HashPassword(plainPassword) → string (hash)                           │
+│  └─ VerifyPassword(hash, plainPassword) → bool                            │
+│                                                                              │
+│  Usa: Microsoft.AspNetCore.Identity.PasswordHasher<Funcionario>           │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    ↓
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       SQL SERVER (Banco de Dados)                           │
+│                                                                              │
+│  Tabela: pessoas                                                            │
+│  ├─ id (int, PK, IDENTITY)                                                │
+│  ├─ nome (varchar(50))                                                     │
+│  ├─ cpf (varchar(20), UNIQUE)                                             │
+│  └─ senha (varchar(256)) ← MODIFICADO para 256                            │
+│                                                                              │
+│  Tabela: funcionarios                                                      │
+│  ├─ pessoa_id (int, FK → pessoas.id, PK)                                 │
+│  └─ email_institucional (varchar(50), UNIQUE)                             │
+│                                                                              │
+│  Query de autenticação:                                                    │
+│  SELECT p.id, p.nome, p.cpf, p.senha, f.email_institucional               │
+│  FROM pessoas p                                                             │
+│  INNER JOIN funcionarios f ON p.id = f.pessoa_id                           │
+│  WHERE p.cpf = @Cpf;                                                       │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+
+FLUXO COMPLETO DE AUTENTICAÇÃO:
+
+1. USUÁRIO ACESSA LOGIN
+   ┌─────────────────────────────────────────────────────┐
+   │ GET /Auth/Login                                     │
+   │ ↓                                                   │
+   │ AuthController.Login()                              │
+   │ ↓                                                   │
+   │ return View("Login")                                │
+   │ ↓                                                   │
+   │ Views/Auth/Login.cshtml (Formulário exibido)       │
+   └─────────────────────────────────────────────────────┘
+
+2. USUÁRIO PREENCHE CPF E SENHA
+   ┌─────────────────────────────────────────────────────┐
+   │ Formulário:                                         │
+   │ ├─ Campo: CPF (input type="text")                   │
+   │ ├─ Campo: Senha (input type="password")             │
+   │ └─ Botão: Entrar (button type="submit")             │
+   └─────────────────────────────────────────────────────┘
+
+3. SUBMIT DO FORMULÁRIO
+   ┌─────────────────────────────────────────────────────┐
+   │ POST /Auth/Login?cpf=XXX&senha=YYY                  │
+   │ ↓                                                   │
+   │ AuthController.Login(cpf, senha)                    │
+   │ ↓                                                   │
+   │ ModelState.IsValid?                                 │
+   │ ├─ NÃO: return View(); (mostra erro)               │
+   │ └─ SIM: continua...                                 │
+   └─────────────────────────────────────────────────────┘
+
+4. CONSULTAR BANCO DE DADOS
+   ┌─────────────────────────────────────────────────────┐
+   │ repository.AuthenticateFuncionario(cpf, senha)      │
+   │ ↓                                                   │
+   │ AuthSqlRepository.AuthenticateFuncionario()         │
+   │ ├─ Abre conexão SQL                                 │
+   │ ├─ Executa query parametrizada:                     │
+   │ │  SELECT ... FROM pessoas WHERE cpf = @Cpf        │
+   │ └─ Fecha conexão                                    │
+   └─────────────────────────────────────────────────────┘
+
+5. VALIDAR SENHA COM HASH
+   ┌─────────────────────────────────────────────────────┐
+   │ PasswordHasher.VerifyHashedPassword()               │
+   │ ├─ Entrada:                                         │
+   │ │  - Senha fornecida: "Teste@123" (texto puro)     │
+   │ │  - Hash do banco: "AQAAAA..." (hashed)           │
+   │ ├─ Comparação segura                                │
+   │ └─ Resultado: Success | Failed                      │
+   └─────────────────────────────────────────────────────┘
+
+6A. SE SENHA VÁLIDA
+    ┌─────────────────────────────────────────────────────┐
+    │ ✅ Senha verificada com sucesso                     │
+    │ ↓                                                   │
+    │ Criar Claims:                                       │
+    │ ├─ NameIdentifier: funcionario.Id (1)             │
+    │ ├─ Name: funcionario.Nome ("João Silva")           │
+    │ ├─ cpf: funcionario.Cpf ("123.456.789-00")         │
+    │ ├─ email: funcionario.EmailInstitucional (...)    │
+    │ └─ Role: "Funcionario"                             │
+    │ ↓                                                   │
+    │ Criar ClaimsPrincipal (usuário autenticado)        │
+    │ ↓                                                   │
+    │ await HttpContext.SignInAsync(                      │
+    │   "FuncionarioScheme", principal, authProperties)  │
+    │ ↓                                                   │
+    │ Cookie "FuncionarioAuth" criado e enviado          │
+    │ ↓                                                   │
+    │ RedirectToAction("Index", "Funcionario")           │
+    │ ↓                                                   │
+    │ 302 Redirect → /Funcionario/Index                  │
+    └─────────────────────────────────────────────────────┘
+
+6B. SE SENHA INVÁLIDA
+    ┌─────────────────────────────────────────────────────┐
+    │ ❌ Senha verificada como inválida                   │
+    │ ↓                                                   │
+    │ ModelState.AddModelError("",                        │
+    │   "CPF ou senha inválidos.")                        │
+    │ ↓                                                   │
+    │ return View(model);                                 │
+    │ ↓                                                   │
+    │ Views/Auth/Login.cshtml com erro exibido           │
+    └─────────────────────────────────────────────────────┘
+
+7. ACESSO À ÁREA PROTEGIDA
+   ┌─────────────────────────────────────────────────────┐
+   │ GET /Funcionario/Index (com cookie)                 │
+   │ ↓                                                   │
+   │ [Authorize] verifica autenticação                    │
+   │ ├─ Cookie presente? SIM                             │
+   │ ├─ Cookie válido? SIM                               │
+   │ ├─ Expirou? NÃO                                     │
+   │ └─ Claims válidas? SIM                              │
+   │ ↓                                                   │
+   │ FuncionarioController.Index() executado             │
+   │ ↓                                                   │
+   │ User.FindFirst(ClaimTypes.NameIdentifier)?.Value    │
+   │ User.FindFirst(ClaimTypes.Name)?.Value              │
+   │ User.FindFirst("cpf")?.Value                        │
+   │ ↓                                                   │
+   │ View exibida com sucesso                            │
+   └─────────────────────────────────────────────────────┘
+
+8. LOGOUT
+   ┌─────────────────────────────────────────────────────┐
+   │ POST /Auth/Logout (clica botão logout)              │
+   │ ↓                                                   │
+   │ AuthController.Logout()                             │
+   │ ↓                                                   │
+   │ await HttpContext.SignOutAsync(                      │
+   │   "FuncionarioScheme")                              │
+   │ ↓                                                   │
+   │ Cookie "FuncionarioAuth" removido                   │
+   │ ↓                                                   │
+   │ RedirectToAction("Index", "Home")                   │
+   │ ↓                                                   │
+   │ 302 Redirect → /Home/Index                          │
+   │ ↓                                                   │
+   │ User não autenticado (cookie removido)              │
+   └─────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+
+ESTRUTURA DE ARQUIVOS:
+
+GestaoReservas/
+│
+├── Controllers/
+│   ├── AuthController.cs ...................... [NOVO] Login/Logout
+│   ├── FuncionarioController.cs ............... [MODIFICADO] Adicionado [Authorize]
+│   ├── HomeController.cs
+│   ├── ClienteController.cs
+│   ├── ReservaController.cs
+│   ├── MesaController.cs
+│   └── AmbienteController.cs
+│
+├── Repositories/
+│   ├── IAuthRepository.cs ..................... [NOVO] Interface de autenticação
+│   ├── AuthSqlRepository.cs .................. [NOVO] Implementação de autenticação
+│   ├── IFuncionarioRepository.cs
+│   ├── FuncionarioSqlRepository.cs ........... [ORIGINAL - não modificado]
+│   ├── IClienteRepository.cs
+│   ├── ClienteSqlRepository.cs
+│   ├── IMesaRepository.cs
+│   ├── MesaSqlRepository.cs
+│   ├── IAmbienteRepository.cs
+│   ├── AmbienteSqlRepository.cs
+│   ├── IReservaRepository.cs
+│   ├── ReservaSqlRepository.cs
+│   ├── IPessoaRepository.cs
+│   ├── PessoaSqlRepository.cs
+│   └── DataConnection.cs
+│
+├── Views/
+│   ├── Auth/ .............................. [NOVA PASTA]
+│   │   ├── Login.cshtml ................... [NOVO] Formulário de login
+│   │   └── AccessDenied.cshtml ........... [NOVO] Acesso negado
+│   ├── Funcionario/
+│   │   ├── index.cshtml ................. [MODIFICADO] Adicionado botão Logout
+│   │   ├── Create.cshtml
+│   │   ├── Edit.cshtml
+│   │   ├── Delete.cshtml
+│   │   └── Details.cshtml
+│   ├── Cliente/
+│   ├── Reserva/
+│   ├── Mesa/
+│   ├── Ambiente/
+│   ├── Home/
+│   ├── Shared/
+│   ├── _ViewImports.cshtml
+│   └── _Layout.cshtml
+│
+├── Models/
+│   ├── Pessoa.cs
+│   ├── Funcionario.cs
+│   ├── Cliente.cs
+│   ├── Reserva.cs
+│   ├── Mesa.cs
+│   └── Ambiente.cs
+│
+├── Utilities/
+│   └── PasswordHasherUtil.cs ............... [NOVO] Hash de senhas
+│
+├── wwwroot/
+│   ├── css/
+│   │   ├── Cadastro.css .................. [USADO] Por Login.cshtml
+│   │   ├── Funcionarios.css
+│   │   ├── Clientes.css
+│   │   ├── Reserva.css
+│   │   ├── Mesas.css
+│   │   ├── Home.css
+│   │   └── Areas.css
+│   └── images/
+│       └── logosantamassa.jpg
+│
+├── Program.cs ............................ [MODIFICADO] Autenticação configurada
+│
+├── appsettings.json
+├── appsettings.Development.json
+│
+├── GestaoReservas.csproj
+│
+├── Backups/ ............................ [NOVA PASTA] Backups de segurança
+│   ├── Configuracoes/
+│   │   ├── Program.cs.bak
+│   │   ├── Program.cs.bak_final
+│   │   ├── MIGRACAO_SENHAS.sql
+│   │   └── GUIA_AUTENTICACAO_FUNCIONARIOS.md
+│   ├── Controllers/
+│   │   ├── FuncionarioController.cs.bak
+│   │   └── AuthController.cs.bak
+│   ├── Repositories/
+│   │   └── FuncionarioSqlRepository.cs.bak
+│   ├── Models/
+│   └── Views/
+│
+├── RELATORIO_AUTENTICACAO_FUNCIONARIOS.md ... [NOVO] Relatório completo
+├── RESUMO_IMPLEMENTACAO.txt ................. [NOVO] Resumo rápido
+├── INSTRUCOES_MIGRACAO_SENHAS.md ........... [NOVO] Migração de senhas
+└── ESTRUTURA_AUTENTICACAO.txt .............. [NOVO] Este arquivo
+
+═══════════════════════════════════════════════════════════════════════════════
+
+FLUXO DE DADOS DURANTE O LOGIN:
+
+CPF + Senha (texto puro)
+         ↓
+AuthController.Login()
+         ↓
+AuthSqlRepository.AuthenticateFuncionario()
+         ↓
+SQL Query (SELECT FROM pessoas WHERE cpf = @Cpf)
+         ↓
+Dados do banco (id, nome, cpf, HASH_armazenado, email)
+         ↓
+PasswordHasher.VerifyHashedPassword(hash_do_banco, senha_fornecida)
+         ↓
+    ┌────┴────┐
+    ↓         ↓
+  ✅ OK    ❌ FAIL
+    ↓         ↓
+ Cria     Retorna
+ Claims   erro
+    ↓
+SignInAsync()
+    ↓
+Cookie "FuncionarioAuth"
+    ↓
+Navegador recebe cookie
+    ↓
+Próximos requests incluem cookie
+    ↓
+[Authorize] valida cookie
+    ↓
+Rota acessada com sucesso
+
+═══════════════════════════════════════════════════════════════════════════════
+
+SEGURANÇA EM CAMADAS:
+
+┌─────────────────────────────────────────────────────────┐
+│ CAMADA 1: TRANSPORTE                                    │
+│ └─ HTTPS (em produção)                                 │
+│ └─ Cookie: Secure=True, HttpOnly=True, SameSite=Lax  │
+└─────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────┐
+│ CAMADA 2: APLICAÇÃO                                     │
+│ └─ CSRF Token em todos os POSTs                        │
+│ └─ Validação de campos no servidor                     │
+│ └─ [Authorize] verifica autenticação                    │
+└─────────────────────────────────────────────────────────┘
+                          ↓
+┌─────────────────────────────────────────────────────────┐
+│ CAMADA 3: BANCO DE DADOS                                │
+│ └─ Queries parametrizadas (@Parameter)                 │
+│ └─ Senhas em hash (não texto puro)                      │
+│ └─ Salt único para cada senha                          │
+└─────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+
+STATUS: ✅ IMPLEMENTAÇÃO COMPLETA
+
+Próximo passo: Executar migração de senhas

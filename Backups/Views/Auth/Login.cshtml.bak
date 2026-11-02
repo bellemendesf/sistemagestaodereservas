@@ -1,0 +1,134 @@
+@* Modelo que esta view não recebe dados do controller *@
+
+@* Bloco C#: configurações da view (título, layout e variáveis) *@
+@{
+    // Atribui Layout null (não usa layout externo)
+    Layout = null;
+    // Título da página
+    ViewData["Title"] = "Login de funcionário";
+}
+
+@* Tipo do documento (HTML5) *@
+<!DOCTYPE html>
+@* Início do documento HTML *@
+<html lang="pt-BR">
+@* Cabeçalho do documento (título, fontes e estilos) *@
+<head>
+    @* Configuração da página *@
+    <meta charset="UTF-8">
+    @* Configuração da página *@
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    @* Título da aba *@
+    <title>@ViewData["Title"]</title>
+
+    @* Arquivo de estilo/fonte externo *@
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    @* Arquivo de estilo/fonte externo *@
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    @* Arquivo de estilo/fonte externo *@
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap"
+          rel="stylesheet">
+
+    @* Arquivo de estilo do projeto (reutiliza estilos de cadastro) *@
+    <link rel="stylesheet" href="~/css/Cadastro.css" asp-append-version="true">
+</head>
+
+@* Corpo da página *@
+<body class="cadastro-page">
+    @* Conteúdo principal *@
+    <main class="cadastro-container">
+
+        @* Link para voltar à página inicial *@
+        <a class="cadastro-voltar-topo"
+           asp-controller="Home"
+           asp-action="Index">
+            ← Voltar à página inicial
+        </a>
+
+        @* Seção da página *@
+        <section class="cadastro-card">
+
+            @* Cabeçalho *@
+            <header class="cadastro-header">
+                @* Imagem do logo *@
+                <img src="~/images/logosantamassa.jpg"
+                     alt="Santa Massa"
+                     class="cadastro-logo">
+
+                @* Parágrafo de texto com subtítulo *@
+                <p class="cadastro-subtitulo">SANTA MASSA · ACESSO</p>
+
+                @* Título principal *@
+                <h1>Login de funcionário</h1>
+
+                @* Parágrafo descritivo *@
+                <p class="cadastro-descricao">
+                    Digite seu CPF e senha para acessar a área de gerenciamento.
+                </p>
+            </header>
+
+            @* Resumo dos erros de validação *@
+            @Html.ValidationSummary(false, "", new { @class = "cadastro-erros" })
+
+            @* Formulário de login *@
+            <form asp-controller="Auth"
+                  asp-action="Login"
+                  method="post"
+                  class="cadastro-form">
+
+                @* Token antifalsificação do formulário *@
+                @Html.AntiForgeryToken()
+
+                @* Bloco (classe campo-cadastro) *@
+                <div class="campo-cadastro">
+                    @* Rótulo do campo *@
+                    <label for="Cpf">CPF</label>
+                    @* Campo de entrada para CPF *@
+                    <input id="Cpf"
+                           name="cpf"
+                           type="text"
+                           placeholder="Digite seu CPF"
+                           autocomplete="off"
+                           required>
+                </div>
+
+                @* Bloco (classe campo-cadastro) *@
+                <div class="campo-cadastro">
+                    @* Rótulo do campo *@
+                    <label for="Senha">Senha</label>
+                    @* Campo de entrada para senha *@
+                    <input id="Senha"
+                           name="senha"
+                           type="password"
+                           placeholder="Digite sua senha"
+                           autocomplete="current-password"
+                           required>
+                </div>
+
+                @* Bloco (classe cadastro-botoes) *@
+                <div class="cadastro-botoes">
+                    @* Botão de submit *@
+                    <button type="submit" class="btn-cadastro-salvar">
+                        Entrar
+                    </button>
+
+                    @* Link para cancelar *@
+                    <a asp-controller="Home"
+                       asp-action="Index"
+                       class="btn-cadastro-voltar">
+                        Cancelar
+                    </a>
+                </div>
+
+            </form>
+        </section>
+
+        @* Rodapé *@
+        <footer class="cadastro-rodape">
+            Santa Massa · Rio Preto
+        </footer>
+
+    </main>
+</body>
+</html>

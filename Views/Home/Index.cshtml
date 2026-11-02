@@ -1,8 +1,9 @@
 ﻿@* Bloco C#: configurações da view (título, layout e variáveis) *@
 @{
-    // Atribui Layout
     Layout = null;
     ViewData["Title"] = "Santa Massa Rio Preto";
+    var funcionarioLogado = User?.Identity?.IsAuthenticated == true && User.IsInRole("Funcionario");
+    var nomeFuncionarioLogado = User?.Identity?.Name;
 }
 
 @* Tipo do documento (HTML5) *@
@@ -81,6 +82,13 @@
 
 @* Cabeçalho *@
 <header class="home-top">
+    @if (funcionarioLogado && !string.IsNullOrWhiteSpace(nomeFuncionarioLogado))
+    {
+        <p class="home-usuario-logado">
+            Funcionário conectado: <strong>@nomeFuncionarioLogado</strong>
+        </p>
+    }
+
     @* Imagem *@
     <img src="~/images/logosantamassa.jpg"
          alt="Logo do restaurante Santa Massa"
@@ -113,29 +121,41 @@
 
     @* Bloco (classe home-actions) *@
     <div class="home-actions">
-        @* Link *@
-        <a asp-controller="AreaCliente"
-           asp-action="Index"
-           class="home-card">
-            @* Subtítulo *@
-            <h2>Entrar como cliente</h2>
-            @* Parágrafo de texto *@
-            <p>Faça uma reserva e consulte as opções disponíveis.</p>
-            @* Texto destacado *@
-            <span>Continuar →</span>
-        </a>
+        @if (!funcionarioLogado)
+        {
+            @* Link *@
+            <a asp-controller="AreaCliente"
+               asp-action="Index"
+               class="home-card">
+                @* Subtítulo *@
+                <h2>Entrar como cliente</h2>
+                @* Parágrafo de texto *@
+                <p>Faça uma reserva e consulte as opções disponíveis.</p>
+                @* Texto destacado *@
+                <span>Continuar →</span>
+            </a>
+        }
 
-        @* Link *@
-        <a asp-controller="AreaRestaurante"
-           asp-action="Index"
-           class="home-card">
-            @* Subtítulo *@
-            <h2>Entrar como funcionário</h2>
-            @* Parágrafo de texto *@
-            <p>Gerencie reservas, mesas e ambientes.</p>
-            @* Texto destacado *@
-            <span>Acessar painel →</span>
-        </a>
+        @if (funcionarioLogado)
+        {
+            <a asp-controller="AreaRestaurante"
+               asp-action="Index"
+               class="home-card">
+                <h2>Painel do funcionário</h2>
+                <p>Continue gerenciando o restaurante.</p>
+                <span>Acessar painel →</span>
+            </a>
+        }
+        else
+        {
+            <a asp-controller="Auth"
+               asp-action="Login"
+               class="home-card">
+                <h2>Entrar como funcionário</h2>
+                <p>Gerencie reservas, mesas e ambientes.</p>
+                <span>Acessar painel →</span>
+            </a>
+        }
     </div>
 </main>
 

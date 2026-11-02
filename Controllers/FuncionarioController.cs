@@ -4,7 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 // Importa os modelos do projeto
 using GestaoReservas.Models;
+// Importa o atributo de autorização para proteger rotas
+using Microsoft.AspNetCore.Authorization;
 
+// Exige cookie de login (FuncionarioScheme) em todo o CRUD de funcionários
+[Authorize(AuthenticationSchemes = "FuncionarioScheme")]
 // Controller responsável pelas telas de Funcionario
 public class FuncionarioController : Controller
 {
@@ -50,6 +54,11 @@ public class FuncionarioController : Controller
             return RedirectToAction(nameof(Index));
         }
         // Erro vindo do banco de dados
+        catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError("", ex.Message);
+            return View(model);
+        }
         catch (SqlException)
         {
             // Registra a mensagem de erro para a tela

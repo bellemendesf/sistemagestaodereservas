@@ -50,6 +50,11 @@ public class ClienteController : Controller
             return RedirectToAction("Create", "Reserva");
         }
         // Erro vindo do banco de dados
+        catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError("", ex.Message);
+            return View(model);
+        }
         catch (SqlException)
         {
             // Registra a mensagem de erro para a tela

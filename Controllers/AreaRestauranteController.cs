@@ -4,7 +4,11 @@ using Microsoft.Data.SqlClient;
 using Microsoft.AspNetCore.Mvc;
 // Importa os modelos do projeto
 using GestaoReservas.Models;
+// Exige login de funcionário para acessar o painel do restaurante
+using Microsoft.AspNetCore.Authorization;
 
+// Painel interno: só funcionário autenticado (cookie de login)
+[Authorize(AuthenticationSchemes = "FuncionarioScheme")]
 // Controller responsável pelas telas de AreaRestaurante
 public class AreaRestauranteController : Controller
 {

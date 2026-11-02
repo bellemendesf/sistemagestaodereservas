@@ -102,28 +102,25 @@
             </p>
         </section>
 
-        @* Navegação *@
-        <nav class="page-tabs" aria-label="Seções de reservas">
-            @* Link *@
-            <a asp-controller="@(restaurante ? "AreaRestaurante" : "Reserva")"
-               asp-action="@(restaurante ? "Reservas" : "Index")"
-               class="page-tab @(isList ? "is-active" : "")"
-               aria-current="@(isList ? "page" : null)">
-                Listagem
-            </a>
+        @* Abas de navegação só na área do cliente (funcionário não precisa da aba Listagem) *@
+        @if (!restaurante)
+        {
+            <nav class="page-tabs" aria-label="Seções de reservas">
+                <a asp-controller="Reserva"
+                   asp-action="Index"
+                   class="page-tab @(isList ? "is-active" : "")"
+                   aria-current="@(isList ? "page" : null)">
+                    Listagem
+                </a>
 
-            @* Mostra o bloco só se a condição for verdadeira *@
-            @if (!restaurante)
-            {
-                @* Link *@
                 <a asp-controller="Reserva"
                    asp-action="Create"
                    class="page-tab @(isCreate ? "is-active" : "")"
                    aria-current="@(isCreate ? "page" : null)">
                     Nova reserva
                 </a>
-            }
-        </nav>
+            </nav>
+        }
 
         @* Bloco (classe page-content) *@
         <div class="page-content">
