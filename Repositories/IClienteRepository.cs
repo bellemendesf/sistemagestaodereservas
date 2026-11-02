@@ -4,6 +4,7 @@ using GestaoReservas.Models;
 // Interface IClienteRepository: define as operações que o repositório deve ter
 public interface IClienteRepository
 {
+    Cliente Login(LoginViewModel model);
     // Retorna todos os registros
     List<Cliente> Read();
     // Retorna um registro pelo id
@@ -14,4 +15,5 @@ public interface IClienteRepository
     void Update(Cliente cliente);
     // Exclui um registro
     void Delete(int id);
+    
 }

@@ -1,4 +1,5 @@
 ﻿// Importa as classes do ASP.NET MVC (Controller, ActionResult...)
+using GestaoReservas.Models;
 using Microsoft.AspNetCore.Mvc;
 
 // Controller responsável pelas telas de AreaCliente
@@ -44,5 +45,27 @@ public class AreaClienteController : Controller
     {
         // CORREÇÃO: leva à confirmação; a mudança de status ocorrerá por POST.
         return RedirectToAction("Delete", "Reserva", new { id });
+    }
+     [HttpPost]
+    public ActionResult Login(Cliente model)
+    {
+        Cliente usuarioCliente = repository.Login(model);
+
+        if (usuarioCliente == null)
+        {
+            ViewBag.Error = "Usuário ou senha inválidos";
+            return View(model);
+        }
+
+        HttpContext.Session.SetInt32("Id", usuarioCliente.Id);
+        HttpContext.Session.SetString("Nome", usuarioCliente.Nome);
+
+        return RedirectToAction("Index", "Cliente");
+    }
+
+    public ActionResult Logout()
+    {
+        HttpContext.Session.Clear();
+        return RedirectToAction("Login");
     }
 }

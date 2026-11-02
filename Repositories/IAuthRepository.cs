@@ -10,3 +10,4 @@ public interface IAuthRepository
     // Busca funcionário pelo id após login (sem expor senha)
     Funcionario? GetFuncionarioById(int id);
 }
+
