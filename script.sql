@@ -111,9 +111,41 @@ values (2, N'joao@email.com', N'(17) 99999-0000');
 go
 
 insert into ambientes (codigo, nome, status, capacidade)
-values (1, N'Salao Principal', N'Ativo', 40);
+values
+    (1, N'Interno', N'Disponivel', 80),
+    (2, N'Externo', N'Disponivel', 48),
+    (3, N'Sacada', N'Disponivel', 32);
 go
 
+;with nums as (
+    select 1 as n
+    union all
+    select n + 1 from nums where n < 20
+)
 insert into mesas (nr, numero, status, qtd_lugares, codigo_ambientes)
-values (1, 1, N'Disponivel', 4, 1);
+select n, n, N'Disponivel', case when n % 2 = 0 then 2 else 4 end, 1
+from nums
+option (maxrecursion 20);
+go
+
+;with nums as (
+    select 1 as n
+    union all
+    select n + 1 from nums where n < 12
+)
+insert into mesas (nr, numero, status, qtd_lugares, codigo_ambientes)
+select n + 20, n, N'Disponivel', 4, 2
+from nums
+option (maxrecursion 12);
+go
+
+;with nums as (
+    select 1 as n
+    union all
+    select n + 1 from nums where n < 8
+)
+insert into mesas (nr, numero, status, qtd_lugares, codigo_ambientes)
+select n + 32, n, N'Disponivel', 2, 3
+from nums
+option (maxrecursion 8);
 go

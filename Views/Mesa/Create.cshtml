@@ -8,15 +8,10 @@
     Layout = null;
 }
 
-@* Tipo do documento (HTML5) *@
 <!DOCTYPE html>
-@* Início do documento HTML *@
 <html lang="pt-BR">
-@* Cabeçalho do documento (título, fontes e estilos) *@
 <head>
-    @* Configuração da página *@
     <meta charset="UTF-8">
-    @* Configuração da página *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @* Título da aba *@
     <title>@ViewData["Title"] - Santa Massa</title>
@@ -47,11 +42,8 @@
         <header class="mesas-header">
             @* Bloco *@
             <div>
-                @* Parágrafo de texto *@
-                <p class="mesas-kicker">Santa Massa · Rio Preto</p>
-                @* Título principal *@
+                <p class="mesas-kicker">Santa Massa - Rio Preto</p>
                 <h1>Cadastrar mesa</h1>
-                @* Parágrafo de texto *@
                 <p class="mesas-descricao">
                     Cadastre uma mesa e defina sua capacidade e disponibilidade.
                 </p>
@@ -111,16 +103,13 @@
         @* Rótulo do campo (asp-for Status) *@
         <label asp-for="Status">Status da mesa</label>
         @* Lista de seleção (asp-for Status) *@
-        <select asp-for="Status">
-            @* Opção da lista *@
-            <option value="">Selecione o status</option>
-            @* Opção da lista *@
+        <select asp-for="Status" required>
             <option value="Livre">Livre</option>
-            @* Opção da lista *@
-            <option value="Reservada">Reservada</option>
-            @* Opção da lista *@
             <option value="Ocupada">Ocupada</option>
         </select>
+        <small class="mesas-erro" style="font-weight:400;opacity:.85">
+            Reservada é definida automaticamente ao confirmar uma reserva.
+        </small>
         @* Texto destacado *@
         <span asp-validation-for="Status" class="mesas-erro"></span>
     </div>
@@ -138,10 +127,9 @@
 
         @* Rodapé *@
         <footer class="mesas-footer">
-            Santa Massa · Painel de gerenciamento
+            Santa Massa - Painel de gerenciamento
         </footer>
     </section>
 </main>
-
 </body>
 </html>

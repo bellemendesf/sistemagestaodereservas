@@ -258,64 +258,6 @@ body.cadastro-page {
     letter-spacing: 0.04em; /* espaço entre letras */
 }
 
-/* Abas de login e cadastro (Auth/Login) */
-.auth-tabs {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.auth-tab {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 42px;
-    border: 1px solid var(--borda);
-    border-radius: 4px;
-    color: var(--texto-secundario);
-    font-size: 0.86rem;
-    font-weight: 600;
-    text-decoration: none;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-}
-
-.auth-tab-ativa {
-    border-color: var(--dourado);
-    background: rgba(198, 164, 92, 0.12);
-    color: var(--dourado-claro);
-}
-
-.auth-painel {
-    animation: authPainelEntrada 0.22s ease;
-}
-
-.auth-painel-oculto {
-    display: none;
-}
-
-@keyframes authPainelEntrada {
-    from {
-        opacity: 0;
-        transform: translateY(6px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.cadastro-sucesso {
-    margin: 0 0 16px;
-    padding: 12px 14px;
-    border: 1px solid rgba(198, 164, 92, 0.45);
-    border-radius: 4px;
-    background: rgba(198, 164, 92, 0.08);
-    color: var(--dourado-claro);
-    font-size: 0.86rem;
-    text-align: center;
-}
-
 /* Regras para telas que atendem: (max-width: 576px) */
 @media (max-width: 576px) {
     /* Estilo de: body.cadastro-page */

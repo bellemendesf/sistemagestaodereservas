@@ -54,7 +54,7 @@ public class MesaController : Controller
         // Carrega a lista de ambientes para o select
         CarregarAmbientes();
         // Mostra a view com o modelo
-        return View(new Mesa());
+        return View(new Mesa { Status = "Livre" });
     }
 
     // Ação atendida por requisições POST (envio do formulário)
@@ -64,6 +64,9 @@ public class MesaController : Controller
     // Ação Create (POST): valida e grava o cadastro
     public ActionResult Create(Mesa model)
     {
+        if (!StatusManualPermitido(model.Status))
+            ModelState.AddModelError(nameof(model.Status), "Escolha Livre ou Ocupada.");
+
         // Se houver erro de validação, volta para o formulário
         if (!ModelState.IsValid)
         {
@@ -139,6 +142,11 @@ public ActionResult Edit(int id, Mesa model)
     ModelState.Remove(nameof(model.Numero));
     // Ignora a validação deste campo
     ModelState.Remove(nameof(model.Id));
+
+    if (mesaExistente.Status == "Reservada")
+        model.Status = "Reservada";
+    else if (!StatusManualPermitido(model.Status))
+        ModelState.AddModelError(nameof(model.Status), "Escolha Livre ou Ocupada.");
 
     // Se houver erro de validação, volta para o formulário
     if (!ModelState.IsValid)
@@ -252,4 +260,7 @@ catch (SqlException)
     return View("Delete", model);
 }
     }
+
+    private static bool StatusManualPermitido(string? status) =>
+        status == "Livre" || status == "Ocupada";
 }

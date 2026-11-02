@@ -101,13 +101,23 @@
                     </div>
 
 
-                    @* Bloco (classe detalhes-edicao-campo) *@
                     <div class="detalhes-edicao-campo">
-                        @* Rótulo do campo (asp-for Status) *@
                         <label asp-for="Status">Status da mesa</label>
-                        @* Campo de entrada (asp-for Status) *@
-                        <input asp-for="Status" placeholder="Ex.: Livre, Reservada ou Ocupada" />
-                        @* Texto destacado *@
+                        @if (Model.Status == "Reservada")
+                        {
+                            <input type="text" value="Reservada" readonly />
+                            <input type="hidden" asp-for="Status" />
+                            <p class="detalhes-edicao-descricao" style="margin-top:8px;font-size:0.85rem">
+                                Definido ao confirmar uma reserva. Volte a reserva para Pendente ou cancele para liberar.
+                            </p>
+                        }
+                        else
+                        {
+                            <select asp-for="Status" required>
+                                <option value="Livre">Livre</option>
+                                <option value="Ocupada">Ocupada</option>
+                            </select>
+                        }
                         <span asp-validation-for="Status" class="detalhes-edicao-erros"></span>
                     </div>
 

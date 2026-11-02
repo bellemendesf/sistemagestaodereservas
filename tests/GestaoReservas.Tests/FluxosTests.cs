@@ -238,6 +238,49 @@ public class FluxosTests
     }
 
     [Fact]
+    public async Task MesasDisponiveisRespeitaDiaMesAno()
+    {
+        using var app = new AplicacaoTeste();
+        var ambRepo = app.Services.GetRequiredService<IAmbienteRepository>();
+        var mesaRepo = app.Services.GetRequiredService<IMesaRepository>();
+        var resRepo = app.Services.GetRequiredService<IReservaRepository>();
+        var cliRepo = app.Services.GetRequiredService<IClienteRepository>();
+
+        ambRepo.Create(new Ambiente { Nome = "Sacada", Capacidade = 10, Status = "Disponivel" });
+        mesaRepo.Create(new Mesa
+        {
+            Numero = 1,
+            QtdLugares = 4,
+            Status = "Livre",
+            AmbienteId = 1,
+            AmbienteNome = "Sacada"
+        });
+        cliRepo.Create(new Cliente
+        {
+            Nome = "Cliente mapa",
+            Cpf = "11111111111",
+            Telefone = "17999999999",
+            EmailPessoal = "c@test.com",
+            Senha = "x"
+        });
+        resRepo.Create(new Reserva
+        {
+            MesaId = 1,
+            ClienteId = 1,
+            DataHora = new DateTime(2027, 2, 2),
+            QtdPessoas = 2
+        });
+
+        using var client = app.Cliente();
+        var noDiaReserva = await client.GetStringAsync("/Reserva/MesasDisponiveis?dataHora=2027-02-02&ambienteId=1");
+        Assert.Contains("Reservada", noDiaReserva);
+
+        var mesmoDiaOutroAno = await client.GetStringAsync("/Reserva/MesasDisponiveis?dataHora=2028-02-02&ambienteId=1");
+        Assert.Contains("Livre", mesmoDiaOutroAno);
+        Assert.DoesNotContain("Reservada", mesmoDiaOutroAno);
+    }
+
+    [Fact]
     public void AplicacaoRealRegistraSqlPorRequisicao()
     {
         using var app = new WebApplicationFactory<Program>();
