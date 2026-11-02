@@ -51,6 +51,36 @@
     border-radius: 50%; /* cantos arredondados */
 }
 
+.mapa-mesa.livre {
+    border-color: #6FA77A;
+    background: rgba(111, 167, 122, 0.15);
+    cursor: pointer;
+}
+
+.mapa-mesa.livre:hover {
+    border-color: #D3B779;
+    box-shadow: 0 0 0 1px #D3B779;
+}
+
+.mapa-mesa.reservada {
+    border-color: #8A4B47;
+    background: rgba(138, 75, 71, 0.25);
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.mapa-mesa.selecionada {
+    border-color: #D3B779;
+    background: rgba(211, 183, 121, 0.22);
+    box-shadow: 0 0 0 2px rgba(211, 183, 121, 0.45);
+}
+
+.mapa-mesa.sem-cadastro {
+    opacity: 0.35;
+    border-style: dashed;
+    cursor: default;
+}
+
 /* Legenda */
 /* Estilo de: .mapa-legenda */
 .mapa-legenda {
@@ -106,6 +136,10 @@
 .mesa-opcao.selecionada { border-color: #D3B779; background: rgba(211, 183, 121, 0.12); }
 
 .mapa-aviso { grid-column: 1 / -1; color: #A9A193; font-size: 0.85rem; margin: 0; }
+
+.mapa-listagem {
+    margin-top: 16px;
+}
 
 /* Regras para telas que atendem: (max-width: 600px) */
 @media (max-width: 600px) {

@@ -1,87 +1,28 @@
-@* Modelo que esta view não recebe dados do controller *@
-
-@* Bloco C#: configurações da view (título, layout e variáveis) *@
 @{
-    // Atribui Layout null (não usa layout externo)
     Layout = null;
-    // Título da página
     ViewData["Title"] = "Acesso negado";
 }
 
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    @* Configuração da página *@
     <meta charset="UTF-8">
-    @* Configuração da página *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    @* Título da aba *@
     <title>@ViewData["Title"]</title>
-
-    @* Arquivo de estilo/fonte externo *@
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    @* Arquivo de estilo/fonte externo *@
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    @* Arquivo de estilo/fonte externo *@
-    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap"
-          rel="stylesheet">
-
-    @* Arquivo de estilo do projeto (reutiliza estilos de cadastro) *@
     <link rel="stylesheet" href="~/css/Cadastro.css" asp-append-version="true">
 </head>
-
-@* Corpo da página *@
 <body class="cadastro-page">
-    @* Conteúdo principal *@
     <main class="cadastro-container">
-
-        @* Seção da página *@
         <section class="cadastro-card">
-
-            @* Cabeçalho *@
             <header class="cadastro-header">
-                @* Imagem do logo *@
-                <img src="~/images/logosantamassa.jpg"
-                     alt="Santa Massa"
-                     class="cadastro-logo">
-
-                @* Parágrafo de texto com subtítulo *@
-                <p class="cadastro-subtitulo">SANTA MASSA - ACESSO</p>
-
-                @* Título principal *@
                 <h1>Acesso negado</h1>
-
-                @* Parágrafo descritivo *@
-                <p class="cadastro-descricao">
-                    Você não tem permissão para acessar esta área. Apenas funcionários autenticados podem acessar.
-                </p>
+                <p class="cadastro-descricao">Faça login como funcionário para continuar.</p>
             </header>
-
-            @* Bloco (classe cadastro-botoes) *@
             <div class="cadastro-botoes">
-                @* Link para login *@
-                <a asp-controller="Auth"
-                   asp-action="Login"
-                   class="btn-cadastro-salvar">
-                    Ir para login
-                </a>
-
-                @* Link para página inicial *@
-                <a asp-controller="Home"
-                   asp-action="Index"
-                   class="btn-cadastro-voltar">
-                    Voltar à página inicial
-                </a>
+                <a asp-controller="Auth" asp-action="Login" class="btn-cadastro-salvar">Ir para login</a>
+                <a asp-controller="Home" asp-action="Index" class="btn-cadastro-voltar">Página inicial</a>
             </div>
-
         </section>
-
-        @* Rodapé *@
-        <footer class="cadastro-rodape">
-            Santa Massa - Rio Preto
-        </footer>
-
     </main>
 </body>
 </html>

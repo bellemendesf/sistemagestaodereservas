@@ -1,11 +1,6 @@
-@* Modelo do formulário de cadastro (aba Cadastrar) *@
-@model Funcionario
-
 @{
     Layout = null;
-    ViewData["Title"] = "Acesso funcionário";
-    var abaAtiva = ViewData["AbaAtiva"] as string ?? "login";
-    var cadastroAtivo = abaAtiva == "cadastro";
+    ViewData["Title"] = "Login de funcionário";
 }
 
 <!DOCTYPE html>
@@ -24,164 +19,46 @@
 <body class="cadastro-page">
     <main class="cadastro-container">
 
-        <a class="cadastro-voltar-topo"
-           asp-controller="Home"
-           asp-action="Index">
+        <a class="cadastro-voltar-topo" asp-controller="Home" asp-action="Index">
             ← Voltar à página inicial
         </a>
 
         <section class="cadastro-card">
-
             <header class="cadastro-header">
-                <img src="~/images/logosantamassa.jpg"
-                     alt="Santa Massa"
-                     class="cadastro-logo">
-
+                <img src="~/images/logosantamassa.jpg" alt="Santa Massa" class="cadastro-logo">
                 <p class="cadastro-subtitulo">SANTA MASSA · EQUIPE</p>
-                <h1>Área do funcionário</h1>
+                <h1>Login de funcionário</h1>
                 <p class="cadastro-descricao">
-                    Entre com seu CPF ou cadastre-se se ainda não tiver acesso.
+                    Digite seu CPF e senha para acessar a área do restaurante.
                 </p>
             </header>
-
-            @* Abas: login (autenticação) e cadastro (primeiro acesso) *@
-            <div class="auth-tabs" role="tablist" aria-label="Login ou cadastro">
-                <a class="auth-tab @(cadastroAtivo ? "" : "auth-tab-ativa")"
-                   asp-controller="Auth"
-                   asp-action="Login"
-                   asp-route-aba="login"
-                   role="tab"
-                   aria-selected="@(!cadastroAtivo)">
-                    Entrar
-                </a>
-                <a class="auth-tab @(cadastroAtivo ? "auth-tab-ativa" : "")"
-                   asp-controller="Auth"
-                   asp-action="Login"
-                   asp-route-aba="cadastro"
-                   role="tab"
-                   aria-selected="@(cadastroAtivo)">
-                    Cadastrar
-                </a>
-            </div>
-
-            @if (TempData["CadastroSucesso"] is string msgSucesso)
-            {
-                <p class="cadastro-sucesso" role="status">@msgSucesso</p>
-            }
 
             @if (!ViewData.ModelState.IsValid)
             {
                 @Html.ValidationSummary(false, "", new { @class = "cadastro-erros" })
             }
 
-            @* --- Aba Entrar: POST para Auth/Login (cookie de autenticação) --- *@
-            <div class="auth-painel @(cadastroAtivo ? "auth-painel-oculto" : "")" id="painel-login">
-                <form asp-controller="Auth"
-                      asp-action="Login"
-                      method="post"
-                      class="cadastro-form">
+            <form asp-controller="Auth" asp-action="Login" method="post" class="cadastro-form">
+                @Html.AntiForgeryToken()
 
-                    @Html.AntiForgeryToken()
+                <div class="campo-cadastro">
+                    <label for="Cpf">CPF</label>
+                    <input id="Cpf" name="cpf" type="text" placeholder="Digite seu CPF" autocomplete="username" required>
+                </div>
 
-                    <div class="campo-cadastro">
-                        <label for="CpfLogin">CPF</label>
-                        <input id="CpfLogin"
-                               name="cpf"
-                               type="text"
-                               placeholder="Digite seu CPF"
-                               autocomplete="username"
-                               required>
-                    </div>
+                <div class="campo-cadastro">
+                    <label for="Senha">Senha</label>
+                    <input id="Senha" name="senha" type="password" placeholder="Digite sua senha" autocomplete="current-password" required>
+                </div>
 
-                    <div class="campo-cadastro">
-                        <label for="SenhaLogin">Senha</label>
-                        <input id="SenhaLogin"
-                               name="senha"
-                               type="password"
-                               placeholder="Digite sua senha"
-                               autocomplete="current-password"
-                               required>
-                    </div>
-
-                    <div class="cadastro-botoes">
-                        <button type="submit" class="btn-cadastro-salvar">
-                            Entrar
-                        </button>
-                        <a asp-controller="Home"
-                           asp-action="Index"
-                           class="btn-cadastro-voltar">
-                            Cancelar
-                        </a>
-                    </div>
-                </form>
-            </div>
-
-            @* --- Aba Cadastrar: POST para Auth/Cadastro (grava hash no banco) --- *@
-            <div class="auth-painel @(cadastroAtivo ? "" : "auth-painel-oculto")" id="painel-cadastro">
-                <form asp-controller="Auth"
-                      asp-action="Cadastro"
-                      method="post"
-                      class="cadastro-form">
-
-                    @Html.AntiForgeryToken()
-
-                    <div class="campo-cadastro">
-                        <label asp-for="Nome">Nome completo</label>
-                        <input asp-for="Nome"
-                               type="text"
-                               placeholder="Nome completo"
-                               autocomplete="name"
-                               required>
-                    </div>
-
-                    <div class="campo-cadastro">
-                        <label asp-for="Cpf">CPF</label>
-                        <input asp-for="Cpf"
-                               type="text"
-                               placeholder="Digite o CPF"
-                               autocomplete="off"
-                               required>
-                    </div>
-
-                    <div class="campo-cadastro">
-                        <label asp-for="EmailInstitucional">E-mail institucional</label>
-                        <input asp-for="EmailInstitucional"
-                               type="email"
-                               placeholder="nome@santamassa.com.br"
-                               autocomplete="email"
-                               maxlength="50"
-                               required>
-                    </div>
-
-                    <div class="campo-cadastro">
-                        <label asp-for="Senha">Senha</label>
-                        <input asp-for="Senha"
-                               type="password"
-                               placeholder="Crie uma senha"
-                               autocomplete="new-password"
-                               required>
-                    </div>
-
-                    <div class="cadastro-botoes">
-                        <button type="submit" class="btn-cadastro-salvar">
-                            Cadastrar funcionário
-                        </button>
-                        <a asp-controller="Auth"
-                           asp-action="Login"
-                           asp-route-aba="login"
-                           class="btn-cadastro-voltar">
-                            Já tenho login
-                        </a>
-                    </div>
-                </form>
-            </div>
-
+                <div class="cadastro-botoes">
+                    <button type="submit" class="btn-cadastro-salvar">Entrar</button>
+                    <a asp-controller="Home" asp-action="Index" class="btn-cadastro-voltar">Cancelar</a>
+                </div>
+            </form>
         </section>
 
-        <footer class="cadastro-rodape">
-            Santa Massa - Rio Preto
-        </footer>
-
+        <footer class="cadastro-rodape">Santa Massa · Rio Preto</footer>
     </main>
 </body>
 </html>

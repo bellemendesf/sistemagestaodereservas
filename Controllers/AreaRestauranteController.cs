@@ -12,14 +12,13 @@ using Microsoft.AspNetCore.Authorization;
 // Controller responsável pelas telas de AreaRestaurante
 public class AreaRestauranteController : Controller
 {
-    // Dependência IReservaRepository recebida pelo construtor
     private readonly IReservaRepository repository;
+    private readonly IMesaRepository mesaRepository;
 
-    // CORREÇÃO: injeta a mesma interface já registrada no Program.cs.
-    public AreaRestauranteController(IReservaRepository repository)
+    public AreaRestauranteController(IReservaRepository repository, IMesaRepository mesaRepository)
     {
-        // Guarda a dependência repository recebida
         this.repository = repository;
+        this.mesaRepository = mesaRepository;
     }
 
     // Ação Index: mostra a listagem
@@ -101,8 +100,8 @@ public class AreaRestauranteController : Controller
         // Tenta executar; erros são tratados abaixo
         try
         {
-            // Chama o repositório: UpdateStatus
             repository.UpdateStatus(reservaId, status);
+            MesaReservaSync.AplicarStatusReserva(repository, mesaRepository, reserva, status);
         }
         // Erro vindo do banco de dados
         catch (SqlException)

@@ -24,7 +24,7 @@ public class AmbienteController : Controller
     // Ação atendida por requisições GET (abrir a tela)
     [HttpGet]
     // Ação Create (GET): abre o formulário vazio
-    public ActionResult Create() => View(new Ambiente());
+    public ActionResult Create() => View(new Ambiente { Status = "Disponivel" });
 
     // Ação atendida por requisições POST (envio do formulário)
     [HttpPost]

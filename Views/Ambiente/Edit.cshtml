@@ -108,16 +108,9 @@
                     <div class="detalhes-edicao-campo">
                         @* Rótulo do campo (asp-for Status) *@
                         <label asp-for="Status">Status do ambiente</label>
-                        @* Lista de seleção (asp-for Status) *@
-                        <select asp-for="Status">
-                            @* Opção da lista *@
-                            <option value="">Selecione o status</option>
-                            @* Opção da lista *@
-                            <option value="Disponível">Disponível</option>
-                            @* Opção da lista *@
-                            <option value="Indisponível">Indisponível</option>
-                            @* Opção da lista *@
-                            <option value="Em manutenção">Em manutenção</option>
+                        <select asp-for="Status" required>
+                            <option value="Disponivel">Disponível</option>
+                            <option value="Indisponivel">Indisponível</option>
                         </select>
                         @* Texto destacado *@
                         <span asp-validation-for="Status"

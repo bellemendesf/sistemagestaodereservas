@@ -102,12 +102,11 @@
 
                     @* Bloco (classe detalhes-edicao-campo) *@
                     <div class="detalhes-edicao-campo">
-                        @* Rótulo do campo (asp-for Status) *@
                         <label asp-for="Status">Status do ambiente</label>
-                        @* Campo de entrada (asp-for Status) *@
-                        <input asp-for="Status"
-                               placeholder="Ex.: Disponível" />
-                        @* Texto destacado *@
+                        <select asp-for="Status" required>
+                            <option value="Disponivel">Disponível</option>
+                            <option value="Indisponivel">Indisponível</option>
+                        </select>
                         <span asp-validation-for="Status"
                               class="detalhes-edicao-erros"></span>
                     </div>

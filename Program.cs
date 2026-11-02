@@ -8,32 +8,20 @@ builder.Services.AddControllersWithViews(options =>
     options.Filters.Add(new Microsoft.AspNetCore.Mvc.AutoValidateAntiforgeryTokenAttribute());
 }).AddMvcOptions(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
-// --- INÍCIO: configuração de autenticação (login de funcionários) ---
-// Registra o serviço de autenticação com esquema de cookie exclusivo para funcionários
 builder.Services.AddAuthentication("FuncionarioScheme")
     .AddCookie("FuncionarioScheme", options =>
     {
-        // URL para onde o usuário é enviado quando tenta acessar rota protegida sem estar logado
         options.LoginPath = "/Auth/Login";
-        // URL exibida quando o usuário autenticado não tem permissão para a ação
         options.AccessDeniedPath = "/Auth/AccessDenied";
-        // Nome do cookie que guarda a sessão do funcionário autenticado
         options.Cookie.Name = "FuncionarioAuth";
-        // Tempo máximo de inatividade antes de exigir novo login (5 minutos)
         options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-        // Renova o prazo a cada requisição autenticada
         options.SlidingExpiration = true;
-        // Em desenvolvimento (HTTP) o cookie precisa ser SameAsRequest; em produção use Always com HTTPS
+        options.Cookie.HttpOnly = true;
         options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
             ? CookieSecurePolicy.SameAsRequest
             : CookieSecurePolicy.Always;
-        // Impede que JavaScript leia o cookie de autenticação
-        options.Cookie.HttpOnly = true;
     });
-
-// Registra políticas de autorização usadas pelos atributos [Authorize]
 builder.Services.AddAuthorization();
-// --- FIM: configuração de autenticação ---
 
 // UNIÃO: os Controllers da versão A utilizam os repositórios SQL da versão B.
 // AddScoped: uma nova instância (e conexão) a cada requisição — ideal para acesso a banco.
@@ -46,7 +34,6 @@ builder.Services.AddScoped<IFuncionarioRepository, FuncionarioSqlRepository>();
 builder.Services.AddScoped<IMesaRepository, MesaSqlRepository>();
 // Registra ReservaSqlRepository como implementação de IReservaRepository
 builder.Services.AddScoped<IReservaRepository, ReservaSqlRepository>();
-// Repositório usado pelo AuthController para validar CPF/senha no login
 builder.Services.AddScoped<IAuthRepository, AuthSqlRepository>();
 
 // Variável app
@@ -69,12 +56,8 @@ app.UseStaticFiles();
 // Ativa o roteamento
 app.UseRouting();
 
-// --- INÍCIO: middlewares de autenticação ---
-// Lê o cookie de login e monta o usuário (ClaimsPrincipal) na requisição
 app.UseAuthentication();
-// Aplica regras [Authorize] / [AllowAnonymous] nos controllers
 app.UseAuthorization();
-// --- FIM: middlewares de autenticação ---
 
 // Rota padrão controller/action/id
 app.MapControllerRoute(

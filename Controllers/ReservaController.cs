@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 // Importa as classes de acesso ao SQL Server
 using Microsoft.Data.SqlClient;
 // Importa os modelos do projeto
+using System.Globalization;
 using GestaoReservas.Models;
 
 // Controller responsável pelas telas de Reserva
@@ -12,64 +13,89 @@ public class ReservaController : Controller
     private readonly IReservaRepository repository;
     // MAPA DE MESAS: repositório de mesas usado para montar o mapa e validar a mesa escolhida.
     private readonly IMesaRepository mesaRepository;
+    private readonly IAmbienteRepository ambienteRepository;
+
+    private static readonly string[] NomesAmbientesMapa = ["Interno", "Externo", "Sacada"];
 
     // Construtor: recebe as dependências por injeção
-    public ReservaController(IReservaRepository repository, IMesaRepository mesaRepository)
+    public ReservaController(
+        IReservaRepository repository,
+        IMesaRepository mesaRepository,
+        IAmbienteRepository ambienteRepository)
     {
-        // Guarda a dependência repository recebida
         this.repository = repository;
-        // Guarda a dependência mesaRepository recebida
         this.mesaRepository = mesaRepository;
+        this.ambienteRepository = ambienteRepository;
     }
 
-    // MAPA DE MESAS: retorna em JSON todas as mesas cadastradas e a situação de cada uma
-    // para a data escolhida. Uso: GET /Reserva/MesasDisponiveis?dataHora=2027-01-02T19:30
-    [HttpGet]
-    // Ação MesasDisponiveis
-    public ActionResult MesasDisponiveis(DateTime? dataHora)
+    private Dictionary<string, int> IdsAmbientesMapa()
     {
-        // Passo 1: busca as mesas cadastradas no banco (status já vem como 'Livre' no lugar de 'Disponivel').
+        var cadastrados = ambienteRepository.Read();
+        return NomesAmbientesMapa.ToDictionary(
+            nome => nome,
+            nome => cadastrados
+                .FirstOrDefault(a => string.Equals(a.Nome.Trim(), nome, StringComparison.OrdinalIgnoreCase))
+                ?.Id ?? 0);
+    }
+
+    // GET /Reserva/MesasDisponiveis?dataHora=2027-02-02&ambienteId=3
+    [HttpGet]
+    public ActionResult MesasDisponiveis([FromQuery] string? dataHora, [FromQuery] int ambienteId = 0)
+    {
+        var dia = ParseDiaConsulta(dataHora);
+        var ocupadas = MesasReservadasNoDia(dia);
+
         var mesas = mesaRepository.Read();
+        if (ambienteId > 0)
+            mesas = mesas.Where(m => m.AmbienteId == ambienteId).ToList();
 
-        // Passo 2: busca as reservas não canceladas do mesmo dia da data informada.
-        var ocupadas = MesasReservadasNoDia(dataHora);
-
-        // Passo 3: monta a situação de cada mesa: só fica 'Livre' se o status da mesa for Livre
-        // e se não houver reserva ativa para ela no dia escolhido.
         var resultado = mesas.Select(m => new
         {
-            // Atribui id
             id = m.Id,
-            // Atribui numero
             numero = m.Numero,
-            // Atribui lugares
             lugares = m.QtdLugares,
-            // Atribui ambiente
+            ambienteId = m.AmbienteId,
             ambiente = m.AmbienteNome,
-            // Atribui situacao
-            situacao = m.Status != "Livre" ? m.Status
-                : ocupadas.Contains(m.Id) ? "Reservada"
-                : "Livre"
-        });
-        // Devolve o resultado em JSON
+            situacao = SituacaoMesaNoDia(m, ocupadas),
+            dataConsulta = dia?.ToString("yyyy-MM-dd")
+        }).ToList();
+
         return Json(resultado);
     }
 
-    // MAPA DE MESAS: ids das mesas com reserva não cancelada no mesmo dia da data informada.
-    // CORREÇÃO: ignorarReservaId permite ignorar a própria reserva durante a edição.
-    private HashSet<int> MesasReservadasNoDia(DateTime? dataHora, int ignorarReservaId = 0)
+    private static DateOnly? ParseDiaConsulta(string? data)
     {
-        // Se não encontrou o registro...
-        if (dataHora == null) return new HashSet<int>();
-        // Devolve o resultado
+        if (string.IsNullOrWhiteSpace(data)) return null;
+        if (DateOnly.TryParse(data, CultureInfo.InvariantCulture, DateTimeStyles.None, out var dia))
+            return dia;
+        if (DateTime.TryParse(data, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out var dt))
+            return DateOnly.FromDateTime(dt.Date);
+        return null;
+    }
+
+    private static DateOnly ToDiaReserva(DateTime dataHora) => DateOnly.FromDateTime(dataHora.Date);
+
+    private HashSet<int> MesasReservadasNoDia(DateOnly? dia, int ignorarReservaId = 0)
+    {
+        if (dia == null) return new HashSet<int>();
         return repository.Read()
-            // Filtra os registros
-            .Where(r => r.Id != ignorarReservaId && r.Status != "Cancelada" && r.MesaId != null && r.DataHora.Date == dataHora.Value.Date)
-            // Seleciona o campo desejado
+            .Where(r => r.Id != ignorarReservaId
+                && r.Status != "Cancelada"
+                && r.MesaId != null
+                && ToDiaReserva(r.DataHora) == dia.Value)
             .Select(r => r.MesaId!.Value)
-            // Converte em conjunto (sem repetição)
             .ToHashSet();
     }
+
+    private static string SituacaoMesaNoDia(Mesa m, HashSet<int> reservadasNaData)
+    {
+        if (m.Status == "Ocupada") return "Ocupada";
+        if (reservadasNaData.Contains(m.Id)) return "Reservada";
+        return "Livre";
+    }
+
+    private static bool MesaLivreParaReservaNaData(Mesa mesa, HashSet<int> reservadasNaData) =>
+        mesa.Status != "Ocupada" && !reservadasNaData.Contains(mesa.Id);
 
     // Ação Index: mostra a listagem
     public ActionResult Index() => View(repository.Read());
@@ -77,7 +103,11 @@ public class ReservaController : Controller
     // Ação atendida por requisições GET (abrir a tela)
     [HttpGet]
     // Ação Create (GET): abre o formulário vazio
-    public ActionResult Create() => View(new Reserva { QtdPessoas = 2, Status = "Pendente" });
+    public ActionResult Create()
+    {
+        ViewBag.MapaAmbienteIds = IdsAmbientesMapa();
+        return View(new Reserva { QtdPessoas = 2, Status = "Pendente" });
+    }
 
     // Ação atendida por requisições POST (envio do formulário)
     [HttpPost]
@@ -105,8 +135,7 @@ public class ReservaController : Controller
             // Variável mesa
             var mesa = mesaRepository.Read(model.MesaId.Value);
             // Condição
-            if (mesa != null && (mesa.Status != "Livre" || MesasReservadasNoDia(model.DataHora).Contains(mesa.Id)))
-                // Registra a mensagem de erro para a tela
+            if (mesa != null && !MesaLivreParaReservaNaData(mesa, MesasReservadasNoDia(ToDiaReserva(model.DataHora))))
                 ModelState.AddModelError(nameof(model.MesaId), "Não foi possível cadastrar. A mesa escolhida não está livre nesta data.");
         }
         // Se houver erro de validação, volta para o formulário
@@ -190,7 +219,7 @@ public class ReservaController : Controller
             // Busca a mesa da reserva no banco
             var mesa = mesaRepository.Read(model.MesaId.Value);
             // Mesa ocupada/reservada por outra reserva no mesmo dia: mostra o erro
-            if (mesa != null && (mesa.Status != "Livre" || MesasReservadasNoDia(model.DataHora, id).Contains(mesa.Id)))
+            if (mesa != null && !MesaLivreParaReservaNaData(mesa, MesasReservadasNoDia(ToDiaReserva(model.DataHora), id)))
                 ModelState.AddModelError(nameof(model.MesaId), "Não foi possível salvar. A mesa não está livre nesta data.");
         }
         // Se houver erro de validação, volta para o formulário
@@ -251,9 +280,8 @@ public class ReservaController : Controller
         // Tenta executar; erros são tratados abaixo
         try
         {
-            // Chama o repositório: Delete
-            repository.Delete(id); // Cancelamento lógico: preserva o histórico.
-            // Redireciona para outra tela
+            repository.Delete(id);
+            MesaReservaSync.AplicarStatusReserva(repository, mesaRepository, model, "Cancelada");
             return RedirectToAction(nameof(Index));
         }
         // Erro vindo do banco de dados
