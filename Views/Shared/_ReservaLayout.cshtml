@@ -10,16 +10,7 @@
     // Variável action
     var action = ViewContext.RouteData.Values["action"]?.ToString();
 
-    // Variável isList
-    var isList =
-        string.Equals(action, "Index", StringComparison.OrdinalIgnoreCase) ||
-        string.Equals(action, "Reservas", StringComparison.OrdinalIgnoreCase);
-
-    // Variável isCreate
-    var isCreate = string.Equals(
-        action,
-        "Create",
-        StringComparison.OrdinalIgnoreCase);
+    var clienteLogado = User?.Identity?.IsAuthenticated == true && User.IsInRole("Cliente");
 }
 @* Tipo do documento (HTML5) *@
 <!DOCTYPE html>
@@ -82,6 +73,13 @@
            asp-action="Index">
             Voltar ao início
         </a>
+        @if (clienteLogado)
+        {
+            <form asp-controller="Auth" asp-action="LogoutCliente" method="post" class="d-inline ms-2">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="page-home-link border-0 bg-transparent p-0" style="cursor:pointer;">Sair</button>
+            </form>
+        }
     </header>
 
     @* Conteúdo principal *@
@@ -98,29 +96,9 @@
             <p class="page-lead">
                 @(restaurante
                     ? "Acompanhe e organize as reservas do restaurante."
-                    : "Consulte suas reservas ou organize uma nova experiência.")
+                    : "Suas reservas em um só lugar: visualize, altere ou cancele.")
             </p>
         </section>
-
-        @* Abas de navegação só na área do cliente (funcionário não precisa da aba Listagem) *@
-        @if (!restaurante)
-        {
-            <nav class="page-tabs" aria-label="Seções de reservas">
-                <a asp-controller="Reserva"
-                   asp-action="Index"
-                   class="page-tab @(isList ? "is-active" : "")"
-                   aria-current="@(isList ? "page" : null)">
-                    Listagem
-                </a>
-
-                <a asp-controller="Reserva"
-                   asp-action="Create"
-                   class="page-tab @(isCreate ? "is-active" : "")"
-                   aria-current="@(isCreate ? "page" : null)">
-                    Nova reserva
-                </a>
-            </nav>
-        }
 
         @* Bloco (classe page-content) *@
         <div class="page-content">

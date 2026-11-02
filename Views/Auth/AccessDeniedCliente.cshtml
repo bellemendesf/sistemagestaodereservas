@@ -1,0 +1,28 @@
+@{
+    Layout = null;
+    ViewData["Title"] = "Acesso negado";
+}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/Cadastro.css" asp-append-version="true">
+</head>
+<body class="cadastro-page">
+    <main class="cadastro-container">
+        <section class="cadastro-card">
+            <header class="cadastro-header">
+                <h1>Acesso negado</h1>
+                <p class="cadastro-descricao">Faça login como cliente para continuar.</p>
+            </header>
+            <div class="cadastro-botoes">
+                <a asp-controller="Auth" asp-action="LoginCliente" class="btn-cadastro-salvar">Ir para login</a>
+                <a asp-controller="Home" asp-action="Index" class="btn-cadastro-voltar">Página inicial</a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

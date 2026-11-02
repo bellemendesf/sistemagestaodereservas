@@ -1,0 +1,65 @@
+@model GestaoReservas.Models.LoginViewModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Login de cliente";
+}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap"
+          rel="stylesheet">
+    <link rel="stylesheet" href="~/css/Cadastro.css" asp-append-version="true">
+</head>
+<body class="cadastro-page">
+    <main class="cadastro-container">
+
+        <a class="cadastro-voltar-topo" asp-controller="Home" asp-action="Index">
+            ← Voltar à página inicial
+        </a>
+
+        <section class="cadastro-card">
+            <header class="cadastro-header">
+                <img src="~/images/logosantamassa.jpg" alt="Santa Massa" class="cadastro-logo">
+                <p class="cadastro-subtitulo">SANTA MASSA · CLIENTE</p>
+                <h1>Login de cliente</h1>
+                <p class="cadastro-descricao">
+                    Digite seu CPF e senha para acessar reservas e sua área.
+                </p>
+            </header>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="cadastro-erros">@ViewBag.Error</div>
+            }
+
+            <form asp-controller="Auth" asp-action="LoginCliente" method="post" class="cadastro-form">
+                @Html.AntiForgeryToken()
+
+                <div class="campo-cadastro">
+                    <label for="Cpf">CPF</label>
+                    <input id="Cpf" name="Cpf" class="form-control" value="@Model.Cpf" autocomplete="username" required>
+                </div>
+
+                <div class="campo-cadastro">
+                    <label for="Senha">Senha</label>
+                    <input id="Senha" name="Senha" type="password" class="form-control" autocomplete="current-password" required>
+                </div>
+
+                <div class="cadastro-botoes">
+                    <button type="submit" class="btn-cadastro-salvar">Entrar</button>
+                    <a asp-controller="Cliente" asp-action="Create" class="btn-cadastro-voltar">Criar cadastro</a>
+                </div>
+            </form>
+        </section>
+
+        <footer class="cadastro-rodape">Santa Massa · Rio Preto</footer>
+    </main>
+</body>
+</html>

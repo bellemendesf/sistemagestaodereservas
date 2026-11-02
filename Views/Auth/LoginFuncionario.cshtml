@@ -1,3 +1,4 @@
+@model GestaoReservas.Models.LoginViewModel
 @{
     Layout = null;
     ViewData["Title"] = "Login de funcionário";
@@ -33,9 +34,9 @@
                 </p>
             </header>
 
-            @if (!ViewData.ModelState.IsValid)
+            @if (ViewBag.Error != null)
             {
-                @Html.ValidationSummary(false, "", new { @class = "cadastro-erros" })
+                <div class="cadastro-erros">@ViewBag.Error</div>
             }
 
             <form asp-controller="Auth" asp-action="Login" method="post" class="cadastro-form">
@@ -43,12 +44,12 @@
 
                 <div class="campo-cadastro">
                     <label for="Cpf">CPF</label>
-                    <input id="Cpf" name="cpf" type="text" placeholder="Digite seu CPF" autocomplete="username" required>
+                    <input id="Cpf" name="Cpf" class="form-control" value="@Model.Cpf" autocomplete="username" required>
                 </div>
 
                 <div class="campo-cadastro">
                     <label for="Senha">Senha</label>
-                    <input id="Senha" name="senha" type="password" placeholder="Digite sua senha" autocomplete="current-password" required>
+                    <input id="Senha" name="Senha" type="password" class="form-control" autocomplete="current-password" required>
                 </div>
 
                 <div class="cadastro-botoes">

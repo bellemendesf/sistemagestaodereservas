@@ -10,6 +10,7 @@
     bool restaurante = string.Equals(ViewContext.RouteData.Values["controller"]?.ToString(), "AreaRestaurante", StringComparison.OrdinalIgnoreCase);
     // Variável voltar
     string voltar = restaurante ? "Reservas" : "Index";
+    var dataMinimaReserva = DateTime.Today.ToString("yyyy-MM-dd");
 }
 
 @* Tipo do documento (HTML5) *@
@@ -85,7 +86,7 @@
                         @* RESERVA POR DIA: apenas o dia é editável, sem horário. *@
                         <label asp-for="DataHora">Data</label>
                         @* Campo de entrada (asp-for DataHora) *@
-                        <input asp-for="DataHora" type="date" readonly="@restaurante" />
+                        <input asp-for="DataHora" type="date" min="@dataMinimaReserva" readonly="@restaurante" />
                         @* Texto destacado *@
                         <span asp-validation-for="DataHora" class="detalhes-edicao-erros"></span>
                     </div>

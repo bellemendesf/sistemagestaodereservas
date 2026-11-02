@@ -1,19 +1,17 @@
-﻿// Importa as classes do ASP.NET MVC (Controller, ActionResult...)
-using Microsoft.AspNetCore.Mvc;
-// Importa as classes de acesso ao SQL Server
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Data.SqlClient;
-// Importa os modelos do projeto
 using System.Globalization;
+using System.Security.Claims;
 using GestaoReservas.Models;
 
-// Controller responsável pelas telas de Reserva
+[Authorize(AuthenticationSchemes = "ClienteScheme")]
 public class ReservaController : Controller
 {
-    // Dependência IReservaRepository recebida pelo construtor
     private readonly IReservaRepository repository;
-    // MAPA DE MESAS: repositório de mesas usado para montar o mapa e validar a mesa escolhida.
     private readonly IMesaRepository mesaRepository;
     private readonly IAmbienteRepository ambienteRepository;
+    private readonly IClienteRepository clienteRepository;
 
     private static readonly string[] NomesAmbientesMapa = ["Interno", "Externo", "Sacada"];
 
@@ -21,11 +19,32 @@ public class ReservaController : Controller
     public ReservaController(
         IReservaRepository repository,
         IMesaRepository mesaRepository,
-        IAmbienteRepository ambienteRepository)
+        IAmbienteRepository ambienteRepository,
+        IClienteRepository clienteRepository)
     {
         this.repository = repository;
         this.mesaRepository = mesaRepository;
         this.ambienteRepository = ambienteRepository;
+        this.clienteRepository = clienteRepository;
+    }
+
+    private int ClienteLogadoId() => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+    private void PreencherClienteLogado(Reserva model)
+    {
+        var cliente = clienteRepository.Read(ClienteLogadoId());
+        if (cliente == null) return;
+        model.Cliente = cliente;
+        model.ClienteId = cliente.Id;
+        foreach (var key in ModelState.Keys.Where(k => k.StartsWith("Cliente.")).ToList())
+            ModelState.Remove(key);
+    }
+
+    private IActionResult? GarantirReservaDoCliente(Reserva? reserva)
+    {
+        if (reserva == null) return NotFound();
+        if (reserva.ClienteId != ClienteLogadoId()) return Forbid();
+        return null;
     }
 
     private Dictionary<string, int> IdsAmbientesMapa()
@@ -97,8 +116,16 @@ public class ReservaController : Controller
     private static bool MesaLivreParaReservaNaData(Mesa mesa, HashSet<int> reservadasNaData) =>
         mesa.Status != "Ocupada" && !reservadasNaData.Contains(mesa.Id);
 
-    // Ação Index: mostra a listagem
-    public ActionResult Index() => View(repository.Read());
+    private static bool DataReservaAnteriorAHoje(DateTime data) =>
+        ToDiaReserva(data) < DateOnly.FromDateTime(DateTime.Today);
+
+    public ActionResult Index()
+    {
+        var clienteId = ClienteLogadoId();
+        var lista = repository.Read().Where(r => r.ClienteId == clienteId).ToList();
+        ViewData["Title"] = "Minhas reservas";
+        return View(lista);
+    }
 
     // Ação atendida por requisições GET (abrir a tela)
     [HttpGet]
@@ -106,7 +133,9 @@ public class ReservaController : Controller
     public ActionResult Create()
     {
         ViewBag.MapaAmbienteIds = IdsAmbientesMapa();
-        return View(new Reserva { QtdPessoas = 2, Status = "Pendente" });
+        var model = new Reserva { QtdPessoas = 2, Status = "Pendente" };
+        PreencherClienteLogado(model);
+        return View(model);
     }
 
     // Ação atendida por requisições POST (envio do formulário)
@@ -114,20 +143,16 @@ public class ReservaController : Controller
     // Ação Create (POST): valida e grava o cadastro
     public ActionResult Create(Reserva model)
     {
-        // Ajusta Status do modelo
         model.Status = "Pendente";
-        // Ignora a validação deste campo
         ModelState.Remove(nameof(model.Status));
-        // RESERVA POR DIA: guarda só a data (sem horário).
+        PreencherClienteLogado(model);
         if (model.DataHora != default) model.DataHora = model.DataHora.Date;
         // Condição
-        if (model.Cliente == null)
-            // Registra a mensagem de erro para a tela
-            ModelState.AddModelError(nameof(model.Cliente), "Informe os dados do cliente.");
-        // Condição
         if (model.DataHora == default)
-            // Registra a mensagem de erro para a tela
-            ModelState.AddModelError(nameof(model.DataHora), "Informe a data e hora.");
+            ModelState.AddModelError(nameof(model.DataHora), "Informe a data da reserva.");
+        else if (DataReservaAnteriorAHoje(model.DataHora))
+            ModelState.AddModelError(nameof(model.DataHora), "A data da reserva não pode ser anterior à data de hoje.");
+
         // MAPA DE MESAS: confere no servidor se a mesa escolhida está livre
         // (status da mesa e reservas ativas no mesmo dia). Mesa não cadastrada segue o tratamento já existente do banco.
         if (ModelState.IsValid && model.MesaId != null)
@@ -138,12 +163,13 @@ public class ReservaController : Controller
             if (mesa != null && !MesaLivreParaReservaNaData(mesa, MesasReservadasNoDia(ToDiaReserva(model.DataHora))))
                 ModelState.AddModelError(nameof(model.MesaId), "Não foi possível cadastrar. A mesa escolhida não está livre nesta data.");
         }
-        // Se houver erro de validação, volta para o formulário
-        if (!ModelState.IsValid) return View(model);
-        // Tenta executar; erros são tratados abaixo
+        if (!ModelState.IsValid)
+        {
+            ViewBag.MapaAmbienteIds = IdsAmbientesMapa();
+            return View(model);
+        }
         try
         {
-            // Chama o repositório: Create
             repository.Create(model);
             // ALTERAÇÃO: após o cadastro mostra a reserva criada, onde o status (Pendente) aparece.
             return RedirectToAction(nameof(Details), new { id = model.Id });
@@ -157,37 +183,29 @@ public class ReservaController : Controller
                 : "Verifique CPF, telefone, e mesa cadastrados e a conexão com o banco.";
             // Registra a mensagem de erro para a tela
             ModelState.AddModelError("", "Não foi possível cadastrar. " + motivo);
-            // Mostra a view com o modelo
+            ViewBag.MapaAmbienteIds = IdsAmbientesMapa();
             return View(model);
         }
     }
 
-    // Ação atendida por requisições GET (abrir a tela)
     [HttpGet]
-    // Ação Edit (GET): abre o formulário de edição
-    public ActionResult Edit([FromRoute] int id)
+    public IActionResult Edit([FromRoute] int id)
     {
         // Busca o registro no banco
         var reserva = repository.Read(id);
-        // Se não encontrou o registro...
-        if (reserva == null) return NotFound();
-        // Condição
-        if (reserva.Status == "Cancelada") return BadRequest("Reserva cancelada não pode ser editada.");
-        // Mostra a view com o modelo
+        var acesso = GarantirReservaDoCliente(reserva);
+        if (acesso != null) return acesso;
+        if (reserva!.Status == "Cancelada") return BadRequest("Reserva cancelada não pode ser editada.");
         return View(reserva);
     }
 
-    // Ação atendida por requisições POST (envio do formulário)
     [HttpPost]
-    // Ação Edit (POST): valida e salva as alterações
-    public ActionResult Edit([FromRoute] int id, Reserva model)
+    public IActionResult Edit([FromRoute] int id, Reserva model)
     {
-        // Busca o registro no banco
         var original = repository.Read(id);
-        // Se não encontrou o registro...
-        if (original == null) return NotFound();
-        // Condição
-        if (original.Status == "Cancelada") return BadRequest("Reserva cancelada não pode ser editada.");
+        var acesso = GarantirReservaDoCliente(original);
+        if (acesso != null) return acesso;
+        if (original!.Status == "Cancelada") return BadRequest("Reserva cancelada não pode ser editada.");
 
         // Ajusta Id do modelo
         model.Id = id;
@@ -211,8 +229,10 @@ public class ReservaController : Controller
             ModelState.Remove(key);
         // Condição
         if (model.DataHora == default)
-            // Registra a mensagem de erro para a tela
-            ModelState.AddModelError(nameof(model.DataHora), "Informe a data e hora.");
+            ModelState.AddModelError(nameof(model.DataHora), "Informe a data da reserva.");
+        else if (DataReservaAnteriorAHoje(model.DataHora))
+            ModelState.AddModelError(nameof(model.DataHora), "A data da reserva não pode ser anterior à data de hoje.");
+
         // CORREÇÃO: na edição também confere se a mesa está livre no dia (ignorando esta própria reserva).
         if (ModelState.IsValid && model.MesaId != null)
         {
@@ -245,38 +265,30 @@ public class ReservaController : Controller
     // Ação atendida por requisições GET (abrir a tela)
     [HttpGet]
     // Ação Details: mostra os detalhes do registro
-    public ActionResult Details(int id)
+    public IActionResult Details(int id)
     {
         // Busca o registro no banco
         var model = repository.Read(id);
-        // Se não encontrou o registro...
-        if (model == null) return NotFound();
-        // Mostra a view com o modelo
+        var acesso = GarantirReservaDoCliente(model);
+        if (acesso != null) return acesso;
         return View(model);
     }
 
-    // Ação atendida por requisições GET (abrir a tela)
     [HttpGet]
-    // Ação Delete: confirmação de exclusão
-    public ActionResult Delete(int id)
+    public IActionResult Delete(int id)
     {
-        // Busca o registro no banco
         var model = repository.Read(id);
-        // Se não encontrou o registro...
-        if (model == null) return NotFound();
-        // Mostra a view com o modelo
+        var acesso = GarantirReservaDoCliente(model);
+        if (acesso != null) return acesso;
         return View(model);
     }
 
-    // Ação POST que responde pela rota Delete
     [HttpPost, ActionName("Delete")]
-    // Ação que executa a exclusão confirmada
-    public ActionResult DeleteConfirmed([FromRoute] int id)
+    public IActionResult DeleteConfirmed([FromRoute] int id)
     {
-        // Busca o registro no banco
         var model = repository.Read(id);
-        // Se não encontrou o registro...
-        if (model == null) return NotFound();
+        var acesso = GarantirReservaDoCliente(model);
+        if (acesso != null) return acesso;
         // Tenta executar; erros são tratados abaixo
         try
         {

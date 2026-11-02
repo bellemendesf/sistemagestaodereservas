@@ -57,6 +57,32 @@ public class FuncionarioMemoryRepository : IFuncionarioRepository
     public void Delete(int id) => itens.RemoveAll(x => x.Id == id);
 }
 
+public class AuthMemoryRepository : IAuthRepository
+{
+    private readonly IFuncionarioRepository funcionarios;
+    private readonly IClienteRepository clientes;
+
+    public AuthMemoryRepository(IFuncionarioRepository funcionarios, IClienteRepository clientes)
+    {
+        this.funcionarios = funcionarios;
+        this.clientes = clientes;
+    }
+
+    public Funcionario? Login(LoginViewModel model)
+    {
+        var f = funcionarios.Read().FirstOrDefault(x => x.Cpf == model.Cpf);
+        if (f == null || f.Senha != model.Senha) return null;
+        return f;
+    }
+
+    public Cliente? LoginCliente(LoginViewModel model)
+    {
+        var c = clientes.Read().FirstOrDefault(x => x.Cpf == model.Cpf);
+        if (c == null || c.Senha != model.Senha) return null;
+        return c;
+    }
+}
+
 public class ReservaMemoryRepository : IReservaRepository
 {
     private readonly List<Reserva> itens = new();

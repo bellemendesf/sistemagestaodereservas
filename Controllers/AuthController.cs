@@ -2,59 +2,91 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using GestaoReservas.Models;
 
 public class AuthController : Controller
 {
-    private const string Esquema = "FuncionarioScheme";
+    private const string EsquemaFuncionario = "FuncionarioScheme";
+    private const string EsquemaCliente = "ClienteScheme";
     private readonly IAuthRepository auth;
 
     public AuthController(IAuthRepository auth) => this.auth = auth;
 
     [AllowAnonymous]
     [HttpGet]
-    public IActionResult Login() => View();
+    public IActionResult Login() => View("LoginFuncionario", new LoginViewModel());
+
+    [AllowAnonymous]
+    [HttpGet]
+    public IActionResult LoginCliente() => View(new LoginViewModel());
 
     [AllowAnonymous]
     [HttpPost]
-    public async Task<IActionResult> Login(string cpf, string senha)
+    public async Task<IActionResult> LoginCliente(LoginViewModel model)
     {
-        if (string.IsNullOrWhiteSpace(cpf))
-            ModelState.AddModelError("", "Informe o CPF.");
-        if (string.IsNullOrWhiteSpace(senha))
-            ModelState.AddModelError("", "Informe a senha.");
-        if (!ModelState.IsValid)
-            return View();
-
-        var funcionario = auth.Login(cpf, senha);
-        if (funcionario == null)
+        var cliente = auth.LoginCliente(model);
+        if (cliente == null)
         {
-            ModelState.AddModelError("", "CPF ou senha inválidos.");
-            return View();
+            ViewBag.Error = "CPF ou senha inválidos.";
+            return View(model);
         }
 
-        var claims = new[]
+        await HttpContext.SignInAsync(
+            EsquemaCliente,
+            new ClaimsPrincipal(new ClaimsIdentity(
+            [
+                new Claim(ClaimTypes.NameIdentifier, cliente.Id.ToString()),
+                new Claim(ClaimTypes.Name, cliente.Nome),
+                new Claim(ClaimTypes.Role, "Cliente")
+            ], EsquemaCliente)),
+            new AuthenticationProperties { ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(5) });
+
+        return RedirectToAction("Index", "Reserva");
+    }
+
+    [AllowAnonymous]
+    [HttpPost]
+    public async Task<IActionResult> Login(LoginViewModel model)
+    {
+        var funcionario = auth.Login(model);
+        if (funcionario == null)
         {
-            new Claim(ClaimTypes.NameIdentifier, funcionario.Id.ToString()),
-            new Claim(ClaimTypes.Name, funcionario.Nome),
-            new Claim(ClaimTypes.Role, "Funcionario")
-        };
+            ViewBag.Error = "CPF ou senha inválidos.";
+            return View("LoginFuncionario", model);
+        }
 
         await HttpContext.SignInAsync(
-            Esquema,
-            new ClaimsPrincipal(new ClaimsIdentity(claims, Esquema)),
+            EsquemaFuncionario,
+            new ClaimsPrincipal(new ClaimsIdentity(
+            [
+                new Claim(ClaimTypes.NameIdentifier, funcionario.Id.ToString()),
+                new Claim(ClaimTypes.Name, funcionario.Nome),
+                new Claim(ClaimTypes.Role, "Funcionario")
+            ], EsquemaFuncionario)),
             new AuthenticationProperties { ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(5) });
 
         return RedirectToAction("Index", "AreaRestaurante");
     }
 
-    [Authorize(AuthenticationSchemes = Esquema)]
+    [Authorize(AuthenticationSchemes = EsquemaFuncionario)]
     [HttpPost]
     public async Task<IActionResult> Logout()
     {
-        await HttpContext.SignOutAsync(Esquema);
+        await HttpContext.SignOutAsync(EsquemaFuncionario);
+        return RedirectToAction("Index", "Home");
+    }
+
+    [Authorize(AuthenticationSchemes = EsquemaCliente)]
+    [HttpPost]
+    public async Task<IActionResult> LogoutCliente()
+    {
+        await HttpContext.SignOutAsync(EsquemaCliente);
         return RedirectToAction("Index", "Home");
     }
 
     [AllowAnonymous]
     public IActionResult AccessDenied() => View();
+
+    [AllowAnonymous]
+    public IActionResult AccessDeniedCliente() => View();
 }

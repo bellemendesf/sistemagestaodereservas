@@ -22,11 +22,13 @@ public class AplicacaoTeste : WebApplicationFactory<Program>
             services.RemoveAll<IClienteRepository>();
             services.RemoveAll<IFuncionarioRepository>();
             services.RemoveAll<IReservaRepository>();
+            services.RemoveAll<IAuthRepository>();
             services.AddSingleton<IAmbienteRepository, AmbienteMemoryRepository>();
             services.AddSingleton<IMesaRepository, MesaMemoryRepository>();
             services.AddSingleton<IClienteRepository, ClienteMemoryRepository>();
             services.AddSingleton<IFuncionarioRepository, FuncionarioMemoryRepository>();
             services.AddSingleton<IReservaRepository, ReservaMemoryRepository>();
+            services.AddSingleton<IAuthRepository, AuthMemoryRepository>();
         });
     }
 
@@ -54,24 +56,96 @@ public class FluxosTests
     {
         ["Cliente.Nome"] = "Cliente de teste", ["Cliente.Cpf"] = "12345678901",
         ["Cliente.Telefone"] = "17999999999", ["Cliente.EmailPessoal"] = "",
-        ["MesaId"] = "1", ["FuncionarioID"] = "1", ["DataHora"] = "2027-01-02T19:30",
+        ["MesaId"] = "1", ["FuncionarioID"] = "1", ["DataHora"] = "2027-01-02",
         ["QtdPessoas"] = "2", ["Status"] = "Confirmada"
     };
 
+    private static async Task LoginClienteTeste(HttpClient client, IServiceProvider? services = null)
+    {
+        if (services != null && !services.GetRequiredService<IClienteRepository>().Read().Any(c => c.Cpf == "12345678901"))
+        {
+            await Post(client, "/Cliente/Create", "/Cliente/Create", new Dictionary<string, string>
+        {
+            ["Nome"] = "Cliente de teste",
+            ["Cpf"] = "12345678901",
+            ["Telefone"] = "17999999999",
+            ["EmailPessoal"] = "teste@email.com",
+            ["Senha"] = "Cliente@123"
+            });
+        }
+        else if (services == null)
+        {
+            await Post(client, "/Cliente/Create", "/Cliente/Create", new Dictionary<string, string>
+            {
+                ["Nome"] = "Cliente de teste",
+                ["Cpf"] = "12345678901",
+                ["Telefone"] = "17999999999",
+                ["EmailPessoal"] = "teste@email.com",
+                ["Senha"] = "Cliente@123"
+            });
+        }
+
+        var login = await Post(client, "/Auth/LoginCliente", "/Auth/LoginCliente", new Dictionary<string, string>
+        {
+            ["cpf"] = "12345678901",
+            ["senha"] = "Cliente@123"
+        });
+        Assert.Equal(HttpStatusCode.Redirect, login.StatusCode);
+    }
+
+    private static async Task LoginFuncionarioTeste(HttpClient client, IServiceProvider services)
+    {
+        if (!services.GetRequiredService<IFuncionarioRepository>().Read().Any())
+        {
+            services.GetRequiredService<IFuncionarioRepository>().Create(new Funcionario
+            {
+                Nome = "Funcionario teste",
+                Cpf = "111.222.333-44",
+                EmailInstitucional = "func@test.com",
+                Senha = "Func@123"
+            });
+        }
+        var login = await Post(client, "/Auth/Login", "/Auth/Login", new Dictionary<string, string>
+        {
+            ["cpf"] = "111.222.333-44",
+            ["senha"] = "Func@123"
+        });
+        Assert.Equal(HttpStatusCode.Redirect, login.StatusCode);
+    }
+
+    private static void PrepararMesaTeste(IServiceProvider services)
+    {
+        services.GetRequiredService<IAmbienteRepository>().Create(new Ambiente
+        {
+            Nome = "Interno",
+            Capacidade = 10,
+            Status = "Disponivel"
+        });
+        services.GetRequiredService<IMesaRepository>().Create(new Mesa
+        {
+            Numero = 1,
+            AmbienteId = 1,
+            QtdLugares = 4,
+            Status = "Livre",
+            AmbienteNome = "Interno"
+        });
+    }
+
     [Theory]
     [InlineData("/")]
-    [InlineData("/AreaCliente")]
+    [InlineData("/Auth/LoginCliente")]
     [InlineData("/AreaRestaurante")]
     [InlineData("/Cliente/Create")]
     [InlineData("/Funcionario/Create")]
     [InlineData("/Ambiente/Create")]
     [InlineData("/Mesa/Create")]
-    [InlineData("/Reserva/Create")]
     [InlineData("/AreaRestaurante/Reservas")]
     public async Task PaginasExistentesAbrem(string route)
     {
         using var app = new AplicacaoTeste();
         using var client = app.Cliente();
+        if (route.StartsWith("/AreaRestaurante", StringComparison.Ordinal) || route == "/Funcionario/Create")
+            await LoginFuncionarioTeste(client, app.Services);
         var response = await client.GetAsync(route);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.DoesNotContain("```", await response.Content.ReadAsStringAsync());
@@ -87,6 +161,10 @@ public class FluxosTests
     {
         using var app = new AplicacaoTeste();
         using var client = app.Cliente();
+        if (entity == "Reserva")
+            await LoginClienteTeste(client, app.Services);
+        else if (entity is "Cliente" or "Funcionario")
+            await LoginFuncionarioTeste(client, app.Services);
         foreach (var action in new[] { "Edit", "Details", "Delete" })
             Assert.Equal(HttpStatusCode.NotFound, (await client.GetAsync($"/{entity}/{action}/999")).StatusCode);
     }
@@ -95,7 +173,9 @@ public class FluxosTests
     public async Task EscritaSemTokenEhRejeitada()
     {
         using var app = new AplicacaoTeste();
+        PrepararMesaTeste(app.Services);
         using var client = app.Cliente();
+        await LoginClienteTeste(client, app.Services);
         var response = await client.PostAsync("/Reserva/Create", new FormUrlEncodedContent(DadosReserva()));
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Empty(app.Services.GetRequiredService<IReservaRepository>().Read());
@@ -105,7 +185,9 @@ public class FluxosTests
     public async Task ReservaPreservaIdentidadeStatusEHistorico()
     {
         using var app = new AplicacaoTeste();
+        PrepararMesaTeste(app.Services);
         using var client = app.Cliente();
+        await LoginClienteTeste(client, app.Services);
         var repo = app.Services.GetRequiredService<IReservaRepository>();
         Assert.Equal(HttpStatusCode.Redirect, (await Post(client, "/Reserva/Create", "/Reserva/Create", DadosReserva())).StatusCode);
         var original = Assert.Single(repo.Read());
@@ -126,6 +208,7 @@ public class FluxosTests
         Assert.Equal("Pendente", atual.Status);
         Assert.Equal("Cliente de teste", atual.Cliente.Nome);
 
+        await LoginFuncionarioTeste(client, app.Services);
         Assert.Equal(HttpStatusCode.Redirect, (await Post(client, $"/AreaRestaurante/Edit/{id}", $"/AreaRestaurante/Edit/{id}", new()
         { ["Status"] = "Confirmada", ["MesaId"] = "999", ["QtdPessoas"] = "999" })).StatusCode);
         Assert.Equal("Confirmada", repo.Read(id)!.Status);
@@ -146,7 +229,9 @@ public class FluxosTests
     public async Task ReservaInvalidaNaoEhGravadaEReexibeDados()
     {
         using var app = new AplicacaoTeste();
+        PrepararMesaTeste(app.Services);
         using var client = app.Cliente();
+        await LoginClienteTeste(client, app.Services);
         var fields = DadosReserva();
         fields["QtdPessoas"] = "texto";
         var response = await Post(client, "/Reserva/Create", "/Reserva/Create", fields);
@@ -159,7 +244,9 @@ public class FluxosTests
     public async Task EdicaoDeReservaInvalidaNaoAlteraRegistro()
     {
         using var app = new AplicacaoTeste();
+        PrepararMesaTeste(app.Services);
         using var client = app.Cliente();
+        await LoginClienteTeste(client, app.Services);
         await Post(client, "/Reserva/Create", "/Reserva/Create", DadosReserva());
         var fields = DadosReserva();
         fields["QtdPessoas"] = "0";
@@ -184,20 +271,27 @@ public class FluxosTests
             ["Nome"] = "Pessoa", ["Cpf"] = "12345678901", ["EmailPessoal"] = "pessoa@example.com",
             ["Senha"] = "senha-original", ["Telefone"] = "17999999999", ["EmailInstitucional"] = "equipe@example.com"
         };
+        if (entity == "Funcionario")
+            await LoginFuncionarioTeste(client, app.Services);
         Assert.Equal(HttpStatusCode.Redirect, (await Post(client, $"/{entity}/Create", $"/{entity}/Create", fields)).StatusCode);
+        if (entity == "Cliente")
+            await LoginFuncionarioTeste(client, app.Services);
+        var id = entity == "Cliente"
+            ? app.Services.GetRequiredService<IClienteRepository>().Read().Single(c => c.Nome == "Pessoa").Id
+            : app.Services.GetRequiredService<IFuncionarioRepository>().Read().Single(f => f.Nome == "Pessoa").Id;
         fields["Nome"] = "Nome editado";
         fields["Senha"] = "";
         fields["Id"] = "999";
-        Assert.Equal(HttpStatusCode.Redirect, (await Post(client, $"/{entity}/Edit/1", $"/{entity}/Edit/1", fields)).StatusCode);
-        Pessoa stored = entity == "Cliente" ? app.Services.GetRequiredService<IClienteRepository>().Read(1)!
-            : app.Services.GetRequiredService<IFuncionarioRepository>().Read(1)!;
+        Assert.Equal(HttpStatusCode.Redirect, (await Post(client, $"/{entity}/Edit/{id}", $"/{entity}/Edit/{id}", fields)).StatusCode);
+        Pessoa stored = entity == "Cliente" ? app.Services.GetRequiredService<IClienteRepository>().Read(id)!
+            : app.Services.GetRequiredService<IFuncionarioRepository>().Read(id)!;
         Assert.Equal("Nome editado", stored.Nome);
         Assert.Equal("senha-original", stored.Senha);
-        Assert.Equal(1, stored.Id);
-        Assert.Equal(HttpStatusCode.OK, (await client.GetAsync($"/{entity}/Details/1")).StatusCode);
+        Assert.Equal(id, stored.Id);
+        Assert.Equal(HttpStatusCode.OK, (await client.GetAsync($"/{entity}/Details/{id}")).StatusCode);
         fields.Remove("Id");
-        Assert.Equal(HttpStatusCode.Redirect, (await Post(client, $"/{entity}/Delete/1", $"/{entity}/Delete/1", fields)).StatusCode);
-        Assert.Equal(HttpStatusCode.NotFound, (await client.GetAsync($"/{entity}/Details/1")).StatusCode);
+        Assert.Equal(HttpStatusCode.Redirect, (await Post(client, $"/{entity}/Delete/{id}", $"/{entity}/Delete/{id}", fields)).StatusCode);
+        Assert.Equal(HttpStatusCode.NotFound, (await client.GetAsync($"/{entity}/Details/{id}")).StatusCode);
     }
 
     [Theory]
@@ -207,6 +301,7 @@ public class FluxosTests
     {
         using var app = new AplicacaoTeste();
         using var client = app.Cliente();
+        await LoginFuncionarioTeste(client, app.Services);
         Dictionary<string,string> fields = new()
         { ["Nome"] = "Sala", ["Numero"] = "5", ["Capacidade"] = "10", ["QtdLugares"] = "4", ["AmbienteId"] = "1", ["Status"] = "Livre" };
         Assert.Equal(HttpStatusCode.Redirect, (await Post(client, $"/{entity}/Create", $"/{entity}/Create", fields)).StatusCode);
@@ -224,10 +319,14 @@ public class FluxosTests
     public async Task RestauranteTemRotaCorretaEStatusInvalidoNaoEhGravado()
     {
         using var app = new AplicacaoTeste();
+        PrepararMesaTeste(app.Services);
         using var client = app.Cliente();
+        await LoginFuncionarioTeste(client, app.Services);
         var menu = await client.GetStringAsync("/AreaRestaurante");
         Assert.Contains("/AreaRestaurante/Reservas", menu);
+        await LoginClienteTeste(client, app.Services);
         await Post(client, "/Reserva/Create", "/Reserva/Create", DadosReserva());
+        await LoginFuncionarioTeste(client, app.Services);
         var list = await client.GetStringAsync("/AreaRestaurante/Reservas");
         Assert.Contains("/AreaRestaurante/Edit/1", list);
         Assert.DoesNotContain("/AreaRestaurante/Delete/1", list);
@@ -272,6 +371,11 @@ public class FluxosTests
         });
 
         using var client = app.Cliente();
+        Assert.Equal(HttpStatusCode.Redirect, (await Post(client, "/Auth/LoginCliente", "/Auth/LoginCliente", new Dictionary<string, string>
+        {
+            ["cpf"] = "11111111111",
+            ["senha"] = "x"
+        })).StatusCode);
         var noDiaReserva = await client.GetStringAsync("/Reserva/MesasDisponiveis?dataHora=2027-02-02&ambienteId=1");
         Assert.Contains("Reservada", noDiaReserva);
 

@@ -1,11 +1,8 @@
-﻿// Importa as classes do ASP.NET MVC (Controller, ActionResult...)
-using Microsoft.AspNetCore.Mvc;
-// Importa as classes de acesso ao SQL Server
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Data.SqlClient;
-// Importa os modelos do projeto
 using GestaoReservas.Models;
 
-// Controller responsável pelas telas de Cliente
 public class ClienteController : Controller
 {
     // Dependência IClienteRepository recebida pelo construtor
@@ -18,17 +15,15 @@ public class ClienteController : Controller
         this.repository = repository;
     }
 
-    // Ação Index: mostra a listagem
+    [Authorize(AuthenticationSchemes = "FuncionarioScheme")]
     public ActionResult Index() => View("index", repository.Read());
 
-    // Ação atendida por requisições GET (abrir a tela)
+    [AllowAnonymous]
     [HttpGet]
-    // Ação Create (GET): abre o formulário vazio
     public ActionResult Create() => View(new Cliente());
 
-    // Ação atendida por requisições POST (envio do formulário)
+    [AllowAnonymous]
     [HttpPost]
-    // Ação Create (POST): valida e grava o cadastro
     public ActionResult Create(Cliente model)
     {
         // Verifica se o campo foi preenchido
@@ -47,7 +42,7 @@ public class ClienteController : Controller
             // Chama o repositório: Create
             repository.Create(model);
             // ALTERAÇÃO: o cliente não vê mais a listagem de clientes; segue direto para a Nova reserva.
-            return RedirectToAction("Create", "Reserva");
+            return RedirectToAction("LoginCliente", "Auth");
         }
         // Erro vindo do banco de dados
         catch (InvalidOperationException ex)
@@ -64,9 +59,8 @@ public class ClienteController : Controller
         }
     }
 
-    // Ação atendida por requisições GET (abrir a tela)
+    [Authorize(AuthenticationSchemes = "FuncionarioScheme")]
     [HttpGet]
-    // Ação Edit (GET): abre o formulário de edição
     public ActionResult Edit([FromRoute] int id)
     {
         // Busca o registro no banco
@@ -77,9 +71,8 @@ public class ClienteController : Controller
         return View(model);
     }
 
-    // Ação atendida por requisições POST (envio do formulário)
+    [Authorize(AuthenticationSchemes = "FuncionarioScheme")]
     [HttpPost]
-    // Ação Edit (POST): valida e salva as alterações
     public ActionResult Edit([FromRoute] int id, Cliente model)
     {
         // A rota identifica o registro; não permita trocar a identidade pelo formulário.
@@ -112,9 +105,8 @@ public class ClienteController : Controller
         }
     }
 
-    // Ação atendida por requisições GET (abrir a tela)
+    [Authorize(AuthenticationSchemes = "FuncionarioScheme")]
     [HttpGet]
-    // Ação Details: mostra os detalhes do registro
     public ActionResult Details(int id)
     {
         // Busca o registro no banco
@@ -125,9 +117,8 @@ public class ClienteController : Controller
         return View(model);
     }
 
-    // Ação atendida por requisições GET (abrir a tela)
+    [Authorize(AuthenticationSchemes = "FuncionarioScheme")]
     [HttpGet]
-    // Ação Delete: confirmação de exclusão
     public ActionResult Delete(int id)
     {
         // Busca o registro no banco
@@ -138,9 +129,8 @@ public class ClienteController : Controller
         return View(model);
     }
 
-    // Ação POST que responde pela rota Delete
+    [Authorize(AuthenticationSchemes = "FuncionarioScheme")]
     [HttpPost, ActionName("Delete")]
-    // Ação que executa a exclusão confirmada
     public ActionResult DeleteConfirmed([FromRoute] int id)
     {
         // Busca o registro no banco

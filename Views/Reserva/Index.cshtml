@@ -8,7 +8,7 @@
 @{
     // Atribui Layout
     Layout = "~/Views/Shared/_ReservaLayout.cshtml";
-    ViewData["Title"] = "Reservas";
+    ViewData["Title"] ??= "Minhas reservas";
 
     // Variável lista
     var lista = Model?.ToList() ?? new List<Reserva>();
@@ -28,14 +28,14 @@
         @* Bloco *@
         <div>
             @* Parágrafo de texto *@
-            <p class="reservas-lista-kicker">PAINEL DE CONTROLE</p>
+            <p class="reservas-lista-kicker">@(restaurante ? "PAINEL DE CONTROLE" : "ÁREA DO CLIENTE")</p>
             @* Subtítulo *@
-            <h2>Reservas cadastradas</h2>
+            <h2>@(restaurante ? "Reservas cadastradas" : "Minhas reservas")</h2>
             @* Parágrafo de texto *@
             <p class="reservas-lista-descricao">
                 @(restaurante
                     ? "Acompanhe os agendamentos e gerencie as reservas do restaurante."
-                    : "Consulte os detalhes e acompanhe seus agendamentos.")
+                    : "Use Detalhes, Editar ou Cancelar em cada linha da tabela.")
             </p>
         </div>
 
@@ -99,8 +99,10 @@
                 <thead>
                     @* Linha da tabela *@
                     <tr>
-                        @* Título da coluna *@
-                        <th>Cliente</th>
+                        @if (restaurante)
+                        {
+                            <th>Cliente</th>
+                        }
                         @* Título da coluna *@
                         <th>Mesa</th>
                         @* Título da coluna *@
@@ -132,10 +134,12 @@
 
                         @* Linha da tabela *@
                         <tr>
-                            @* Célula *@
-                            <td data-label="Cliente" class="reserva-cliente">
-                                @(reserva.Cliente?.Nome ?? "—")
-                            </td>
+                            @if (restaurante)
+                            {
+                                <td data-label="Cliente" class="reserva-cliente">
+                                    @(reserva.Cliente?.Nome ?? "—")
+                                </td>
+                            }
 
                             @* Célula *@
                             <td data-label="Mesa">
@@ -168,7 +172,7 @@
                                     <a asp-action="Details"
                                        asp-route-id="@reserva.Id"
                                        class="reserva-acao">
-                                        Detalhes
+                                        @(restaurante ? "Detalhes" : "Visualizar")
                                     </a>
 
                                     @* Mostra o bloco só se a condição for verdadeira *@

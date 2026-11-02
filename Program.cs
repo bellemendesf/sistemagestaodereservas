@@ -8,12 +8,24 @@ builder.Services.AddControllersWithViews(options =>
     options.Filters.Add(new Microsoft.AspNetCore.Mvc.AutoValidateAntiforgeryTokenAttribute());
 }).AddMvcOptions(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 
-builder.Services.AddAuthentication("FuncionarioScheme")
+builder.Services.AddAuthentication()
     .AddCookie("FuncionarioScheme", options =>
     {
         options.LoginPath = "/Auth/Login";
         options.AccessDeniedPath = "/Auth/AccessDenied";
         options.Cookie.Name = "FuncionarioAuth";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+        options.SlidingExpiration = true;
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SecurePolicy = builder.Environment.IsDevelopment()
+            ? CookieSecurePolicy.SameAsRequest
+            : CookieSecurePolicy.Always;
+    })
+    .AddCookie("ClienteScheme", options =>
+    {
+        options.LoginPath = "/Auth/LoginCliente";
+        options.AccessDeniedPath = "/Auth/AccessDeniedCliente";
+        options.Cookie.Name = "ClienteAuth";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
         options.SlidingExpiration = true;
         options.Cookie.HttpOnly = true;

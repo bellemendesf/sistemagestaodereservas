@@ -4,6 +4,8 @@
     ViewData["Title"] = "Santa Massa Rio Preto";
     var funcionarioLogado = User?.Identity?.IsAuthenticated == true && User.IsInRole("Funcionario");
     var nomeFuncionarioLogado = User?.Identity?.Name;
+    var clienteLogado = User?.Identity?.IsAuthenticated == true && User.IsInRole("Cliente");
+    var nomeClienteLogado = User?.Identity?.Name;
 }
 
 @* Tipo do documento (HTML5) *@
@@ -88,6 +90,12 @@
             Funcionário conectado: <strong>@nomeFuncionarioLogado</strong>
         </p>
     }
+    @if (clienteLogado && !string.IsNullOrWhiteSpace(nomeClienteLogado))
+    {
+        <p class="home-usuario-logado">
+            Cliente conectado: <strong>@nomeClienteLogado</strong>
+        </p>
+    }
 
     @* Imagem *@
     <img src="~/images/logosantamassa.jpg"
@@ -121,17 +129,23 @@
 
     @* Bloco (classe home-actions) *@
     <div class="home-actions">
-        @if (!funcionarioLogado)
+        @if (clienteLogado)
         {
-            @* Link *@
-            <a asp-controller="AreaCliente"
+            <a asp-controller="Reserva"
                asp-action="Index"
                class="home-card">
-                @* Subtítulo *@
+                <h2>Minhas reservas</h2>
+                <p>Consulte, edite ou cancele suas reservas.</p>
+                <span>Continuar →</span>
+            </a>
+        }
+        else if (!funcionarioLogado)
+        {
+            <a asp-controller="Auth"
+               asp-action="LoginCliente"
+               class="home-card">
                 <h2>Entrar como cliente</h2>
-                @* Parágrafo de texto *@
                 <p>Faça uma reserva e consulte as opções disponíveis.</p>
-                @* Texto destacado *@
                 <span>Continuar →</span>
             </a>
         }

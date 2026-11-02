@@ -7,6 +7,7 @@
     ViewData["Title"] = "Nova reserva";
     var mapaIds = ViewBag.MapaAmbienteIds as Dictionary<string, int> ?? new Dictionary<string, int>();
     int IdAmbienteMapa(string nome) => mapaIds.TryGetValue(nome, out var id) ? id : 0;
+    var dataMinimaReserva = DateTime.Today.ToString("yyyy-MM-dd");
 }
 
 @* Seção da página *@
@@ -15,44 +16,15 @@
     <form asp-action="Create" method="post">
         @* Resumo dos erros de validação *@
         @Html.ValidationSummary(false, "", new { @class = "text-danger" })
-        @* Bloco (classe form-section) *@
-        <div class="form-section">
-            @* Subtítulo *@
-            <h2>Dados do cliente</h2>
-            @* Parágrafo de texto *@
-            <p>Quem vai ocupar a mesa.</p>
-            @* Bloco (classe form-grid) *@
-            <div class="form-grid">
-                @* Bloco (classe field) *@
-                <div class="field">
-                    @* Rótulo do campo (asp-for Cliente.Nome) *@
-                    <label asp-for="Cliente.Nome">Nome</label>
-                    @* Campo de entrada (asp-for Cliente.Nome) *@
-                    <input asp-for="Cliente.Nome" placeholder="Nome completo" />
-                </div>
-                @* Bloco (classe field) *@
-                <div class="field">
-                    @* Rótulo do campo (asp-for Cliente.Cpf) *@
-                    <label asp-for="Cliente.Cpf">CPF</label>
-                    @* Campo de entrada (asp-for Cliente.Cpf) *@
-                    <input asp-for="Cliente.Cpf" placeholder="000.000.000-00" />
-                </div>
-                @* Bloco (classe field) *@
-                <div class="field">
-                    @* Rótulo do campo (asp-for Cliente.Telefone) *@
-                    <label asp-for="Cliente.Telefone">Telefone</label>
-                    @* Campo de entrada (asp-for Cliente.Telefone) *@
-                    <input asp-for="Cliente.Telefone" type="tel" placeholder="(17) 90000-0000" />
-                </div>
-                @* Bloco (classe field) *@
-                <div class="field">
-                    @* Rótulo do campo (asp-for Cliente.EmailPessoal) *@
-                    <label asp-for="Cliente.EmailPessoal">E-mail</label>
-                    @* Campo de entrada (asp-for Cliente.EmailPessoal) *@
-                    <input asp-for="Cliente.EmailPessoal" type="email" placeholder="cliente@email.com" />
-                </div>
+        @if (Model.Cliente != null && Model.ClienteId > 0)
+        {
+            <div class="form-section">
+                <h2>Cliente</h2>
+                <p>Reserva vinculada à sua conta logada.</p>
+                <p><strong>@Model.Cliente.Nome</strong> · CPF @Model.Cliente.Cpf</p>
+                <input type="hidden" asp-for="ClienteId" />
             </div>
-        </div>
+        }
 
         @* Bloco (classe form-section) *@
         <div class="form-section">
@@ -77,7 +49,9 @@
                     @* RESERVA POR DIA: o cliente escolhe apenas o dia, sem horário. *@
                     <label asp-for="DataHora">Data</label>
                     @* Campo de entrada (asp-for DataHora) *@
-                    <input asp-for="DataHora" type="date" value="@(Model.DataHora == default ? "" : Model.DataHora.ToString("yyyy-MM-dd"))" />
+                    <input asp-for="DataHora" type="date" min="@dataMinimaReserva"
+                           value="@(Model.DataHora == default ? "" : Model.DataHora.ToString("yyyy-MM-dd"))" />
+                    <span asp-validation-for="DataHora" class="text-danger"></span>
                 </div>
                 @* Bloco (classe field) *@
                 <div class="field">
