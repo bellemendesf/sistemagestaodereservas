@@ -1,0 +1,32 @@
+@model GestaoReservas.Models.SiteHeaderModel
+
+<header class="page-top page-top--fixed">
+    <a class="page-brand" asp-controller="Home" asp-action="Index">
+        <img src="~/images/logosantamassa.jpg" alt="Logo do restaurante Santa Massa" class="reserva-logo" />
+        <span>Santa Massa</span>
+    </a>
+
+    <div class="page-top-actions">
+        @if (Model.FuncionarioLogado || Model.ClienteLogado)
+        {
+            <span class="page-user-badge">
+                @(Model.FuncionarioLogado ? "Funcionário" : "Cliente"): <strong>@Model.Nome</strong>
+            </span>
+        }
+        <a class="page-home-link" asp-controller="Home" asp-action="Index">Voltar ao início</a>
+        @if (Model.FuncionarioLogado)
+        {
+            <form asp-controller="Auth" asp-action="Logout" method="post" class="page-logout-form">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="page-home-link page-home-link--btn">Sair</button>
+            </form>
+        }
+        else if (Model.ClienteLogado)
+        {
+            <form asp-controller="Auth" asp-action="LogoutCliente" method="post" class="page-logout-form">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="page-home-link page-home-link--btn">Sair</button>
+            </form>
+        }
+    </div>
+</header>

@@ -215,13 +215,17 @@ public class FluxosTests
         Assert.Equal(1, repo.Read(id)!.MesaId);
         Assert.Equal(3, repo.Read(id)!.QtdPessoas);
 
+        await LoginClienteTeste(client, app.Services);
         Assert.Equal(HttpStatusCode.Redirect, (await Post(client, $"/Reserva/Delete/{id}", $"/Reserva/Delete/{id}", new() { ["Id"] = id.ToString() })).StatusCode);
         Assert.Equal("Cancelada", Assert.Single(repo.Read()).Status);
         Assert.Equal(HttpStatusCode.BadRequest, (await client.GetAsync($"/Reserva/Edit/{id}")).StatusCode);
+
+        await LoginFuncionarioTeste(client, app.Services);
         Assert.Equal(HttpStatusCode.BadRequest, (await client.GetAsync($"/AreaRestaurante/Edit/{id}")).StatusCode);
-        // POST também deve impedir reativação, mesmo sem passar pelo formulário bloqueado.
-        Assert.Equal(HttpStatusCode.BadRequest, (await Post(client, "/Reserva/Create", $"/AreaRestaurante/Edit/{id}", new() { ["Status"] = "Pendente" })).StatusCode);
-        Assert.Equal(HttpStatusCode.BadRequest, (await Post(client, "/Reserva/Create", $"/Reserva/Edit/{id}", edit)).StatusCode);
+        Assert.Equal(HttpStatusCode.BadRequest, (await Post(client, "/AreaRestaurante/Reservas", $"/AreaRestaurante/Edit/{id}", new() { ["Status"] = "Pendente" })).StatusCode);
+
+        await LoginClienteTeste(client, app.Services);
+        Assert.Equal(HttpStatusCode.BadRequest, (await Post(client, "/Reserva/Index", $"/Reserva/Edit/{id}", edit)).StatusCode);
         Assert.Equal("Cancelada", repo.Read(id)!.Status);
     }
 

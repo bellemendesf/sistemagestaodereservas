@@ -1,4 +1,4 @@
-using GestaoReservas.Models;
+﻿using GestaoReservas.Models;
 using Microsoft.Data.SqlClient;
 
 public class AuthSqlRepository : DataConnection, IAuthRepository
@@ -14,7 +14,7 @@ public class AuthSqlRepository : DataConnection, IAuthRepository
     private Funcionario? AutenticarFuncionario(string cpf, string senha)
     {
         using var cmd = new SqlCommand(
-            @"SELECT p.id, p.nome, p.cpf, p.senha, f.email_institucional
+            @"SELECT p.id, p.nome, p.cpf, COALESCE(f.senha_hash, ''), f.email_institucional -- CORREÇÃO: senha própria do funcionário
               FROM pessoas p
               INNER JOIN funcionarios f ON p.id = f.pessoa_id
               WHERE p.cpf = @Cpf", conn);
@@ -47,7 +47,7 @@ public class AuthSqlRepository : DataConnection, IAuthRepository
     private Cliente? AutenticarCliente(string cpf, string senha)
     {
         using var cmd = new SqlCommand(
-            @"SELECT p.id, p.nome, p.cpf, p.senha, c.email_pessoal, c.telefone
+            @"SELECT p.id, p.nome, p.cpf, COALESCE(c.senha_hash, ''), c.email_pessoal, c.telefone -- CORREÇÃO: senha própria do cliente
               FROM pessoas p
               INNER JOIN clientes c ON p.id = c.pessoa_id
               WHERE p.cpf = @Cpf", conn);

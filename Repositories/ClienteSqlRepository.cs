@@ -22,14 +22,14 @@ public class ClienteSqlRepository : DataConnection, IClienteRepository
             {
                 if (pessoaId == null)
                 {
-                    var senhaHash = PasswordHasherUtil.HashPassword(cliente.Senha ?? "");
+                    // CORREÇÃO: a senha não fica mais em pessoas (vai para clientes.senha_hash)
                     using (var cmdPessoa = new SqlCommand(
                                @"INSERT INTO pessoas (nome, cpf, senha) VALUES (@Nome, @Cpf, @Senha);
                                  SELECT CAST(SCOPE_IDENTITY() AS INT);", conn, tx))
                     {
                         cmdPessoa.Parameters.AddWithValue("@Nome", cliente.Nome);
                         cmdPessoa.Parameters.AddWithValue("@Cpf", cliente.Cpf);
-                        cmdPessoa.Parameters.AddWithValue("@Senha", senhaHash);
+                        cmdPessoa.Parameters.AddWithValue("@Senha", ""); // senha em pessoas não é mais usada no login
                         pessoaId = (int)cmdPessoa.ExecuteScalar()!;
                     }
                 }
@@ -48,9 +48,11 @@ public class ClienteSqlRepository : DataConnection, IClienteRepository
                 }
 
                 using (var cmdCliente = new SqlCommand(
-                           @"INSERT INTO clientes (pessoa_id, email_pessoal, telefone)
-                             VALUES (@PessoaId, @Email_pessoal, @Telefone)", conn, tx))
+                           @"INSERT INTO clientes (pessoa_id, email_pessoal, telefone, senha_hash)
+                             VALUES (@PessoaId, @Email_pessoal, @Telefone, @SenhaHash)", conn, tx))
                 {
+                    // CORREÇÃO: grava o hash da senha do cliente na própria tabela clientes (CPF novo ou já existente)
+                    cmdCliente.Parameters.AddWithValue("@SenhaHash", PasswordHasherUtil.HashPassword(cliente.Senha ?? ""));
                     cmdCliente.Parameters.AddWithValue("@PessoaId", pessoaId.Value);
                     cmdCliente.Parameters.AddWithValue("@Email_pessoal", cliente.EmailPessoal);
                     cmdCliente.Parameters.AddWithValue("@Telefone", cliente.Telefone);
@@ -212,8 +214,8 @@ public class ClienteSqlRepository : DataConnection, IClienteRepository
             cmd.Connection = conn;
             // Texto SQL que será executado
             cmd.CommandText = @"SET XACT_ABORT ON; BEGIN TRANSACTION;
-                UPDATE pessoas SET nome = @Nome, cpf = @Cpf, senha = COALESCE(NULLIF(@Senha, ''), senha) WHERE id = @Id;
-                UPDATE clientes SET telefone = @Telefone, email_pessoal = @Email_pessoal WHERE pessoa_id = @Id;
+                UPDATE pessoas SET nome = @Nome, cpf = @Cpf WHERE id = @Id;
+                UPDATE clientes SET telefone = @Telefone, email_pessoal = @Email_pessoal, senha_hash = COALESCE(NULLIF(@Senha, ''), senha_hash) WHERE pessoa_id = @Id;
                 COMMIT TRANSACTION;";
             // Preenche o parâmetro @Nome (evita SQL injection)
             cmd.Parameters.AddWithValue("@Nome", cliente.Nome);
@@ -222,7 +224,8 @@ public class ClienteSqlRepository : DataConnection, IClienteRepository
             // Preenche o parâmetro @Email_pessoal (evita SQL injection)
             cmd.Parameters.AddWithValue("@Email_pessoal", cliente.EmailPessoal);
             // Preenche o parâmetro @Senha (evita SQL injection)
-            cmd.Parameters.AddWithValue("@Senha", cliente.Senha ?? "");
+            // CORREÇÃO: nova senha vira hash (antes ia em texto puro); vazia mantém a atual
+            cmd.Parameters.AddWithValue("@Senha", string.IsNullOrWhiteSpace(cliente.Senha) ? "" : PasswordHasherUtil.HashPassword(cliente.Senha));
             // Preenche o parâmetro @Telefone (evita SQL injection)
             cmd.Parameters.AddWithValue("@Telefone", cliente.Telefone);
             // Preenche o parâmetro @Id (evita SQL injection)

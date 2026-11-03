@@ -37,19 +37,16 @@
     <link rel="stylesheet"
           href="~/css/Areas.css"
           asp-append-version="true">
+    <link rel="stylesheet" href="~/css/Reserva.css" asp-append-version="true" />
 </head>
 
 @* Corpo da página *@
-<body class="area-page">
+<body class="area-page has-fixed-page-top">
+@await Component.InvokeAsync("ReservaPageTop")
     @* Conteúdo principal *@
     <main class="area-container">
 
-        @* Link *@
-        <a asp-controller="Home"
-           asp-action="Index"
-           class="back-link">
-            ← Voltar ao início
-        </a>
+        <a asp-controller="Home" asp-action="Index" class="back-link">← Voltar ao início</a>
 
         @* Cabeçalho *@
         <header class="area-header">
@@ -80,23 +77,6 @@
         @* Seção da página *@
         <section class="area-grid"
                  aria-label="Opções de gerenciamento">
-
-            @* Funcionário logado pode virar cliente com o mesmo CPF *@
-            <a asp-controller="Cliente"
-               asp-action="Create"
-               class="area-card">
-
-                @* Bloco *@
-                <div>
-                    @* Subtítulo *@
-                    <h2>Área do cliente</h2>
-                    @* Parágrafo de texto *@
-                    <p>Cadastre-se como cliente usando o mesmo CPF.</p>
-                </div>
-
-                @* Texto destacado *@
-                <span class="card-link">Cadastrar</span>
-            </a>
 
             @* Cadastro interno (funcionário já autenticado) *@
             <a asp-controller="Funcionario"
@@ -202,13 +182,9 @@
 
         </section>
 
-        @* Rodapé com logout (encerra cookie de autenticação) *@
         <footer class="area-footer">
             <span>Santa Massa · Painel de gerenciamento</span>
-            <form asp-controller="Auth"
-                  asp-action="Logout"
-                  method="post"
-                  class="area-logout-form">
+            <form asp-controller="Auth" asp-action="Logout" method="post" class="area-logout-form">
                 @Html.AntiForgeryToken()
                 <button type="submit" class="area-logout-btn">Sair</button>
             </form>

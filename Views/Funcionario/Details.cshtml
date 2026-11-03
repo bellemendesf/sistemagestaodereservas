@@ -1,49 +1,73 @@
-﻿@* Tipo de dado (modelo) que esta view recebe do controller *@
-@model Funcionario
-@* View Details de Funcionario: apresenta os campos do DER via model MVC.
-   As alterações passam pelo controller e pela interface do repositório. *@
-@* Tipo do documento (HTML5) *@
+﻿@model GestaoReservas.Models.Funcionario
+@{
+    ViewData["Title"] = "Detalhes do funcionário";
+    Layout = null;
+}
+
 <!DOCTYPE html>
-@* Início do documento HTML *@
 <html lang="pt-BR">
-@* Cabeçalho do documento (título, fontes e estilos) *@
 <head>
-    @* Configuração da página *@
     <meta charset="UTF-8">
-    @* Configuração da página *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @* Título da aba *@
-    <title>Details - Funcionario</title>
-    @* Arquivo de estilo/fonte externo *@
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>@ViewData["Title"] - Santa Massa</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="~/css/DetalhesEdicao.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/Listagens.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/Reserva.css" asp-append-version="true">
 </head>
-@* Corpo da página *@
-<body class="container py-4">
-    @* Navegação *@
-    <nav class="mb-4">
-        @* Link *@
-        <a href="/Cliente/Index">Clientes</a> |
-        @* Link *@
-        <a href="/Funcionario/Index">Funcionários</a>
-    </nav>
-    @* Título principal *@
-    <h1>Detalhes - Funcionario</h1>
-    @* Senha e hash não são apresentados nas páginas de consulta. *@
-    <dl>
-        @* Nome do dado *@
-        <dt>ID</dt><dd>@Model.Id</dd>
-        @* Nome do dado *@
-        <dt>Nome</dt><dd>@Model.Nome</dd>
-        @* Nome do dado *@
-        <dt>CPF</dt><dd>@Model.Cpf</dd>
-        @* Nome do dado *@
-        <dt>E-mail pessoal</dt><dd>@Model.EmailInstitucional</dd>
-        @* Nome do dado *@
-        <dt>E-mail institucional</dt><dd>@Model.EmailInstitucional</dd>
-    </dl>
-    @* Link *@
-    <a href="/Funcionario/Edit/@Model.Id" class="btn btn-primary">Editar</a>
-    @* Link *@
-    <a href="/Funcionario/Index" class="btn btn-secondary mt-2">Voltar</a>
+<body class="detalhes-edicao-page has-fixed-page-top">
+@await Component.InvokeAsync("ReservaPageTop")
+    <main class="detalhes-edicao-container">
+        <a asp-action="Index" class="detalhes-edicao-voltar">← Voltar à listagem de funcionários</a>
+
+        <section class="detalhes-edicao-card">
+            <header class="detalhes-edicao-header">
+                <p class="detalhes-edicao-kicker">Santa Massa · Rio Preto</p>
+                <h1>Detalhes do funcionário</h1>
+                <p class="detalhes-edicao-descricao">
+                    Consulta dos dados cadastrais (senha não é exibida por segurança).
+                </p>
+            </header>
+
+            <div class="detalhes-edicao-conteudo">
+                <div class="detalhes-edicao-grid">
+                    <div class="detalhes-edicao-item">
+                        <span>Código</span>
+                        <strong>#@Model.Id</strong>
+                    </div>
+
+                    <div class="detalhes-edicao-item">
+                        <span>Nome completo</span>
+                        <strong>@(string.IsNullOrWhiteSpace(Model.Nome) ? "Não informado" : Model.Nome)</strong>
+                    </div>
+
+                    <div class="detalhes-edicao-item">
+                        <span>CPF</span>
+                        <strong>@(string.IsNullOrWhiteSpace(Model.Cpf) ? "Não informado" : Model.Cpf)</strong>
+                    </div>
+
+                    <div class="detalhes-edicao-item">
+                        <span>E-mail institucional</span>
+                        <strong>@(string.IsNullOrWhiteSpace(Model.EmailInstitucional) ? "Não informado" : Model.EmailInstitucional)</strong>
+                    </div>
+                </div>
+
+                <div class="detalhes-edicao-acoes" style="margin-top: 28px;">
+                    <a asp-action="Index"
+                       class="detalhes-edicao-botao detalhes-edicao-botao-principal">
+                        Voltar à listagem
+                    </a>
+                </div>
+            </div>
+
+            <footer class="detalhes-edicao-rodape">
+                Santa Massa · Painel de gerenciamento
+            </footer>
+        </section>
+    </main>
 </body>
 </html>

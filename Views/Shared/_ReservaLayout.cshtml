@@ -10,7 +10,6 @@
     // Variável action
     var action = ViewContext.RouteData.Values["action"]?.ToString();
 
-    var clienteLogado = User?.Identity?.IsAuthenticated == true && User.IsInRole("Cliente");
 }
 @* Tipo do documento (HTML5) *@
 <!DOCTYPE html>
@@ -45,42 +44,12 @@
     <link rel="stylesheet" href="~/css/Reserva.css" asp-append-version="true" />
     @* Arquivo de estilo/fonte externo *@
     <link rel="stylesheet" href="~/css/ReservasIndex.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Listagens.css" asp-append-version="true" />
 </head>
 
 @* Corpo da página *@
-<body class="page-reserva">
-    @* Bloco (classe page-glow) *@
-    <div class="page-glow" aria-hidden="true"></div>
-
-    @* Cabeçalho *@
-    <header class="page-top">
-        @* Link *@
-        <a class="page-brand"
-           asp-controller="Home"
-           asp-action="Index">
-            @* Imagem *@
-            <img src="~/images/logosantamassa.jpg"
-                 alt="Logo do restaurante Santa Massa"
-                 class="reserva-logo" />
-
-            @* Texto destacado *@
-            <span>Santa Massa</span>
-        </a>
-
-        @* Link *@
-        <a class="page-home-link"
-           asp-controller="Home"
-           asp-action="Index">
-            Voltar ao início
-        </a>
-        @if (clienteLogado)
-        {
-            <form asp-controller="Auth" asp-action="LogoutCliente" method="post" class="d-inline ms-2">
-                @Html.AntiForgeryToken()
-                <button type="submit" class="page-home-link border-0 bg-transparent p-0" style="cursor:pointer;">Sair</button>
-            </form>
-        }
-    </header>
+<body class="page-reserva has-fixed-page-top">
+@await Component.InvokeAsync("ReservaPageTop")
 
     @* Conteúdo principal *@
     <main class="page-shell">

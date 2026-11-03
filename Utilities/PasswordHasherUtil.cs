@@ -18,7 +18,6 @@ public static class PasswordHasherUtil
         var funcionarioTemp = new Funcionario();
         
         // Gera o hash da senha usando o PasswordHasher
-        // Este método já inclui salt e segue os padrões de segurança do ASP.NET Core
         var hashedPassword = _hasher.HashPassword(funcionarioTemp, plainPassword);
         
         // Retorna o hash da senha

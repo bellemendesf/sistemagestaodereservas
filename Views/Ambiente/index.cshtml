@@ -35,6 +35,8 @@
 
     @* Arquivo de estilo/fonte externo *@
     <link rel="stylesheet" href="~/css/DetalhesEdicao.css" asp-append-version="true">
+    <link rel="stylesheet" href="~/css/Listagens.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Reserva.css" asp-append-version="true" />
 
     @* Estilos desta página *@
     <style>
@@ -317,16 +319,12 @@
 </head>
 
 @* Corpo da página *@
-<body class="detalhes-edicao-page">
+<body class="detalhes-edicao-page has-fixed-page-top">
+@await Component.InvokeAsync("ReservaPageTop")
     @* Conteúdo principal *@
-    <main class="detalhes-edicao-container">
+    <main class="detalhes-edicao-container listagem-larga">
 
-        @* Link *@
-        <a asp-controller="AreaRestaurante"
-           asp-action="Index"
-           class="detalhes-edicao-voltar">
-            ← Voltar à área do restaurante
-        </a>
+        <a asp-controller="AreaRestaurante" asp-action="Index" class="detalhes-edicao-voltar">← Voltar à área do restaurante</a>
 
         @* Seção da página *@
         <section class="detalhes-edicao-card">

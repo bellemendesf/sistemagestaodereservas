@@ -1,4 +1,4 @@
-        /* Estilo de: .clientes-topo */
+﻿        /* Estilo de: .clientes-topo */
         .clientes-topo {
             display: flex; /* tipo de exibição */
             align-items: center; /* alinhamento vertical */
@@ -311,12 +311,12 @@
         }
 
         /* Larguras das colunas: ID, Nome, CPF, E-mail, Telefone, Ações */
-        .clientes-tabela th:nth-child(1) { width: 7%; }
-        .clientes-tabela th:nth-child(2) { width: 20%; }
-        .clientes-tabela th:nth-child(3) { width: 14%; }
-        .clientes-tabela th:nth-child(4) { width: 24%; }
-        .clientes-tabela th:nth-child(5) { width: 14%; }
-        .clientes-tabela th:nth-child(6) { width: 21%; }
+        /* AJUSTE: larguras sem a coluna ID (Nome, CPF, E-mail, Telefone, Ações) */
+        .clientes-tabela th:nth-child(1) { width: 22%; } /* nome */
+        .clientes-tabela th:nth-child(2) { width: 15%; } /* CPF */
+        .clientes-tabela th:nth-child(3) { width: 26%; } /* e-mail */
+        .clientes-tabela th:nth-child(4) { width: 15%; } /* telefone */
+        .clientes-tabela th:nth-child(5) { width: 22%; } /* ações */
 
         /* Estilo de: .cliente-nome */
         .cliente-nome {

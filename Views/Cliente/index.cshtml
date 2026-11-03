@@ -94,31 +94,13 @@
 
                         @* Parágrafo de texto *@
                         <p>
-                            Cadastre o primeiro cliente para começar a organizar
-                            os registros do restaurante.
+                            Os clientes cadastrados pelo fluxo de reservas aparecerão nesta lista.
                         </p>
-
-                        @* Link *@
-                        <a asp-controller="Cliente"
-                           asp-action="Create"
-                           class="clientes-botao-novo">
-                            + Novo cadastro
-                        </a>
                     </div>
                 }
                 @* Caso contrário, mostra este bloco *@
                 else
                 {
-                    @* Bloco (classe clientes-acoes-topo) *@
-                    <div class="clientes-acoes-topo">
-                        @* Link *@
-                        <a asp-controller="Cliente"
-                           asp-action="Create"
-                           class="clientes-botao-novo">
-                            + Novo cadastro
-                        </a>
-                    </div>
-
                     @* Bloco (classe clientes-tabela-wrap) *@
                     <div class="clientes-tabela-wrap">
                         @* Tabela *@
@@ -127,8 +109,7 @@
                             <thead>
                                 @* Linha da tabela *@
                                 <tr>
-                                    @* Título da coluna *@
-                                    <th>ID</th>
+                                    @* AJUSTE: coluna ID removida só da parte visual (o id continua nos links de ações) *@
                                     @* Título da coluna *@
                                     <th>Nome</th>
                                     @* Título da coluna *@
@@ -149,11 +130,6 @@
                                 {
                                     @* Linha da tabela *@
                                     <tr>
-                                        @* Célula *@
-                                        <td class="cliente-id">
-                                            #@item.Id
-                                        </td>
-
                                         @* Célula *@
                                         <td class="cliente-nome">
                                             @item.Nome
@@ -176,24 +152,9 @@
                                             <div class="cliente-acoes">
                                                 @* Link *@
                                                 <a asp-controller="Cliente"
-                                                   asp-action="Edit"
-                                                   asp-route-id="@item.Id">
-                                                    Editar
-                                                </a>
-
-                                                @* Link *@
-                                                <a asp-controller="Cliente"
                                                    asp-action="Details"
                                                    asp-route-id="@item.Id">
                                                     Detalhes
-                                                </a>
-
-                                                @* Link *@
-                                                <a asp-controller="Cliente"
-                                                   asp-action="Delete"
-                                                   asp-route-id="@item.Id"
-                                                   class="cliente-excluir">
-                                                    Excluir
                                                 </a>
                                             </div>
                                         </td>

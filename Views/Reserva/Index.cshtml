@@ -20,6 +20,13 @@
         StringComparison.OrdinalIgnoreCase);
 }
 
+@* NOVO: botão de voltar à Área do Restaurante, igual ao das outras listagens (estilo em Listagens.css) *@
+@if (restaurante)
+{
+    @* Só aparece na aba Reservas da área do restaurante *@
+    <a asp-controller="AreaRestaurante" asp-action="Index" class="mesas-voltar">← Voltar à área do restaurante</a>
+}
+
 @* Seção da página *@
 <section class="reservas-lista">
 

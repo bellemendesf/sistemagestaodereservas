@@ -17,47 +17,49 @@
 
 /* Estilo de: body.home */
 body.home {
-    margin: 0; /* espaçamento externo */
-    min-height: 100vh; /* altura mínima */
-    background:
-        radial-gradient(
-            ellipse at 50% 0%,
-            #292316 0%,
-            #11100d 35%,
-            var(--preto) 75%
-        );
-    color: var(--branco); /* cor do texto */
-    font-family: "Poppins", sans-serif; /* fonte */
+    margin: 0;
+    min-height: 100vh;
+    background: var(--preto);
+    color: var(--branco);
+    font-family: "Poppins", sans-serif;
+    -webkit-font-smoothing: antialiased;
 }
 
-/* Brilho dourado discreto no fundo */
-/* Estilo de: .home-glow */
-.home-glow {
-    position: fixed; /* posicionamento */
-    width: 380px; /* largura */
-    height: 380px; /* altura */
-    right: -160px; /* distância da direita */
-    bottom: -170px; /* distância do rodapé */
-    border-radius: 50%; /* cantos arredondados */
-    background: rgba(198, 164, 92, 0.12); /* fundo */
-    filter: blur(90px); /* propriedade filter */
-    pointer-events: none; /* eventos do mouse */
-    z-index: 0; /* camada */
+.home-fixed-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+    background: var(--preto);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+body.has-home-fixed-header {
+    padding-top: var(--home-fixed-header-height, 320px);
+}
+
+@media (max-width: 800px) {
+    body.has-home-fixed-header {
+        padding-top: var(--home-fixed-header-height-mobile, 380px);
+    }
 }
 
 /* Cabeçalho centralizado */
 /* Estilo de: .home-top */
 .home-top {
-    position: relative; /* posicionamento */
-    z-index: 1; /* camada */
-    display: flex; /* tipo de exibição */
-    flex-direction: column; /* direção dos itens */
-    align-items: center; /* alinhamento vertical */
-    justify-content: center; /* alinhamento horizontal */
-    gap: 14px; /* espaço entre itens */
-    width: 100%; /* largura */
-    padding: 42px 20px 10px; /* espaçamento interno */
-    text-align: center; /* alinhamento do texto */
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 36px 20px 8px;
+    text-align: center;
 }
 
 /* Estilo de: .home-logo */
@@ -76,13 +78,45 @@ body.home {
 
 /* Nome do funcionário autenticado no header da home */
 .home-usuario-logado {
-    margin: 0 0 8px;
-    padding: 8px 14px;
-    border: 1px solid rgba(198, 164, 92, 0.35);
-    border-radius: 999px;
-    background: rgba(198, 164, 92, 0.1);
-    color: var(--dourado-claro, #E0C989);
-    font-size: 0.86rem;
+    margin: 0;
+    padding: 10px 18px;
+    border: 1px solid var(--dourado);
+    border-radius: 8px;
+    background: var(--preto-card);
+    color: var(--dourado-claro);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.home-sair-wrap {
+    margin-top: 36px;
+    display: flex;
+    justify-content: center;
+}
+
+.home-sair-form {
+    margin: 0;
+}
+
+.home-sair-btn {
+    min-height: 44px;
+    padding: 0 28px;
+    border: 1px solid var(--dourado);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--dourado-claro);
+    font-family: "Poppins", sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.home-sair-btn:hover {
+    background: var(--dourado);
+    border-color: var(--dourado);
+    color: var(--preto);
 }
 
 /* Estilo de: .home-brand */
@@ -140,73 +174,88 @@ body.home {
 /* Cartões de acesso */
 /* Estilo de: .home-actions */
 .home-actions {
-    display: grid; /* tipo de exibição */
-    grid-template-columns: repeat(2, minmax(0, 1fr)); /* colunas da grade */
-    gap: 22px; /* espaço entre itens */
-    max-width: 720px; /* largura máxima */
-    margin: 0 auto; /* espaçamento externo */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    max-width: 820px;
+    margin: 0 auto;
+    align-items: stretch;
 }
 
-/* Estilo de: .home-card */
+.home-card--solo {
+    flex: 1 1 280px;
+    max-width: 380px;
+}
+
 .home-card {
-    display: flex; /* tipo de exibição */
-    flex-direction: column; /* direção dos itens */
-    align-items: center; /* alinhamento vertical */
-    justify-content: center; /* alinhamento horizontal */
-    min-height: 225px; /* altura mínima */
-    padding: 30px 24px; /* espaçamento interno */
-    border: 1px solid rgba(198, 164, 92, 0.42); /* borda */
-    border-radius: 12px; /* cantos arredondados */
-    background: rgba(21, 21, 21, 0.88); /* fundo */
-    color: var(--branco); /* cor do texto */
-    text-decoration: none; /* decoração do texto */
-    transition:
-        transform 0.25s ease,
-        border-color 0.25s ease,
-        background-color 0.25s ease,
-        box-shadow 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    min-height: 220px;
+    height: 100%;
+    padding: 28px 22px 24px;
+    border: 1px solid #5c5238;
+    border-radius: 10px;
+    background: var(--preto-card);
+    color: var(--branco);
+    text-decoration: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
-/* Estilo de: .home-card h2 */
 .home-card h2 {
-    margin: 0 0 14px; /* espaçamento externo */
-    color: var(--dourado-claro); /* cor do texto */
-    font-family: "Josefin Sans", sans-serif; /* fonte */
-    font-size: 1.45rem; /* tamanho da fonte */
-    font-weight: 600; /* peso da fonte */
-    line-height: 1.3; /* altura da linha */
+    margin: 0 0 12px;
+    color: var(--dourado-claro);
+    font-family: "Josefin Sans", sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.35;
+    min-height: 2.7em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Estilo de: .home-card p */
 .home-card p {
-    margin: 0 0 22px; /* espaçamento externo */
-    color: var(--cinza); /* cor do texto */
-    font-size: 0.9rem; /* tamanho da fonte */
-    line-height: 1.7; /* altura da linha */
+    margin: 0 0 20px;
+    flex: 1;
+    color: var(--cinza);
+    font-size: 0.9rem;
+    line-height: 1.55;
+    max-width: 28ch;
 }
 
-/* Estilo de: .home-card span */
+.home-card-cta,
 .home-card span {
-    margin-top: auto; /* margem superior */
-    color: var(--dourado); /* cor do texto */
-    font-size: 0.85rem; /* tamanho da fonte */
-    font-weight: 600; /* peso da fonte */
-    letter-spacing: 0.04em; /* espaço entre letras */
+    margin-top: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 148px;
+    min-height: 42px;
+    padding: 0 20px;
+    border: 1px solid var(--dourado);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--dourado);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
 }
 
-/* Estilo de: .home-card:hover */
 .home-card:hover {
-    transform: translateY(-5px); /* transformação (movimento) */
-    border-color: var(--dourado); /* cor da borda */
-    background: var(--preto-hover); /* fundo */
-    color: var(--branco); /* cor do texto */
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3); /* sombra */
+    border-color: var(--dourado);
+    background: var(--preto-hover);
 }
 
-.home-card:hover h2,
-/* Estilo de: .home-card:hover span */
+.home-card:hover .home-card-cta,
 .home-card:hover span {
-    color: var(--dourado-claro); /* cor do texto */
+    background: var(--dourado);
+    color: var(--preto);
 }
 
 /* Teclado e acessibilidade */
@@ -288,15 +337,15 @@ body.home {
 /* Cabeçalho com endereço e horário */
 /* Estilo de: .home-info-topo */
 .home-info-topo {
-    display: flex; /* tipo de exibição */
-    align-items: center; /* alinhamento vertical */
-    justify-content: space-between; /* alinhamento horizontal */
-    gap: 24px; /* espaço entre itens */
-    padding: 15px 5%; /* espaçamento interno */
-    background: #181817; /* fundo */
-    border-bottom: 1px solid #49443A; /* borda inferior */
-    color: #F7F3EA; /* cor do texto */
-    font-family: "Poppins", sans-serif; /* fonte */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 14px 5%;
+    background: var(--preto-card);
+    border-bottom: 1px solid #49443a;
+    color: var(--branco);
+    font-family: "Poppins", sans-serif;
 }
 
 /* Estilo de: .home-info-endereco */

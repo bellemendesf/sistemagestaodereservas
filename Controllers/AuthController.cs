@@ -31,6 +31,8 @@ public class AuthController : Controller
             return View(model);
         }
 
+        await HttpContext.SignOutAsync(EsquemaFuncionario);
+
         await HttpContext.SignInAsync(
             EsquemaCliente,
             new ClaimsPrincipal(new ClaimsIdentity(
@@ -55,6 +57,8 @@ public class AuthController : Controller
             return View("LoginFuncionario", model);
         }
 
+        await HttpContext.SignOutAsync(EsquemaCliente);
+
         await HttpContext.SignInAsync(
             EsquemaFuncionario,
             new ClaimsPrincipal(new ClaimsIdentity(
@@ -68,7 +72,7 @@ public class AuthController : Controller
         return RedirectToAction("Index", "AreaRestaurante");
     }
 
-    [Authorize(AuthenticationSchemes = EsquemaFuncionario)]
+    [AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> Logout()
     {
@@ -76,10 +80,19 @@ public class AuthController : Controller
         return RedirectToAction("Index", "Home");
     }
 
-    [Authorize(AuthenticationSchemes = EsquemaCliente)]
+    [AllowAnonymous]
     [HttpPost]
     public async Task<IActionResult> LogoutCliente()
     {
+        await HttpContext.SignOutAsync(EsquemaCliente);
+        return RedirectToAction("Index", "Home");
+    }
+
+    [AllowAnonymous]
+    [HttpPost]
+    public async Task<IActionResult> SairConta()
+    {
+        await HttpContext.SignOutAsync(EsquemaFuncionario);
         await HttpContext.SignOutAsync(EsquemaCliente);
         return RedirectToAction("Index", "Home");
     }

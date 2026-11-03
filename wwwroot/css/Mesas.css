@@ -508,3 +508,39 @@ body.mesas-page {
         width: 100%; /* largura */
     }
 }
+
+/* AJUSTE VISUAL: tabela de mesas mais organizada e legível (mesmo padrão da lista de clientes). */
+.mesas-table {
+    table-layout: fixed; /* colunas com larguras definidas */
+    font-size: 14px; /* tamanho da fonte */
+}
+
+.mesas-table thead th {
+    padding: 18px 20px; /* espaçamento interno do cabeçalho */
+    font-size: 12px; /* tamanho da fonte do cabeçalho */
+}
+
+.mesas-table tbody td {
+    padding: 18px 20px; /* espaçamento interno das células */
+    line-height: 1.5; /* altura da linha */
+    vertical-align: middle; /* alinha o conteúdo no meio */
+    overflow-wrap: anywhere; /* quebra textos longos */
+}
+
+/* Larguras das colunas: Número, Ambiente, Capacidade, Status, Ações */
+.mesas-table th:nth-child(1) { width: 16%; } /* número da mesa */
+.mesas-table th:nth-child(2) { width: 20%; } /* ambiente */
+.mesas-table th:nth-child(3) { width: 16%; } /* capacidade */
+.mesas-table th:nth-child(4) { width: 16%; } /* status */
+.mesas-table th:nth-child(5) { width: 32%; } /* ações */
+
+.mesas-acoes {
+    display: flex; /* botões lado a lado */
+    flex-wrap: wrap; /* quebra para a linha de baixo se faltar espaço */
+    gap: 8px; /* espaço entre os botões */
+}
+
+@media (max-width: 900px) {
+    .mesas-table-wrap { overflow-x: auto; } /* rolagem lateral em telas estreitas */
+    .mesas-table { min-width: 760px; } /* largura mínima da tabela */
+}

@@ -1,24 +1,31 @@
-﻿// Importa as classes do ASP.NET MVC (Controller, ActionResult...)
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
-// Controller responsável pelas telas de Home
 public class HomeController : Controller
 {
-    // Dispensa o token antifalsificação nesta ação
+    private const string EsquemaFuncionario = "FuncionarioScheme";
+    private const string EsquemaCliente = "ClienteScheme";
+
     [Microsoft.AspNetCore.Mvc.IgnoreAntiforgeryToken]
-    // Ação Error
     public ActionResult Error()
     {
-        // Define o código HTTP da resposta
         Response.StatusCode = 500;
-        // Mostra a view com o modelo
         return View();
     }
 
-    // Ação Index: mostra a listagem
-    public ActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        // Mostra a view com o modelo
+        var funcionario = await HttpContext.AuthenticateAsync(EsquemaFuncionario);
+        var cliente = await HttpContext.AuthenticateAsync(EsquemaCliente);
+
+        var funcionarioLogado = funcionario.Succeeded;
+        var clienteLogado = cliente.Succeeded && !funcionarioLogado;
+
+        ViewBag.FuncionarioLogado = funcionarioLogado;
+        ViewBag.ClienteLogado = clienteLogado;
+        ViewBag.NomeFuncionario = funcionarioLogado ? funcionario.Principal?.Identity?.Name : null;
+        ViewBag.NomeCliente = clienteLogado ? cliente.Principal?.Identity?.Name : null;
+
         return View();
     }
 }

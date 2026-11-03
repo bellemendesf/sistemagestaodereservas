@@ -1,4 +1,6 @@
-﻿// Variável builder
+﻿using Microsoft.AspNetCore.Authentication;
+
+// Variável builder
 var builder = WebApplication.CreateBuilder(args);
 
 // Habilita MVC com views
@@ -69,6 +71,16 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
+
+app.Use(async (context, next) =>
+{
+    var funcionario = await context.AuthenticateAsync("FuncionarioScheme");
+    var cliente = await context.AuthenticateAsync("ClienteScheme");
+    if (funcionario.Succeeded && cliente.Succeeded)
+        await context.SignOutAsync("ClienteScheme");
+    await next();
+});
+
 app.UseAuthorization();
 
 // Rota padrão controller/action/id

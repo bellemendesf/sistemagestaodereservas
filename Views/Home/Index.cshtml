@@ -1,176 +1,114 @@
-﻿@* Bloco C#: configurações da view (título, layout e variáveis) *@
-@{
+﻿@{
     Layout = null;
     ViewData["Title"] = "Santa Massa Rio Preto";
-    var funcionarioLogado = User?.Identity?.IsAuthenticated == true && User.IsInRole("Funcionario");
-    var nomeFuncionarioLogado = User?.Identity?.Name;
-    var clienteLogado = User?.Identity?.IsAuthenticated == true && User.IsInRole("Cliente");
-    var nomeClienteLogado = User?.Identity?.Name;
+    var funcionarioLogado = ViewBag.FuncionarioLogado == true;
+    var clienteLogado = ViewBag.ClienteLogado == true;
+    var nomeFuncionarioLogado = ViewBag.NomeFuncionario as string;
+    var nomeClienteLogado = ViewBag.NomeCliente as string;
 }
 
-@* Tipo do documento (HTML5) *@
 <!DOCTYPE html>
-@* Início do documento HTML *@
 <html lang="pt-br">
-@* Cabeçalho do documento (título, fontes e estilos) *@
 <head>
-    @* Configuração da página *@
     <meta charset="utf-8" />
-    @* Configuração da página *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    @* Título da aba *@
     <title>@ViewData["Title"]</title>
-
-    @* Arquivo de estilo/fonte externo *@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
           crossorigin="anonymous" />
-    @* Arquivo de estilo/fonte externo *@
-    <link rel="stylesheet" href="~/css/Home.css" />
-    @* Arquivo de estilo/fonte externo *@
+    <link rel="stylesheet" href="~/css/Home.css" asp-append-version="true" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    @* Arquivo de estilo/fonte externo *@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    @* Arquivo de estilo/fonte externo *@
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&family=Poppins:wght@400;500;600&display=swap"
           rel="stylesheet" />
 </head>
-@* Corpo da página *@
-<body class="home">
-    
-@* Cabeçalho *@
-<header class="home-info-topo">
+<body class="home has-home-fixed-header">
 
-    @* Bloco (classe home-info-esquerda) *@
-    <div class="home-info-esquerda">
-        @* Imagem *@
-        <img src="~/images/logosantamassa.jpg"
-             alt="Logo Santa Massa"
-             class="home-info-logo" />
-
-        @* Bloco (classe home-info-endereco) *@
-        <div class="home-info-endereco">
-
-            @* Bloco *@
-            <div>
-                @* Texto destacado *@
-                <span class="home-info-label">NOSSO ENDEREÇO</span>
-                @* Parágrafo de texto *@
-                <p>
-                    R. XV de Novembro, 3411 - Centro,
-                    São José do Rio Preto - SP, 15015-110
-                </p>
+<div class="home-fixed-header">
+    <header class="home-info-topo">
+        <div class="home-info-esquerda">
+            <img src="~/images/logosantamassa.jpg" alt="Logo Santa Massa" class="home-info-logo" />
+            <div class="home-info-endereco">
+                <div>
+                    <span class="home-info-label">NOSSO ENDEREÇO</span>
+                    <p>R. XV de Novembro, 3411 - Centro, São José do Rio Preto - SP, 15015-110</p>
+                </div>
             </div>
         </div>
-    </div>
+        <div class="home-info-horario">
+            <span class="home-info-label">HORÁRIO DE FUNCIONAMENTO</span>
+            <p><span class="home-info-ponto"></span> Segunda a sábado, das 18:30h às 23:30h</p>
+        </div>
+    </header>
 
-    @* Bloco (classe home-info-horario) *@
-    <div class="home-info-horario">
-        @* Texto destacado *@
-        <span class="home-info-label">HORÁRIO DE FUNCIONAMENTO</span>
-        @* Parágrafo de texto *@
-        <p>
-            @* Texto destacado *@
-            <span class="home-info-ponto"></span>
-            Segunda a sábado, das 18:30h às 23:30h
-        </p>
-    </div>
+    <header class="home-top">
+        @if (funcionarioLogado && !string.IsNullOrWhiteSpace(nomeFuncionarioLogado))
+        {
+            <p class="home-usuario-logado">Funcionário conectado: <strong>@nomeFuncionarioLogado</strong></p>
+        }
+        @if (clienteLogado && !string.IsNullOrWhiteSpace(nomeClienteLogado))
+        {
+            <p class="home-usuario-logado">Cliente conectado: <strong>@nomeClienteLogado</strong></p>
+        }
 
-</header>
+        <img src="~/images/logosantamassa.jpg" alt="Logo do restaurante Santa Massa" class="home-logo" />
+        <span class="home-brand">Santa Massa</span>
+        <span class="home-subbrand">RIO PRETO</span>
+        <div class="home-divider" aria-hidden="true"></div>
+    </header>
+</div>
 
-    @* Bloco (classe home-glow) *@
-    <div class="home-glow" aria-hidden="true"></div>
-
-@* Cabeçalho *@
-<header class="home-top">
-    @if (funcionarioLogado && !string.IsNullOrWhiteSpace(nomeFuncionarioLogado))
-    {
-        <p class="home-usuario-logado">
-            Funcionário conectado: <strong>@nomeFuncionarioLogado</strong>
-        </p>
-    }
-    @if (clienteLogado && !string.IsNullOrWhiteSpace(nomeClienteLogado))
-    {
-        <p class="home-usuario-logado">
-            Cliente conectado: <strong>@nomeClienteLogado</strong>
-        </p>
-    }
-
-    @* Imagem *@
-    <img src="~/images/logosantamassa.jpg"
-         alt="Logo do restaurante Santa Massa"
-         class="home-logo" />
-
-    @* Texto destacado *@
-    <span class="home-brand">Santa Massa</span>
-
-    @* Texto destacado *@
-    <span class="home-subbrand">RIO PRETO</span>
-    @* Bloco (classe home-divider) *@
-    <div class="home-divider" aria-hidden="true"></div>
-</header>
-
-
-@* Conteúdo principal *@
 <main class="home-hero">
-    @* Parágrafo de texto *@
-    <p class="home-kicker">
-        RESTAURANTE ITALIANO - SÃO JOSÉ DO RIO PRETO
-    </p>
-
-    @* Título principal *@
+    <p class="home-kicker">RESTAURANTE ITALIANO · SÃO JOSÉ DO RIO PRETO</p>
     <h1>Bem-vindo ao Santa Massa!</h1>
+    <p class="home-lead">Escolha como deseja acessar nosso sistema.</p>
 
-    @* Parágrafo de texto *@
-    <p class="home-lead">
-        Escolha como deseja acessar nosso sistema.
-    </p>
-
-    @* Bloco (classe home-actions) *@
     <div class="home-actions">
         @if (clienteLogado)
         {
-            <a asp-controller="Reserva"
-               asp-action="Index"
-               class="home-card">
+            <a asp-controller="Reserva" asp-action="Index" class="home-card home-card--solo">
                 <h2>Minhas reservas</h2>
                 <p>Consulte, edite ou cancele suas reservas.</p>
-                <span>Continuar →</span>
+                <span class="home-card-cta">Continuar</span>
             </a>
         }
         else if (!funcionarioLogado)
         {
-            <a asp-controller="Auth"
-               asp-action="LoginCliente"
-               class="home-card">
+            <a asp-controller="Auth" asp-action="LoginCliente" class="home-card home-card--solo">
                 <h2>Entrar como cliente</h2>
-                <p>Faça uma reserva e consulte as opções disponíveis.</p>
-                <span>Continuar →</span>
+                <p>Acesse sua conta para reservar mesas.</p>
+                <span class="home-card-cta">Entrar</span>
             </a>
         }
 
         @if (funcionarioLogado)
         {
-            <a asp-controller="AreaRestaurante"
-               asp-action="Index"
-               class="home-card">
+            <a asp-controller="AreaRestaurante" asp-action="Index" class="home-card home-card--solo">
                 <h2>Painel do funcionário</h2>
                 <p>Continue gerenciando o restaurante.</p>
-                <span>Acessar painel →</span>
+                <span class="home-card-cta">Acessar painel</span>
             </a>
         }
-        else
+        else if (!clienteLogado)
         {
-            <a asp-controller="Auth"
-               asp-action="Login"
-               class="home-card">
+            <a asp-controller="Auth" asp-action="Login" class="home-card home-card--solo">
                 <h2>Entrar como funcionário</h2>
                 <p>Gerencie reservas, mesas e ambientes.</p>
-                <span>Acessar painel →</span>
+                <span class="home-card-cta">Entrar</span>
             </a>
         }
     </div>
+
+    @if (funcionarioLogado || clienteLogado)
+    {
+        <div class="home-sair-wrap">
+            <form asp-controller="Auth" asp-action="SairConta" method="post" class="home-sair-form">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="home-sair-btn">Sair da conta</button>
+            </form>
+        </div>
+    }
 </main>
 
 </body>

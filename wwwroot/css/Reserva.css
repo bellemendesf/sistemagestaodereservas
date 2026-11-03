@@ -54,16 +54,57 @@ body.page-reserva {
 
 /* Estilo de: .page-top */
 .page-top {
-    position: relative; /* posicionamento */
-    z-index: 1; /* camada */
-    display: flex; /* tipo de exibição */
-    align-items: center; /* alinhamento vertical */
-    justify-content: space-between; /* alinhamento horizontal */
-    gap: 24px; /* espaço entre itens */
-    width: 100%; /* largura */
-    padding: 18px 6%; /* espaçamento interno */
-    background: rgba(24, 24, 23, 0.88); /* fundo */
-    border-bottom: 1px solid rgba(211, 183, 121, 0.22); /* borda inferior */
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    width: 100%;
+    padding: 18px 6%;
+    background: rgba(24, 24, 23, 0.88);
+    border-bottom: 1px solid rgba(211, 183, 121, 0.22);
+}
+
+.page-top--fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+    background: #181817;
+    border-bottom: 1px solid rgba(211, 183, 121, 0.35);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+body.has-fixed-page-top:not(.mesas-page):not(.funcionarios-page):not(.detalhes-edicao-page):not(.area-page) {
+    padding-top: 82px;
+}
+
+.page-top-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.page-user-badge {
+    color: var(--sm-dourado-claro);
+    font-size: 0.82rem;
+}
+
+.page-logout-form {
+    margin: 0;
+    display: inline;
+}
+
+.page-home-link--btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font: inherit;
+    padding: 0;
 }
 
 /* Estilo de: .page-brand */

@@ -22,14 +22,14 @@ public class FuncionarioSqlRepository : DataConnection, IFuncionarioRepository
             {
                 if (pessoaId == null)
                 {
-                    var senhaHashCreate = PasswordHasherUtil.HashPassword(funcionario.Senha ?? "");
+                    // CORREÇÃO: a senha não fica mais em pessoas (vai para funcionarios.senha_hash)
                     using (var cmdPessoa = new SqlCommand(
                                @"INSERT INTO pessoas (nome, cpf, senha) VALUES (@Nome, @Cpf, @Senha);
                                  SELECT CAST(SCOPE_IDENTITY() AS INT);", conn, tx))
                     {
                         cmdPessoa.Parameters.AddWithValue("@Nome", funcionario.Nome);
                         cmdPessoa.Parameters.AddWithValue("@Cpf", funcionario.Cpf);
-                        cmdPessoa.Parameters.AddWithValue("@Senha", senhaHashCreate);
+                        cmdPessoa.Parameters.AddWithValue("@Senha", ""); // senha em pessoas não é mais usada no login
                         pessoaId = (int)cmdPessoa.ExecuteScalar()!;
                     }
                 }
@@ -48,9 +48,11 @@ public class FuncionarioSqlRepository : DataConnection, IFuncionarioRepository
                 }
 
                 using (var cmdFunc = new SqlCommand(
-                           @"INSERT INTO funcionarios (pessoa_id, email_institucional)
-                             VALUES (@PessoaId, @EmailInstitucional)", conn, tx))
+                           @"INSERT INTO funcionarios (pessoa_id, email_institucional, senha_hash)
+                             VALUES (@PessoaId, @EmailInstitucional, @SenhaHash)", conn, tx))
                 {
+                    // CORREÇÃO: grava o hash da senha do funcionário na própria tabela funcionarios (CPF novo ou já existente)
+                    cmdFunc.Parameters.AddWithValue("@SenhaHash", PasswordHasherUtil.HashPassword(funcionario.Senha ?? ""));
                     cmdFunc.Parameters.AddWithValue("@PessoaId", pessoaId.Value);
                     cmdFunc.Parameters.AddWithValue("@EmailInstitucional", funcionario.EmailInstitucional);
                     cmdFunc.ExecuteNonQuery();
@@ -205,8 +207,8 @@ public class FuncionarioSqlRepository : DataConnection, IFuncionarioRepository
             cmd.Connection = conn;
             // Texto SQL que será executado
             cmd.CommandText = @"SET XACT_ABORT ON; BEGIN TRANSACTION;
-                UPDATE pessoas SET nome = @Nome, cpf = @Cpf, senha = COALESCE(NULLIF(@Senha, ''), senha) WHERE id = @Id;
-                UPDATE funcionarios SET email_institucional = @Email_Institucional WHERE pessoa_id = @Id;
+                UPDATE pessoas SET nome = @Nome, cpf = @Cpf WHERE id = @Id;
+                UPDATE funcionarios SET email_institucional = @Email_Institucional, senha_hash = COALESCE(NULLIF(@Senha, ''), senha_hash) WHERE pessoa_id = @Id; -- CORREÇÃO: senha própria do funcionário
                 COMMIT TRANSACTION;";
             // Preenche o parâmetro @Nome (evita SQL injection)
             cmd.Parameters.AddWithValue("@Nome", funcionario.Nome);

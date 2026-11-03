@@ -41,19 +41,17 @@
     <link rel="stylesheet"
           href="~/css/Mesas.css"
           asp-append-version="true">
+    <link rel="stylesheet" href="~/css/Listagens.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Reserva.css" asp-append-version="true" />
 </head>
 
 @* Corpo da página *@
-<body class="mesas-page">
+<body class="mesas-page has-fixed-page-top">
+@await Component.InvokeAsync("ReservaPageTop")
     @* Conteúdo principal *@
     <main class="mesas-container">
 
-        @* Link *@
-        <a asp-controller="AreaRestaurante"
-           asp-action="Index"
-           class="mesas-voltar">
-            ← Voltar à Área do Restaurante
-        </a>
+        <a asp-controller="AreaRestaurante" asp-action="Index" class="mesas-voltar">← Voltar à Área do Restaurante</a>
 
         @* Seção da página *@
         <section class="mesas-card">
@@ -117,7 +115,7 @@
                             <thead>
                                 @* Linha da tabela *@
                                 <tr>
-                                    <th>ID</th>
+                                    @* AJUSTE: coluna ID removida só da parte visual (o id continua nos links de ações) *@
                                     <th>Número da mesa</th>
                                     <th>Ambiente</th>
                                     <th>Capacidade</th>
@@ -143,8 +141,6 @@
 
                                     @* Linha da tabela *@
                                     <tr>
-                                        @* Célula *@
-                                        <td>@mesa.Id</td>
                                         @* Célula *@
                                         <td class="mesa-numero">
                                             Mesa @mesa.Numero</td>

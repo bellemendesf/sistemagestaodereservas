@@ -1,0 +1,437 @@
+/* Padronização: Minhas reservas, Mesas, Ambientes, Funcionários, Reservas (restaurante) */
+
+:root {
+    --lista-dourado: #c6a45c;
+    --lista-dourado-forte: #d9b24a;
+    --lista-dourado-hover: #ecc96a;
+    --lista-texto-escuro: #0a0908;
+    --lista-acao-fundo: #3a3220;
+    --lista-acao-borda: #c6a45c;
+    --lista-perigo: #e05a4f;
+    --lista-perigo-fundo: #4a2420;
+    --lista-perigo-texto: #ffc9c4;
+}
+
+body.mesas-page,
+body.funcionarios-page {
+    background: #181817 !important;
+}
+
+:root {
+    --lista-page-top-height: 82px;
+    --lista-respiro-topo: 40px;
+    --lista-padding-lateral: 32px;
+}
+
+body.mesas-page.has-fixed-page-top,
+body.funcionarios-page.has-fixed-page-top,
+body.detalhes-edicao-page.has-fixed-page-top,
+body.area-page.has-fixed-page-top {
+    padding: calc(var(--lista-page-top-height) + var(--lista-respiro-topo)) var(--lista-padding-lateral) 52px !important;
+}
+
+body.area-page.has-fixed-page-top {
+    padding-top: calc(var(--lista-page-top-height) + 24px) !important;
+}
+
+.mesas-container,
+.funcionarios-container,
+.detalhes-edicao-container.listagem-larga {
+    max-width: 1240px;
+}
+
+.mesas-voltar,
+.funcionarios-voltar,
+.detalhes-edicao-voltar,
+.clientes-voltar {
+    margin-bottom: 28px !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+}
+
+/* —— Cabeçalho das listagens —— */
+.reservas-lista-cabecalho,
+.mesas-header,
+.funcionarios-header,
+.detalhes-edicao-header,
+.ambientes-topo {
+    align-items: center !important;
+    padding: 36px 40px !important;
+    gap: 24px !important;
+}
+
+.reservas-lista-kicker,
+.mesas-kicker,
+.funcionarios-kicker,
+.detalhes-edicao-header .detalhes-edicao-kicker {
+    color: var(--lista-dourado-forte) !important;
+    font-size: 11px !important;
+    letter-spacing: 0.14em !important;
+    font-weight: 700 !important;
+}
+
+.reservas-lista-cabecalho h2,
+.mesas-header h1,
+.funcionarios-header h1,
+.detalhes-edicao-header .ambientes-topo h1 {
+    font-size: clamp(1.5rem, 2.5vw, 2rem) !important;
+    line-height: 1.2 !important;
+}
+
+.reservas-contador,
+.ambientes-contador,
+.clientes-contador {
+    min-height: 38px !important;
+    padding: 8px 16px !important;
+    border: 1px solid var(--lista-dourado) !important;
+    background: #2f2a1c !important;
+    color: var(--lista-dourado-hover) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+}
+
+.reservas-lista-acoes,
+.ambientes-acoes-topo {
+    padding: 20px 32px 0 !important;
+    justify-content: flex-end !important;
+}
+
+.mesas-conteudo,
+.funcionarios-conteudo,
+.detalhes-edicao-conteudo {
+    padding: 32px 40px 40px !important;
+}
+
+.mesas-descricao,
+.funcionarios-descricao,
+.detalhes-edicao-descricao {
+    font-size: 0.95rem !important;
+    line-height: 1.75 !important;
+}
+
+.mesas-table thead th {
+    padding: 20px 22px !important;
+    font-size: 0.82rem !important;
+}
+
+.mesas-table tbody td {
+    padding: 22px !important;
+    font-size: 1rem !important;
+}
+
+.ambientes-tabela thead th {
+    padding: 18px 20px !important;
+    font-size: 0.78rem !important;
+    letter-spacing: 0.08em !important;
+}
+
+.ambientes-tabela tbody td {
+    padding: 20px 22px !important;
+    font-size: 0.95rem !important;
+}
+
+.ambiente-status {
+    padding: 8px 14px !important;
+    font-size: 0.78rem !important;
+}
+
+.funcionario-item {
+    padding: 26px 28px !important;
+    gap: 28px !important;
+}
+
+.funcionario-avatar {
+    width: 52px !important;
+    height: 52px !important;
+    font-size: 1.35rem !important;
+}
+
+.funcionario-id {
+    font-size: 0.72rem !important;
+    margin-bottom: 8px !important;
+}
+
+.funcionario-nome {
+    font-size: 1.12rem !important;
+}
+
+.funcionario-cpf,
+.funcionario-contato span,
+.funcionario-contato strong {
+    font-size: 0.88rem !important;
+}
+
+.funcionarios-resumo-numero {
+    font-size: 1.75rem !important;
+}
+
+.detalhes-edicao-item {
+    padding: 24px !important;
+}
+
+.detalhes-edicao-item span {
+    font-size: 12px !important;
+    margin-bottom: 12px !important;
+}
+
+.detalhes-edicao-item strong {
+    font-size: 1.125rem !important;
+}
+
+/* —— Botão principal (novo / cadastrar) —— */
+.reservas-botao-novo,
+.btn-mesa-nova,
+.ambientes-botao-novo,
+.funcionarios-botao.funcionarios-botao-principal,
+.funcionarios-botao-principal {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 48px !important;
+    min-width: 188px !important;
+    padding: 0 26px !important;
+    border: 2px solid var(--lista-dourado-forte) !important;
+    border-radius: 8px !important;
+    background: var(--lista-dourado-forte) !important;
+    color: var(--lista-texto-escuro) !important;
+    font-family: "Poppins", sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.05em !important;
+    text-transform: uppercase !important;
+    text-decoration: none !important;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.35);
+}
+
+.reservas-botao-novo:hover,
+.btn-mesa-nova:hover,
+.ambientes-botao-novo:hover,
+.funcionarios-botao-principal:hover {
+    background: var(--lista-dourado-hover) !important;
+    border-color: var(--lista-dourado-hover) !important;
+    color: var(--lista-texto-escuro) !important;
+    transform: translateY(-1px);
+}
+
+/* —— Grupo de ações na linha —— */
+.reservas-acoes,
+.mesas-acoes,
+.ambiente-acoes,
+.funcionario-acoes {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 8px !important;
+}
+
+/* —— Botões de linha (visualizar, editar, etc.) —— */
+.reserva-acao,
+.mesas-acoes a,
+.ambiente-acoes a,
+.funcionarios-botao.funcionarios-botao-secundario,
+.funcionarios-botao.funcionarios-botao-editar {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 40px !important;
+    min-width: 100px !important;
+    padding: 0 16px !important;
+    border: 1px solid var(--lista-acao-borda) !important;
+    border-radius: 8px !important;
+    background: var(--lista-acao-fundo) !important;
+    color: var(--lista-dourado-hover) !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.03em !important;
+    text-decoration: none !important;
+    text-transform: uppercase !important;
+    white-space: nowrap !important;
+}
+
+.reserva-acao:hover,
+.mesas-acoes a:not(.acao-excluir):hover,
+.ambiente-acoes a:not(.ambiente-excluir):hover,
+.funcionarios-botao-secundario:hover,
+.funcionarios-botao-editar:hover {
+    background: var(--lista-dourado-forte) !important;
+    border-color: var(--lista-dourado-forte) !important;
+    color: var(--lista-texto-escuro) !important;
+    text-decoration: none !important;
+}
+
+/* —— Cancelar / excluir —— */
+.reserva-acao-cancelar,
+.mesas-acoes .acao-excluir,
+.ambiente-acoes a.ambiente-excluir,
+.funcionarios-botao.funcionarios-botao-excluir,
+.funcionarios-botao-excluir {
+    border: 1px solid var(--lista-perigo) !important;
+    background: var(--lista-perigo-fundo) !important;
+    color: var(--lista-perigo-texto) !important;
+}
+
+.reserva-acao-cancelar:hover,
+.mesas-acoes .acao-excluir:hover,
+.ambiente-acoes a.ambiente-excluir:hover,
+.funcionarios-botao.funcionarios-botao-excluir:hover,
+.funcionarios-botao-excluir:hover {
+    background: var(--lista-perigo) !important;
+    border-color: var(--lista-perigo) !important;
+    color: #fff !important;
+}
+
+.mesas-contagem {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    padding: 8px 16px;
+    margin-bottom: 20px;
+    border: 1px solid var(--lista-dourado);
+    border-radius: 20px;
+    background: #2f2a1c;
+    color: var(--lista-dourado-hover);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.mesas-contagem strong {
+    color: #fff;
+    margin-left: 4px;
+}
+
+@media (max-width: 700px) {
+    .reservas-lista-cabecalho,
+    .mesas-header,
+    .funcionarios-header {
+        flex-direction: column;
+        align-items: stretch !important;
+        text-align: center;
+    }
+
+    .reservas-botao-novo,
+    .btn-mesa-nova,
+    .ambientes-botao-novo,
+    .funcionarios-header > .funcionarios-botao {
+        width: 100%;
+    }
+
+    .funcionario-item {
+        grid-template-columns: 1fr !important;
+    }
+
+    .funcionario-acoes {
+        justify-content: stretch !important;
+    }
+
+    .funcionario-acoes .funcionarios-botao {
+        flex: 1 1 calc(50% - 4px);
+        min-width: 0 !important;
+    }
+}
+
+/* =========================================================
+   AJUSTE (v8): botões "← Voltar" com a mesma cor em todas as telas.
+   Na aba Reservas o Mesas.css não é carregado, então o link ficava
+   com a cor padrão do Bootstrap. Aqui o estilo fica igual para todos.
+   ========================================================= */
+.mesas-voltar,
+.funcionarios-voltar,
+.detalhes-edicao-voltar,
+.clientes-voltar {
+    display: inline-block; /* mesmo formato dos demais */
+    color: #E8D5A5 !important; /* dourado claro do Santa Massa */
+    text-decoration: none !important; /* sem sublinhado */
+    transition: color 0.25s ease; /* troca de cor suave */
+}
+
+.mesas-voltar:hover,
+.funcionarios-voltar:hover,
+.detalhes-edicao-voltar:hover,
+.clientes-voltar:hover {
+    color: #FFFFFF !important; /* clareia ao passar o mouse */
+}
+
+/* =========================================================
+   AJUSTE (v8): visual mais acolhedor, sutil e com as mesmas cores/fontes.
+   ========================================================= */
+
+/* Cartões principais: cantos mais arredondados e sombra suave */
+.mesas-card,
+.funcionarios-card,
+.detalhes-edicao-card,
+.reservas-lista,
+.page-content form,
+.area-card {
+    border-radius: 16px !important; /* cantos levemente arredondados */
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.22) !important; /* sombra suave */
+}
+
+/* Tabelas: contorno arredondado e linhas com destaque suave */
+.mesas-table-wrap,
+.clientes-tabela-wrap,
+.ambientes-tabela-wrap {
+    border-radius: 12px !important; /* cantos da tabela */
+    overflow: hidden; /* respeita o arredondamento */
+}
+
+.mesas-table tbody tr,
+.clientes-tabela tbody tr,
+.ambientes-tabela tbody tr,
+.funcionario-item {
+    transition: background-color 0.25s ease; /* hover suave */
+}
+
+.mesas-table tbody tr:hover,
+.clientes-tabela tbody tr:hover,
+.ambientes-tabela tbody tr:hover,
+.funcionario-item:hover {
+    background-color: rgba(211, 183, 121, 0.06) !important; /* leve brilho dourado */
+}
+
+/* Botões: arredondados e com movimento suave */
+.reservas-botao-novo,
+.btn-mesa-nova,
+.ambientes-botao-novo,
+.funcionarios-botao,
+.reserva-acao,
+.mesas-acoes a,
+.ambiente-acoes a,
+.page-content form button[type="submit"] {
+    border-radius: 10px !important; /* cantos mais amigáveis */
+    transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease !important; /* hover suave */
+}
+
+.reservas-botao-novo:hover,
+.btn-mesa-nova:hover,
+.ambientes-botao-novo:hover,
+.reserva-acao:hover,
+.mesas-acoes a:hover,
+.ambiente-acoes a:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25); /* leve elevação */
+}
+
+/* Textos de apoio: um pouco mais leves e com mais respiro */
+.mesas-descricao,
+.funcionarios-descricao,
+.detalhes-edicao-descricao,
+.page-lead {
+    color: #D6CEBF !important; /* tom mais quente e legível */
+    letter-spacing: 0.01em; /* leitura mais confortável */
+}
+
+/* Títulos: um respiro maior abaixo */
+.mesas-header h1,
+.funcionarios-header h1,
+.reservas-lista-cabecalho h2,
+.detalhes-edicao-header h1 {
+    margin-bottom: 10px !important; /* espaço entre título e texto */
+}
+
+/* Campos de formulário: cantos suaves */
+.page-content form input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+.page-content form select,
+.detalhes-edicao-campo input,
+.detalhes-edicao-campo select {
+    border-radius: 10px !important; /* cantos dos campos */
+}

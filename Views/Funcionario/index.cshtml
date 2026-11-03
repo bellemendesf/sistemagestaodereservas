@@ -35,20 +35,18 @@
     <link rel="stylesheet"
           href="~/css/Funcionarios.css"
           asp-append-version="true">
+    <link rel="stylesheet" href="~/css/Listagens.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Reserva.css" asp-append-version="true" />
 </head>
 
 @* Corpo da página *@
-<body class="funcionarios-page">
+<body class="funcionarios-page has-fixed-page-top">
+@await Component.InvokeAsync("ReservaPageTop")
 
     @* Conteúdo principal *@
     <main class="funcionarios-container">
 
-        @* Link *@
-        <a asp-controller="AreaRestaurante"
-           asp-action="Index"
-           class="funcionarios-voltar">
-            ← Voltar à área do restaurante
-        </a>
+        <a asp-controller="AreaRestaurante" asp-action="Index" class="funcionarios-voltar">← Voltar à área do restaurante</a>
 
         @* Seção da página *@
         <section class="funcionarios-card">
@@ -204,14 +202,6 @@
 
                                     @* Link *@
                                     <a asp-controller="Funcionario"
-                                       asp-action="Edit"
-                                       asp-route-id="@item.Id"
-                                       class="funcionarios-botao funcionarios-botao-editar">
-                                        Editar
-                                    </a>
-
-                                    @* Link *@
-                                    <a asp-controller="Funcionario"
                                        asp-action="Delete"
                                        asp-route-id="@item.Id"
                                        class="funcionarios-botao funcionarios-botao-excluir">
@@ -228,24 +218,8 @@
 
             @* Rodapé *@
             <footer class="funcionarios-footer">
-                @* Texto destacado *@
                 <span>Santa Massa</span>
-                @* Texto destacado *@
                 <span>Painel de gerenciamento</span>
-                
-                @* Bloco com botão de logout *@
-                <form asp-controller="Auth" 
-                      asp-action="Logout" 
-                      method="post" 
-                      style="display: inline;">
-                    @* Token antifalsificação *@
-                    @Html.AntiForgeryToken()
-                    @* Botão de logout *@
-                    <button type="submit" 
-                            style="background: none; border: none; color: #999; cursor: pointer; font-size: 0.85rem; text-decoration: underline;">
-                        Logout
-                    </button>
-                </form>
             </footer>
 
         </section>
@@ -254,4 +228,3 @@
 
 </body>
 </html>
-```
