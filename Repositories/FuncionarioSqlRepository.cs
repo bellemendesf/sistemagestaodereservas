@@ -24,12 +24,12 @@ public class FuncionarioSqlRepository : DataConnection, IFuncionarioRepository
                 {
                     // CORREÇÃO: a senha não fica mais em pessoas (vai para funcionarios.senha_hash)
                     using (var cmdPessoa = new SqlCommand(
-                               @"INSERT INTO pessoas (nome, cpf, senha) VALUES (@Nome, @Cpf, @Senha);
+                               @"INSERT INTO pessoas (nome, cpf) VALUES (@Nome, @Cpf);
                                  SELECT CAST(SCOPE_IDENTITY() AS INT);", conn, tx))
                     {
                         cmdPessoa.Parameters.AddWithValue("@Nome", funcionario.Nome);
                         cmdPessoa.Parameters.AddWithValue("@Cpf", funcionario.Cpf);
-                        cmdPessoa.Parameters.AddWithValue("@Senha", ""); // senha em pessoas não é mais usada no login
+                        cmdPessoa.Parameters.AddWithValue("@Senha", ""); // script novo: pessoas não tem coluna senha (parâmetro sem uso)
                         pessoaId = (int)cmdPessoa.ExecuteScalar()!;
                     }
                 }
@@ -99,7 +99,7 @@ public class FuncionarioSqlRepository : DataConnection, IFuncionarioRepository
             // Associa o comando à conexão
             cmd.Connection = conn;
             // Texto SQL que será executado
-            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, p.senha, f.email_institucional FROM pessoas p INNER JOIN funcionarios f ON p.id = f.pessoa_id";
+            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, '', f.email_institucional FROM pessoas p INNER JOIN funcionarios f ON p.id = f.pessoa_id";
 
             // Abre a conexão com o banco
             conn.Open();
@@ -153,7 +153,7 @@ public class FuncionarioSqlRepository : DataConnection, IFuncionarioRepository
             // Associa o comando à conexão
             cmd.Connection = conn;
             // Texto SQL que será executado
-            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, p.senha, f.email_institucional FROM pessoas p INNER JOIN funcionarios f ON p.id = f.pessoa_id WHERE p.id = @Id";
+            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, '', f.email_institucional FROM pessoas p INNER JOIN funcionarios f ON p.id = f.pessoa_id WHERE p.id = @Id";
             // Preenche o parâmetro @Id (evita SQL injection)
             cmd.Parameters.AddWithValue("@Id", id);
 

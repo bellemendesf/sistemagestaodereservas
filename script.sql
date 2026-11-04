@@ -134,21 +134,23 @@ VALUES
 GO
 
 -- Clientes --
+-- Senha inicial de todos os clientes: Cliente@123 (senha_hash gerado com o PasswordHasherUtil do projeto)
 INSERT INTO clientes
 (pessoa_id, email_pessoal, telefone, senha_hash)
 VALUES
-(1, 'joao@email.com', '(17) 99999-0001', NULL),
-(2, 'maria@email.com', '(17) 99999-0002', NULL),
-(3, 'pedro@email.com', '(17) 99999-0003', NULL)
+(1, 'joao@email.com', '(17) 99999-0001', 'AQAAAAIAAYagAAAAECf73N1r+ESbL+NXeQHbgUFbI+YvnflCDZIwbTNbLcbJ+sLanVYbCxuohaGLRpXYfQ=='),
+(2, 'maria@email.com', '(17) 99999-0002', 'AQAAAAIAAYagAAAAECUhYX6JQsctaUhhURPdLA9Fp0qAFljtFB9L26TCv1lTjb5uSP5qeO1HCB3UGkmoEA=='),
+(3, 'pedro@email.com', '(17) 99999-0003', 'AQAAAAIAAYagAAAAELwN2wlTTgxz/SRocejzp+0sPdN7L1x4WFyAOrBAH9EAxrHNEZO0K16M6Qq+60R4xA==')
 GO
 
 -- Funcionarios --
+-- Senha inicial de todos os funcionários: Func@123 (senha_hash gerado com o PasswordHasherUtil do projeto)
 INSERT INTO funcionarios
 (pessoa_id, email_institucional, senha_hash)
 VALUES
-(4, 'ana@santamassa.com.br', NULL),
-(5, 'carlos@santamassa.com.br', NULL),
-(6, 'juliana@santamassa.com.br', NULL)
+(4, 'ana@santamassa.com.br', 'AQAAAAIAAYagAAAAELKwxpYhaL2sy/t/PgA4Rv5RtsiHIeFN3qrZiyvjW9JLcCMpCbK4ZUd2IAG7DoKdbw=='),
+(5, 'carlos@santamassa.com.br', 'AQAAAAIAAYagAAAAEFslurjvKKHWXNelaxnatjMGCdRF8SshAl3C5Afu9Sm3S2UE2LzW96oehf5Lp03V7g=='),
+(6, 'juliana@santamassa.com.br', 'AQAAAAIAAYagAAAAEIQfhus5xC+CeiYa4mWG+twm//E880Z8NrclLYhJ7GowHQEhf2kEqGlfu0Tttue8Sw==')
 GO
 
 
@@ -314,7 +316,7 @@ GO
 -- Teste de execução --
 SELECT * FROM v_reservas_mesas
 GO
-7. Visualização detalhada das reservas com clientes, mesas e ambientes
+--7. Visualização detalhada das reservas com clientes, mesas e ambientes--
 CREATE VIEW v_reservas_detalhadas
 AS
 SELECT
@@ -343,7 +345,7 @@ GO
 SELECT * FROM v_reservas_detalhadas
 GO
 
-1. Procedure para cadastrar um cliente
+--1. Procedure para cadastrar um cliente--
 CREATE PROCEDURE buscCli
     @nome VARCHAR(100),
     @cpf VARCHAR(14),
@@ -376,7 +378,7 @@ EXEC buscCli
     @senha_hash = 'hash_teste'
 GO
 
-2. Procedure para atualizar os dados de um cliente na tabela Clientes.
+--2. Procedure para atualizar os dados de um cliente na tabela Clientes.--
 CREATE OR ALTER PROCEDURE AtualizaCli
     @pessoa_id INT,
     @nome VARCHAR(100),
@@ -404,7 +406,8 @@ EXEC AtualizaCli
     1, 'Maria Oliveira', '12345678900',
     'maria@email.com', '17999999999', 'hash_teste'
 GO
-3. Procedure para inserir um funcionário na tabela Funcionarios.
+
+--3. Procedure para inserir um funcionário na tabela Funcionarios.
 CREATE OR ALTER PROCEDURE InsereFunc
     @nome VARCHAR(100),
     @cpf VARCHAR(14),
@@ -429,7 +432,7 @@ EXEC InsereFunc
     'João Santos', '98765432100',
     'joao@santamassa.com', 'hash_teste'
 GO
-4. Procedure para atualizar os dados de um funcionário na tabela Funcionarios.
+--4. Procedure para atualizar os dados de um funcionário na tabela Funcionarios.
 CREATE OR ALTER PROCEDURE AtualizaFunc
     @pessoa_id INT,
     @nome VARCHAR(100),
@@ -490,7 +493,7 @@ GO
 -- Teste de execução --
 EXEC AtualizaAmb 1, 'Salão Interno', 'Ativo', 80
 GO
-7. Procedure para inserir uma mesa na tabela Mesas.
+--7. Procedure para inserir uma mesa na tabela Mesas.--
 CREATE OR ALTER PROCEDURE InsereMesa
     @nr INT,
     @numero INT,
@@ -509,7 +512,7 @@ GO
 -- Teste de execução --
 EXEC InsereMesa 41, 21, 'Disponivel', 4, 1
 GO
-8. Procedure para atualizar os dados de uma mesa na tabela Mesas.
+--8. Procedure para atualizar os dados de uma mesa na tabela Mesas.--
 CREATE OR ALTER PROCEDURE AtualizaMesa
     @nr INT,
     @numero INT,
@@ -530,7 +533,7 @@ GO
 -- Teste de execução --
 EXEC AtualizaMesa 1, 1, 'Disponivel', 4, 1
 GO
-9. Procedure para inserir uma reserva na tabela Reservas.
+--9. Procedure para inserir uma reserva na tabela Reservas.
 CREATE OR ALTER PROCEDURE InsereReserva
     @qtd_pessoas INT,
     @data_hora DATETIME,
@@ -547,7 +550,7 @@ GO
 -- Teste de execução --
 EXEC InsereReserva 4, '2026-11-10', 1
 GO
-10. Procedure para atualizar os dados de uma reserva na tabela Reservas.
+--10. Procedure para atualizar os dados de uma reserva na tabela Reservas.
 CREATE OR ALTER PROCEDURE AtualizaReserva
     @numero INT,
     @qtd_pessoas INT,
@@ -568,7 +571,7 @@ GO
 -- Teste de execução --
 EXEC AtualizaReserva 1, 5, '2026-11-10', 1, 1
 GO
-11. Procedure para inserir uma associação entre reserva e mesa na tabela Reservas_Mesas.
+--11. Procedure para inserir uma associação entre reserva e mesa na tabela Reservas_Mesas.
 CREATE OR ALTER PROCEDURE InsereReservaMesa
     @numero_reservas INT,
     @nr_mesas INT
@@ -584,7 +587,7 @@ GO
 -- Teste de execução --
 EXEC InsereReservaMesa 1, 2
 GO
-12. Procedure para atualizar uma associação entre reserva e mesa na tabela Reservas_Mesas.
+--12. Procedure para atualizar uma associação entre reserva e mesa na tabela Reservas_Mesas.
 CREATE OR ALTER PROCEDURE AtualizaReservaMesa
     @numero_reservas INT,
     @nr_mesa_antiga INT,
@@ -601,7 +604,7 @@ GO
 -- Teste de execução --
 EXEC AtualizaReservaMesa 1, 2, 3
 GO
-13.Procedure adicional para listar as mesas disponíveis de um ambiente.
+--13.Procedure adicional para listar as mesas disponíveis de um ambiente.
 CREATE OR ALTER PROCEDURE ListDisp
     @codigo_ambientes INT
 AS
@@ -622,7 +625,7 @@ GO
 -- Teste de execução --
 EXEC ListDisp @codigo_ambientes = 1
 GO
-14.Procedure adicional para atualizar o status de uma mesa.
+--14.Procedure adicional para atualizar o status de uma mesa.
 CREATE OR ALTER PROCEDURE AtualizaStatus
     @nr INT,
     @NovoStatus VARCHAR(20),

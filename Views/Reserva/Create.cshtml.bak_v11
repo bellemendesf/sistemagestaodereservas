@@ -1,0 +1,372 @@
+﻿@* Tipo de dado (modelo) que esta view recebe do controller *@
+@model GestaoReservas.Models.Reserva
+
+@* Bloco C#: configurações da view (título, layout e variáveis) *@
+@{
+    Layout = "~/Views/Shared/_ReservaLayout.cshtml";
+    ViewData["Title"] = "Nova reserva";
+    var mapaIds = ViewBag.MapaAmbienteIds as Dictionary<string, int> ?? new Dictionary<string, int>();
+    int IdAmbienteMapa(string nome) => mapaIds.TryGetValue(nome, out var id) ? id : 0;
+    var dataMinimaReserva = DateTime.Today.ToString("yyyy-MM-dd");
+}
+
+@* Seção da página *@
+<section class="panel">
+    @* Formulário (asp-action Create) *@
+    <form asp-action="Create" method="post">
+        @* Resumo dos erros de validação *@
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+        @if (Model.Cliente != null && Model.ClienteId > 0)
+        {
+            <div class="form-section">
+                <h2>Cliente</h2>
+                <p><strong>@Model.Cliente.Nome</strong> - CPF @Model.Cliente.Cpf</p>
+                <input type="hidden" asp-for="ClienteId" />
+            </div>
+        }
+
+        @* Bloco (classe form-section) *@
+        <div class="form-section">
+            @* Subtítulo *@
+            <h2>Detalhes da reserva</h2>
+            @* Parágrafo de texto *@
+            <p>Mesa, dia e quantidade de pessoas.</p>
+            @* Bloco (classe form-grid) *@
+            <div class="form-grid">
+                @* Bloco (classe field) *@
+                <div class="field">
+                    @* Rótulo do campo (asp-for MesaId) *@
+                    <label asp-for="MesaId">Número da mesa</label>
+                    @* MAPA DE MESAS: o campo continua sendo o mesmo; ele é preenchido ao clicar numa mesa livre abaixo. *@
+                    <input asp-for="MesaId" type="number" min="1" readonly placeholder="Escolha no mapa abaixo" />
+                    @* Texto destacado *@
+                    <span asp-validation-for="MesaId" class="text-danger"></span>
+                </div>
+        
+                @* Bloco (classe field) *@
+                <div class="field">
+                    @* RESERVA POR DIA: o cliente escolhe apenas o dia, sem horário. *@
+                    <label asp-for="DataHora">Data</label>
+                    @* Campo de entrada (asp-for DataHora) *@
+                    <input asp-for="DataHora" type="date" min="@dataMinimaReserva"
+                           value="@(Model.DataHora == default ? "" : Model.DataHora.ToString("yyyy-MM-dd"))" />
+                    <span asp-validation-for="DataHora" class="text-danger"></span>
+                </div>
+                @* Bloco (classe field) *@
+                <div class="field">
+                    @* Rótulo do campo (asp-for QtdPessoas) *@
+                    <label asp-for="QtdPessoas">Quantidade de pessoas</label>
+                    @* Campo de entrada (asp-for QtdPessoas) *@
+                    <input asp-for="QtdPessoas" type="number" min="1" />
+                </div>
+                @* ALTERAÇÃO: o status não aparece mais durante o cadastro; a nova reserva fica Pendente
+                   e o status é exibido na tela de detalhes logo após salvar. *@
+            </div>
+        </div>
+
+        @* MAPA DE MESAS: o cliente escolhe a área, vê o desenho dela e seleciona uma mesa livre. *@
+        <div class="form-section">
+            @* Subtítulo *@
+            <h2>Mapa de mesas</h2>
+            @* Parágrafo de texto *@
+            <p>Escolha o dia acima, depois a área do restaurante e uma mesa livre.</p>
+
+            <div class="field">
+                <label for="area-mapa">Ambiente</label>
+                <select id="area-mapa">
+                    <option value="">Selecione o ambiente</option>
+                    @foreach (var nome in new[] { "Interno", "Externo", "Sacada" })
+                    {
+                        var codigo = IdAmbienteMapa(nome);
+                        if (codigo > 0)
+                        {
+                            <option value="@codigo" data-chave="@nome">@nome</option>
+                        }
+                        else
+                        {
+                            <option value="" disabled>@nome (cadastre em Ambientes)</option>
+                        }
+                    }
+                </select>
+            </div>
+
+            <p id="mapa-aviso" class="mapa-aviso">Informe o dia e escolha o ambiente para ver as mesas no mapa.</p>
+
+            <div id="mapa-mesas-root"
+                 data-url="@Url.Action("MesasDisponiveis", "Reserva")">
+
+            @* Interno: 20 mesas (números 1–20 neste ambiente). *@
+            <div class="mapa-salao" data-chave="Interno" data-ambiente-id="@IdAmbienteMapa("Interno")" hidden aria-hidden="true">
+                @* Bloco (classe mapa-areas) *@
+                <div class="mapa-areas">
+                    @* Bloco (classe mapa-area) *@
+                    <div class="mapa-area">Entrada</div>
+                    @* Bloco (classe mapa-area janela) *@
+                    <div class="mapa-area janela">Janela</div>
+                </div>
+                @* Bloco (classe mapa-grade) *@
+                <div class="mapa-grade">
+                    @* Repete o bloco o número de vezes indicado *@
+                    @for (int n = 1; n <= 20; n++)
+                    {
+                        <div class="mapa-mesa @(n % 2 == 0 ? "redonda" : "")" data-numero="@n">@n</div>
+                    }
+                </div>
+                @* Bloco (classe mapa-areas) *@
+                <div class="mapa-areas">
+                    @* Bloco (classe mapa-area) *@
+                    <div class="mapa-area">Banheiros</div>
+                    @* Bloco (classe mapa-area) *@
+                    <div class="mapa-area">Cozinha / Balcão</div>
+                    @* Bloco (classe mapa-area saida) *@
+                    <div class="mapa-area saida">Saída</div>
+                </div>
+                <div class="mapa-listagem selecao-mesas" aria-label="Mesas cadastradas no Interno"></div>
+            </div>
+
+            @* Externo: 12 mesas (números 1–12 neste ambiente). *@
+            <div class="mapa-salao" data-chave="Externo" data-ambiente-id="@IdAmbienteMapa("Externo")" hidden aria-hidden="true">
+                @* Bloco (classe mapa-areas) *@
+                <div class="mapa-areas">
+                    @* Bloco (classe mapa-area) *@
+                    <div class="mapa-area">Calçada</div>
+                </div>
+                @* Bloco (classe mapa-grade quatro) *@
+                <div class="mapa-grade quatro">
+                    @* Repete o bloco o número de vezes indicado *@
+                    @for (int n = 1; n <= 12; n++)
+                    {
+                        <div class="mapa-mesa redonda" data-numero="@n">@n</div>
+                    }
+                </div>
+                @* Bloco (classe mapa-areas) *@
+                <div class="mapa-areas">
+                    @* Bloco (classe mapa-area janela) *@
+                    <div class="mapa-area janela">Jardim</div>
+                    @* Bloco (classe mapa-area saida) *@
+                    <div class="mapa-area saida">Saída</div>
+                </div>
+                <div class="mapa-listagem selecao-mesas" aria-label="Mesas cadastradas no Externo"></div>
+            </div>
+
+            @* Sacada: 8 mesas (números 1–8 neste ambiente). *@
+            <div class="mapa-salao" data-chave="Sacada" data-ambiente-id="@IdAmbienteMapa("Sacada")" hidden aria-hidden="true">
+                @* Bloco (classe mapa-areas) *@
+                <div class="mapa-areas">
+                    @* Bloco (classe mapa-area janela) *@
+                    <div class="mapa-area janela">Vista / Parapeito</div>
+                </div>
+                @* Bloco (classe mapa-grade quatro) *@
+                <div class="mapa-grade quatro">
+                    @* Repete o bloco o número de vezes indicado *@
+                    @for (int n = 1; n <= 8; n++)
+                    {
+                        <div class="mapa-mesa" data-numero="@n">@n</div>
+                    }
+                </div>
+                @* Bloco (classe mapa-areas) *@
+                <div class="mapa-areas">
+                    @* Bloco (classe mapa-area) *@
+                    <div class="mapa-area">Escada</div>
+                    @* Bloco (classe mapa-area saida) *@
+                    <div class="mapa-area saida">Saída</div>
+                </div>
+                <div class="mapa-listagem selecao-mesas" aria-label="Mesas cadastradas na Sacada"></div>
+            </div>
+
+            @* Passo 3: legenda das cores usadas na seleção. *@
+            <div class="mapa-legenda">
+                @* Texto destacado *@
+                <span><i class="leg livre"></i> Livre</span>
+                @* Texto destacado *@
+                <span><i class="leg reservada"></i> Reservada / ocupada</span>
+                @* Texto destacado *@
+                <span><i class="leg selecionada"></i> Selecionada</span>
+            </div>
+
+            </div>
+        </div>
+
+        @* Bloco (classe form-actions) *@
+        <div class="form-actions">
+            @* Botão *@
+            <button type="submit" class="btn-save">Salvar reserva</button>
+            @* Link (asp-action Index) *@
+            <a asp-action="Index" class="btn-ghost">Cancelar</a>
+        </div>
+    </form>
+</section>
+
+@* Arquivo de estilo/fonte externo *@
+<link rel="stylesheet" href="~/css/MapaMesas.css" asp-append-version="true" />
+
+<script>
+    (function () {
+        const campoMesa = document.getElementById("MesaId");
+        const campoData = document.getElementById("DataHora");
+        const campoArea = document.getElementById("area-mapa");
+        const aviso = document.getElementById("mapa-aviso");
+        const root = document.getElementById("mapa-mesas-root");
+        let mesasDoDia = [];
+
+        function ambienteId() {
+            const id = parseInt(campoArea.value, 10);
+            return Number.isFinite(id) && id > 0 ? id : 0;
+        }
+
+        function chaveAmbiente() {
+            const opt = campoArea.options[campoArea.selectedIndex];
+            if (!opt || opt.disabled) return "";
+            return (opt.dataset.chave || opt.textContent || "").trim();
+        }
+
+        function idMesa(m) { return m.id ?? m.Id; }
+        function numMesa(m) { return Number(m.numero ?? m.Numero); }
+        function idAmbMesa(m) { return Number(m.ambienteId ?? m.AmbienteId ?? 0); }
+        function nomeAmbMesa(m) { return (m.ambiente ?? m.Ambiente ?? "").trim(); }
+        function sitMesa(m) { return (m.situacao ?? m.Situacao ?? "").trim(); }
+        function lugaresMesa(m) { return m.lugares ?? m.Lugares ?? ""; }
+
+        function mesasDoAmbienteAtual() {
+            const id = ambienteId();
+            const chave = chaveAmbiente().toLowerCase();
+            if (!id && !chave) return [];
+            return mesasDoDia.filter(m => {
+                if (id > 0 && idAmbMesa(m) === id) return true;
+                const nome = nomeAmbMesa(m).toLowerCase();
+                return chave && nome === chave;
+            });
+        }
+
+        function salaoAtual() {
+            const chave = chaveAmbiente();
+            const id = ambienteId();
+            return [...document.querySelectorAll(".mapa-salao")].find(s =>
+                (chave && s.dataset.chave === chave) ||
+                (id > 0 && s.dataset.ambienteId === String(id))
+            ) ?? null;
+        }
+
+        function mostrarSalao() {
+            const salao = salaoAtual();
+            document.querySelectorAll(".mapa-salao").forEach(s => {
+                const ok = salao === s;
+                s.hidden = !ok;
+                s.setAttribute("aria-hidden", ok ? "false" : "true");
+            });
+        }
+
+        function limparCelulas(salao) {
+            salao.querySelectorAll(".mapa-mesa").forEach(c => {
+                c.classList.remove("livre", "reservada", "selecionada", "sem-cadastro");
+                delete c.dataset.mesaId;
+            });
+        }
+
+        function pintarMapa() {
+            document.querySelectorAll(".mapa-listagem").forEach(el => { el.innerHTML = ""; });
+
+            if (!campoData.value) {
+                aviso.textContent = "Informe a data da reserva para ver a disponibilidade das mesas.";
+                return;
+            }
+            if (!ambienteId()) {
+                aviso.textContent = "Selecione o ambiente (Interno, Externo ou Sacada).";
+                return;
+            }
+
+            const salao = salaoAtual();
+            if (!salao) {
+                aviso.textContent = "Ambiente não encontrado no mapa.";
+                return;
+            }
+            mostrarSalao();
+            limparCelulas(salao);
+
+            const mesas = mesasDoAmbienteAtual();
+            salao.querySelectorAll(".mapa-mesa").forEach(cel => {
+                const num = parseInt(cel.dataset.numero, 10);
+                const m = mesas.find(x => numMesa(x) === num);
+                if (!m) {
+                    cel.classList.add("sem-cadastro");
+                    return;
+                }
+                cel.dataset.mesaId = idMesa(m);
+                if (sitMesa(m).toLowerCase() === "livre") cel.classList.add("livre");
+                else cel.classList.add("reservada");
+                if (String(idMesa(m)) === campoMesa.value) cel.classList.add("selecionada");
+            });
+
+            pintarListagem(salao, mesas);
+
+            const escolhida = mesas.find(m => String(idMesa(m)) === campoMesa.value);
+            if (!escolhida || sitMesa(escolhida).toLowerCase() !== "livre")
+                campoMesa.value = "";
+
+            aviso.textContent = mesas.length === 0
+                ? "Nenhuma mesa cadastrada neste ambiente. Cadastre em Mesas e vincule ao ambiente " + chaveAmbiente() + "."
+                : "Disponibilidade para " + campoData.value + ". Clique em uma mesa verde (livre).";
+        }
+
+        function pintarListagem(salao, mesas) {
+            const listagem = salao.querySelector(".mapa-listagem");
+            if (!listagem) return;
+            if (mesas.length === 0) {
+                listagem.innerHTML = '<p class="mapa-aviso">Nenhuma mesa neste ambiente.</p>';
+                return;
+            }
+            mesas.slice().sort((a, b) => numMesa(a) - numMesa(b)).forEach(m => {
+                const botao = document.createElement("button");
+                botao.type = "button";
+                const livre = sitMesa(m).toLowerCase() === "livre";
+                botao.className = "mesa-opcao " + (livre ? "livre" : "reservada");
+                if (String(idMesa(m)) === campoMesa.value) botao.classList.add("selecionada");
+                botao.disabled = !livre;
+                botao.innerHTML = "<strong>Mesa " + numMesa(m) + "</strong><small>" +
+                    lugaresMesa(m) + " lugares · " + nomeAmbMesa(m) + "</small><small>" + sitMesa(m) + "</small>";
+                botao.addEventListener("click", () => {
+                    campoMesa.value = idMesa(m);
+                    pintarMapa();
+                });
+                listagem.appendChild(botao);
+            });
+        }
+
+        async function carregarMesas() {
+            if (!campoData.value) {
+                mesasDoDia = [];
+                pintarMapa();
+                return;
+            }
+            const params = new URLSearchParams();
+            params.set("dataHora", campoData.value);
+            const id = ambienteId();
+            if (id > 0) params.set("ambienteId", String(id));
+
+            try {
+                const resposta = await fetch(root.dataset.url + "?" + params.toString());
+                if (!resposta.ok) throw new Error("HTTP " + resposta.status);
+                const data = await resposta.json();
+                mesasDoDia = Array.isArray(data) ? data : [];
+                pintarMapa();
+            } catch {
+                mesasDoDia = [];
+                aviso.textContent = "Não foi possível carregar as mesas. Verifique a conexão com o banco.";
+                pintarMapa();
+            }
+        }
+
+        root.addEventListener("click", e => {
+            const cel = e.target.closest(".mapa-mesa.livre");
+            if (cel && cel.dataset.mesaId) {
+                campoMesa.value = cel.dataset.mesaId;
+                pintarMapa();
+            }
+        });
+
+        campoData.addEventListener("change", carregarMesas);
+        campoData.addEventListener("input", carregarMesas);
+        campoArea.addEventListener("change", () => { mostrarSalao(); carregarMesas(); });
+        pintarMapa();
+    })();
+</script>

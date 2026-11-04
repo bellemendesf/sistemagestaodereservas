@@ -18,7 +18,7 @@ public class PessoaSqlRepository : DataConnection, IPessoaRepository
             // Associa o comando à conexão
             cmd.Connection = conn;
             // Texto SQL que será executado
-            cmd.CommandText = @"INSERT INTO pessoas (nome, cpf, senha) VALUES (@Nome, @Cpf, @Senha);";
+            cmd.CommandText = @"INSERT INTO pessoas (nome, cpf) VALUES (@Nome, @Cpf); -- script novo: pessoas não tem mais a coluna senha";
             // Preenche o parâmetro @Nome (evita SQL injection)
             cmd.Parameters.AddWithValue("@Nome", pessoa.Nome);
             // Preenche o parâmetro @Cpf (evita SQL injection)
@@ -55,7 +55,7 @@ public class PessoaSqlRepository : DataConnection, IPessoaRepository
             // Associa o comando à conexão
             cmd.Connection = conn;
             // Texto SQL que será executado
-            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, p.senha FROM pessoas p";
+            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, '' FROM pessoas p" /* script novo: senha fica em clientes/funcionarios */;
 
             // Abre a conexão com o banco
             conn.Open();
@@ -107,7 +107,7 @@ public class PessoaSqlRepository : DataConnection, IPessoaRepository
             // Associa o comando à conexão
             cmd.Connection = conn;
             // Texto SQL que será executado
-            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, p.senha FROM pessoas p WHERE p.id = @Id";
+            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, '' FROM pessoas p WHERE p.id = @Id" /* script novo: senha fica em clientes/funcionarios */;
             // Preenche o parâmetro @Id (evita SQL injection)
             cmd.Parameters.AddWithValue("@Id", id);
 
@@ -158,7 +158,7 @@ public class PessoaSqlRepository : DataConnection, IPessoaRepository
             // Associa o comando à conexão
             cmd.Connection = conn;
             // Texto SQL que será executado
-            cmd.CommandText = @"UPDATE pessoas SET nome = @Nome, cpf = @Cpf, senha = COALESCE(NULLIF(@Senha, ''), senha) WHERE id = @Id;";
+            cmd.CommandText = @"UPDATE pessoas SET nome = @Nome, cpf = @Cpf WHERE id = @Id;"; // script novo: pessoas não tem mais a coluna senha
             // Preenche o parâmetro @Nome (evita SQL injection)
             cmd.Parameters.AddWithValue("@Nome", pessoa.Nome);
             // Preenche o parâmetro @Cpf (evita SQL injection)

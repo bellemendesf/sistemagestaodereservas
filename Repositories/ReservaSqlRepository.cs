@@ -4,333 +4,234 @@ using GestaoReservas.Models;
 using Microsoft.Data.SqlClient;
 
 // Repositório que grava e lê Reserva no SQL Server
+// N:N: as mesas da reserva ficam na tabela Reservas_Mesas (a tabela reservas não guarda mesa).
 public class ReservaSqlRepository : DataConnection, IReservaRepository
 {
     // Construtor: repassa a configuração para a classe base
     public ReservaSqlRepository(IConfiguration configuration) : base(configuration) { }
 
-    // Insere um novo registro no banco
+    // Consulta base: VIEW v_reservas (número, quantidade, data e status em texto) + v_clientes (dados do cliente).
+    // A view não traz o id do cliente, por isso liga com reservas só para pegar cliente_id.
+    private const string SelectReservas = @"SELECT v.Codigo_Reserva, v.Quantidade_Pessoas, v.Data_Reserva,
+                COALESCE(v.Status, 'Pendente'), -- status nulo vira Pendente
+                r.cliente_id, c.Nome, c.CPF, c.Email, c.Telefone
+                FROM v_reservas v
+                INNER JOIN reservas r ON r.numero = v.Codigo_Reserva
+                INNER JOIN v_clientes c ON c.Codigo = r.cliente_id";
+
+    // Mesas de cada reserva: VIEW v_reservas_mesas (ligação N:N) + v_mesas (número, lugares e ambiente).
+    private const string SelectMesas = @"SELECT rm.Codigo_Reserva, rm.Codigo_Mesa, m.Numero, m.Ambiente, m.Quantidade_Lugares
+                FROM v_reservas_mesas rm
+                INNER JOIN v_mesas m ON m.Codigo = rm.Codigo_Mesa";
+
+    // Insere uma nova reserva e grava cada mesa escolhida na tabela de ligação
     public void Create(Reserva reserva)
     {
-        // UNIÃO: liga o Cliente recebido por A ao cadastro e à reserva SQL de B.
-        using (var cmd = new SqlCommand())
+        conn.Open();
+        try
         {
-            // Associa o comando à conexão
-            cmd.Connection = conn;
-            // Texto SQL que será executado
-            cmd.CommandText = @"SET XACT_ABORT ON; BEGIN TRANSACTION;
-                DECLARE @PessoaId int;
-                SELECT @PessoaId = id FROM pessoas WITH (UPDLOCK, HOLDLOCK) WHERE cpf = @Cpf;
-                IF @PessoaId IS NULL
-                BEGIN
-                    INSERT INTO pessoas (nome, cpf, senha) VALUES (@Nome, @Cpf, '');
-                    SET @PessoaId = CAST(SCOPE_IDENTITY() AS INT);
-                END;
-                IF NOT EXISTS (SELECT 1 FROM clientes WHERE pessoa_id = @PessoaId)
-                    INSERT INTO clientes (pessoa_id, email_pessoal, telefone) VALUES (@PessoaId, @Email_pessoal, @Telefone);
-                INSERT INTO reservas (qtd_pessoas, data_hora, status, mesas_nr, cliente_id)
-                VALUES (@QtdPessoas, @DataHora, 0, @MesaId, @PessoaId);
-                DECLARE @ReservaId int = CAST(SCOPE_IDENTITY() AS INT);
-                INSERT INTO Reservas_Mesas (numero_reservas, nr_mesas) VALUES (@ReservaId, @MesaId);
-                COMMIT TRANSACTION;
-                SELECT @ReservaId;";
-            // Preenche o parâmetro @Nome (evita SQL injection)
-            cmd.Parameters.AddWithValue("@Nome", reserva.Cliente.Nome);
-            // Preenche o parâmetro @Cpf (evita SQL injection)
-            cmd.Parameters.AddWithValue("@Cpf", reserva.Cliente.Cpf);
-            // Preenche o parâmetro @Email_pessoal (evita SQL injection)
-            cmd.Parameters.AddWithValue("@Email_pessoal", reserva.Cliente.EmailPessoal ?? "");
-            // Preenche o parâmetro @Telefone (evita SQL injection)
-            cmd.Parameters.AddWithValue("@Telefone", reserva.Cliente.Telefone);
-            // Preenche o parâmetro @QtdPessoas (evita SQL injection)
-            cmd.Parameters.AddWithValue("@QtdPessoas", reserva.QtdPessoas);
-            // Preenche o parâmetro @DataHora (evita SQL injection)
-            cmd.Parameters.AddWithValue("@DataHora", reserva.DataHora);
-            // Preenche o parâmetro @MesaId (evita SQL injection)
-            cmd.Parameters.AddWithValue("@MesaId", reserva.MesaId);
-
-            // Abre a conexão com o banco
-            conn.Open();
-            // Tenta executar; erros são tratados abaixo
+            using var tx = conn.BeginTransaction();
             try
             {
-                // ALTERAÇÃO: guarda o número gerado para mostrar a reserva (com status) após o cadastro.
-                reserva.Id = Convert.ToInt32(cmd.ExecuteScalar());
+                // Confere de novo, dentro da transação, se alguma mesa já tem reserva ativa no mesmo dia
+                // (evita duas reservas gravadas ao mesmo tempo para a mesma mesa).
+                foreach (var mesaId in reserva.MesaIds.Distinct())
+                {
+                    using var conferir = new SqlCommand(@"SELECT COUNT(*)
+                        FROM Reservas_Mesas rm WITH (UPDLOCK, HOLDLOCK)
+                        INNER JOIN reservas r ON r.numero = rm.numero_reservas
+                        WHERE rm.nr_mesas = @MesaId
+                          AND ISNULL(r.status, 0) <> 2
+                          AND CAST(r.data_hora AS date) = CAST(@DataHora AS date)", conn, tx);
+                    conferir.Parameters.AddWithValue("@MesaId", mesaId);
+                    conferir.Parameters.AddWithValue("@DataHora", reserva.DataHora);
+                    if ((int)conferir.ExecuteScalar()! > 0)
+                        throw new InvalidOperationException("A mesa escolhida não está livre nesta data.");
+                }
+
+                // Grava a reserva (status 0 = Pendente) e pega o número gerado
+                using (var cmd = new SqlCommand(@"INSERT INTO reservas (qtd_pessoas, data_hora, status, cliente_id)
+                    VALUES (@QtdPessoas, @DataHora, 0, @ClienteId);
+                    SELECT CAST(SCOPE_IDENTITY() AS INT);", conn, tx))
+                {
+                    cmd.Parameters.AddWithValue("@QtdPessoas", reserva.QtdPessoas);
+                    cmd.Parameters.AddWithValue("@DataHora", reserva.DataHora);
+                    cmd.Parameters.AddWithValue("@ClienteId", reserva.ClienteId);
+                    reserva.Id = (int)cmd.ExecuteScalar()!;
+                }
+
+                // Grava uma linha na tabela N:N para cada mesa escolhida
+                foreach (var mesaId in reserva.MesaIds.Distinct())
+                {
+                    using var cmdMesa = new SqlCommand(
+                        "INSERT INTO Reservas_Mesas (numero_reservas, nr_mesas) VALUES (@Reserva, @Mesa)", conn, tx);
+                    cmdMesa.Parameters.AddWithValue("@Reserva", reserva.Id);
+                    cmdMesa.Parameters.AddWithValue("@Mesa", mesaId);
+                    cmdMesa.ExecuteNonQuery();
+                }
+
+                tx.Commit();
             }
-            // Sempre executa, com ou sem erro
-            finally
+            catch
             {
-                // Fecha a conexão com o banco
-                conn.Close();
+                tx.Rollback();
+                throw;
             }
+        }
+        finally
+        {
+            conn.Close();
         }
     }
 
-    // Lê todos os registros do banco
+    // Lê todas as reservas (com as mesas de cada uma)
     public List<Reserva> Read()
     {
-        // Lista que receberá os Reserva
         var reservas = new List<Reserva>();
-
-        // Cria o comando SQL (descartado ao final)
-        using (var cmd = new SqlCommand())
+        conn.Open();
+        try
         {
-            // Associa o comando à conexão
-            cmd.Connection = conn;
-            // Texto SQL que será executado
-            cmd.CommandText = @"SELECT r.numero, r.qtd_pessoas,
-                r.data_hora,
-                CASE r.status WHEN 0 THEN 'Pendente' WHEN 1 THEN 'Confirmada' WHEN 2 THEN 'Cancelada' ELSE 'Pendente' END, -- CORREÇÃO: status nulo vira Pendente
-                r.mesas_nr, r.cliente_id, p.nome, p.cpf, c.email_pessoal, c.telefone
-                FROM reservas r
-                INNER JOIN clientes c ON c.pessoa_id = r.cliente_id
-                INNER JOIN pessoas p ON p.id = c.pessoa_id";
-
-            // Abre a conexão com o banco
-            conn.Open();
-            // Tenta executar; erros são tratados abaixo
-            try
+            using (var cmd = new SqlCommand(SelectReservas, conn))
+            using (var reader = cmd.ExecuteReader())
             {
-                // Executa a consulta e abre o leitor de resultados
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    // Percorre cada linha retornada
-                    while (reader.Read())
-                    {
-                        // Adiciona um Reserva à lista
-                        reservas.Add(new Reserva
-                        {
-                            // Lê a coluna 0 para Id
-                            Id = reader.GetInt32(0),
-                            // Lê a coluna 1 para QtdPessoas
-                            QtdPessoas = reader.GetInt32(1),
-                            // Lê a coluna 2 para DataHora
-                            DataHora = reader.GetDateTime(2),
-                            // Lê a coluna 3 para Status
-                            Status = reader.GetString(3),
-                            // Lê MesaId tratando valor nulo
-                            MesaId = reader.IsDBNull(4)
-                            // Se for nulo, fica sem valor
-                            ? null
-                            // Senão, lê o valor
-                            : reader.GetInt32(4),
-                            // Lê a coluna 5 para ClienteId
-                            ClienteId = reader.GetInt32(5),
-                            // Monta o objeto Cliente com os dados da linha
-                            Cliente = new Cliente
-                            {
-                                // Lê a coluna 5 para Id
-                                Id = reader.GetInt32(5),
-                                // Lê a coluna 6 para Nome
-                                Nome = reader.GetString(6),
-                                // Lê a coluna 7 para Cpf
-                                Cpf = reader.GetString(7),
-                                // Lê a coluna 8 para EmailPessoal
-                                EmailPessoal = reader.GetString(8),
-                                // Lê a coluna 9 para Telefone
-                                Telefone = reader.GetString(9)
-                            }
-                        });
-                    }
-                }
+                while (reader.Read())
+                    reservas.Add(LerReserva(reader));
             }
-            // Sempre executa, com ou sem erro
-            finally
-            {
-                // Fecha a conexão com o banco
-                conn.Close();
-            }
+            CarregarMesas(reservas, null);
         }
-
-        // Devolve o resultado
+        finally
+        {
+            conn.Close();
+        }
         return reservas;
     }
 
-    // Lê um registro pelo id (null se não existir)
+    // Lê uma reserva pelo número (null se não existir)
     public Reserva? Read(int id)
     {
-        // reserva começa nulo (não encontrado)
         Reserva? reserva = null;
-
-        // Cria o comando SQL (descartado ao final)
-        using (var cmd = new SqlCommand())
+        conn.Open();
+        try
         {
-            // Associa o comando à conexão
-            cmd.Connection = conn;
-            // Texto SQL que será executado
-            cmd.CommandText = @"SELECT r.numero, r.qtd_pessoas,
-                r.data_hora,
-                CASE r.status WHEN 0 THEN 'Pendente' WHEN 1 THEN 'Confirmada' WHEN 2 THEN 'Cancelada' ELSE 'Pendente' END, -- CORREÇÃO: status nulo vira Pendente
-                r.mesas_nr, r.cliente_id, p.nome, p.cpf, c.email_pessoal, c.telefone
-                FROM reservas r
-                INNER JOIN clientes c ON c.pessoa_id = r.cliente_id
-                INNER JOIN pessoas p ON p.id = c.pessoa_id WHERE r.numero = @Id";
-            // Preenche o parâmetro @Id (evita SQL injection)
-            cmd.Parameters.AddWithValue("@Id", id);
-
-            // Abre a conexão com o banco
-            conn.Open();
-            // Tenta executar; erros são tratados abaixo
-            try
+            using (var cmd = new SqlCommand(SelectReservas + " WHERE v.Codigo_Reserva = @Id", conn))
             {
-                // Executa a consulta e abre o leitor de resultados
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    // Se encontrou a linha, monta o objeto
-                    if (reader.Read())
-                    {
-                        // Monta o objeto Reserva com os dados da linha
-                        reserva = new Reserva
-                        {
-                            // Lê a coluna 0 para Id
-                            Id = reader.GetInt32(0),
-                            // Lê a coluna 1 para QtdPessoas
-                            QtdPessoas = reader.GetInt32(1),
-                            // Lê a coluna 2 para DataHora
-                            DataHora = reader.GetDateTime(2),
-                            // Lê a coluna 3 para Status
-                            Status = reader.GetString(3),
-                            // Lê a coluna 4 para MesaId
-                            // CORREÇÃO: reserva sem mesa (mesas_nr nulo) não quebra mais a tela.
-                            MesaId = reader.IsDBNull(4) ? null : reader.GetInt32(4),
-                            // Lê a coluna 5 para ClienteId
-                            ClienteId = reader.GetInt32(5),
-                            // Monta o objeto Cliente com os dados da linha
-                            Cliente = new Cliente
-                            {
-                                // Lê a coluna 5 para Id
-                                Id = reader.GetInt32(5),
-                                // Lê a coluna 6 para Nome
-                                Nome = reader.GetString(6),
-                                // Lê a coluna 7 para Cpf
-                                Cpf = reader.GetString(7),
-                                // Lê a coluna 8 para EmailPessoal
-                                EmailPessoal = reader.GetString(8),
-                                // Lê a coluna 9 para Telefone
-                                Telefone = reader.GetString(9)
-                            }
-                        };
-                    }
-                }
+                cmd.Parameters.AddWithValue("@Id", id);
+                using var reader = cmd.ExecuteReader();
+                if (reader.Read())
+                    reserva = LerReserva(reader);
             }
-            // Sempre executa, com ou sem erro
-            finally
-            {
-                // Fecha a conexão com o banco
-                conn.Close();
-            }
+            if (reserva != null)
+                CarregarMesas(new List<Reserva> { reserva }, id);
         }
-
-        // Devolve o resultado
+        finally
+        {
+            conn.Close();
+        }
         return reserva;
     }
 
-    // Atualiza um registro existente no banco
+    // Monta o objeto Reserva a partir de uma linha da consulta base
+    private static Reserva LerReserva(SqlDataReader reader) => new Reserva
+    {
+        Id = reader.GetInt32(0),
+        QtdPessoas = reader.GetInt32(1),
+        DataHora = reader.GetDateTime(2),
+        Status = reader.GetString(3),
+        ClienteId = reader.GetInt32(4),
+        Cliente = new Cliente
+        {
+            Id = reader.GetInt32(4),
+            Nome = reader.GetString(5),
+            Cpf = reader.GetString(6),
+            EmailPessoal = reader.GetString(7),
+            Telefone = reader.GetString(8)
+        }
+    };
+
+    // Preenche MesaIds e MesasDescricao das reservas (conexão já aberta)
+    private void CarregarMesas(List<Reserva> reservas, int? reservaId)
+    {
+        var porNumero = reservas.ToDictionary(r => r.Id);
+        using var cmd = new SqlCommand(
+            SelectMesas + (reservaId == null ? "" : " WHERE rm.Codigo_Reserva = @Id") + " ORDER BY m.Ambiente, m.Numero", conn);
+        if (reservaId != null) cmd.Parameters.AddWithValue("@Id", reservaId.Value);
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            if (!porNumero.TryGetValue(reader.GetInt32(0), out var r)) continue;
+            r.MesaIds.Add(reader.GetInt32(1));
+            r.MesasDescricao.Add($"Mesa {reader.GetInt32(2)} · {reader.GetString(3)} · {reader.GetInt32(4)} lugares");
+        }
+    }
+
+    // Atualiza a reserva: o cliente só altera o dia e a quantidade de pessoas (as mesas continuam as mesmas)
     public void Update(Reserva reserva)
     {
-        // UNIÃO: preserva cliente, funcionário e status como no repositório de A.
         using (var cmd = new SqlCommand())
         {
-            // Associa o comando à conexão
             cmd.Connection = conn;
-            // Texto SQL que será executado
-            cmd.CommandText = @"SET XACT_ABORT ON; BEGIN TRANSACTION;
-                IF EXISTS (SELECT 1 FROM reservas WITH (UPDLOCK, HOLDLOCK) WHERE numero = @Id AND status <> 2)
-                BEGIN
-                    UPDATE reservas SET qtd_pessoas = @QtdPessoas, data_hora = @DataHora, mesas_nr = @MesaId WHERE numero = @Id;
-                    DELETE FROM Reservas_Mesas WHERE numero_reservas = @Id;
-                    INSERT INTO Reservas_Mesas (numero_reservas, nr_mesas) VALUES (@Id, @MesaId);
-                END;
-                COMMIT TRANSACTION;";
-            // Preenche o parâmetro @Id (evita SQL injection)
+            // Reserva cancelada (status 2) não é alterada
+            cmd.CommandText = @"UPDATE reservas SET qtd_pessoas = @QtdPessoas, data_hora = @DataHora
+                WHERE numero = @Id AND ISNULL(status, 0) <> 2;";
             cmd.Parameters.AddWithValue("@Id", reserva.Id);
-            // Preenche o parâmetro @QtdPessoas (evita SQL injection)
             cmd.Parameters.AddWithValue("@QtdPessoas", reserva.QtdPessoas);
-            // Preenche o parâmetro @DataHora (evita SQL injection)
             cmd.Parameters.AddWithValue("@DataHora", reserva.DataHora);
-            // Preenche o parâmetro @MesaId (evita SQL injection)
-            cmd.Parameters.AddWithValue("@MesaId", reserva.MesaId);
 
-            // Abre a conexão com o banco
             conn.Open();
-            // Tenta executar; erros são tratados abaixo
             try
             {
-                // Executa o comando (INSERT/UPDATE/DELETE)
                 cmd.ExecuteNonQuery();
             }
-            // Sempre executa, com ou sem erro
             finally
             {
-                // Fecha a conexão com o banco
                 conn.Close();
             }
         }
     }
 
-    // Atualiza apenas o status da reserva
+    // Altera só o status (usado pelo funcionário)
     public void UpdateStatus(int id, string status)
     {
-        // UNIÃO: aplica no SQL os estados e o bloqueio de canceladas da versão A.
         if (status != "Pendente" && status != "Confirmada" && status != "Cancelada")
         {
             return;
         }
 
-        // Cria o comando SQL (descartado ao final)
         using (var cmd = new SqlCommand())
         {
-            // Associa o comando à conexão
             cmd.Connection = conn;
-            // Texto SQL que será executado
-            cmd.CommandText = @"UPDATE reservas SET status = CASE @Status WHEN 'Pendente' THEN 0 WHEN 'Confirmada' THEN 1 WHEN 'Cancelada' THEN 2 END WHERE numero = @Id AND status <> 2;";
-            // Preenche o parâmetro @Status (evita SQL injection)
+            cmd.CommandText = @"UPDATE reservas SET status = CASE @Status WHEN 'Pendente' THEN 0 WHEN 'Confirmada' THEN 1 WHEN 'Cancelada' THEN 2 END WHERE numero = @Id AND ISNULL(status, 0) <> 2;";
             cmd.Parameters.AddWithValue("@Status", status);
-            // Preenche o parâmetro @Id (evita SQL injection)
             cmd.Parameters.AddWithValue("@Id", id);
 
-            // Abre a conexão com o banco
             conn.Open();
-            // Tenta executar; erros são tratados abaixo
             try
             {
-                // Executa o comando (INSERT/UPDATE/DELETE)
                 cmd.ExecuteNonQuery();
             }
-            // Sempre executa, com ou sem erro
             finally
             {
-                // Fecha a conexão com o banco
                 conn.Close();
             }
         }
     }
 
-    // Remove (ou cancela) um registro no banco
+    // Cancela a reserva (status 2); o registro e as mesas ligadas ficam guardados no histórico
     public void Delete(int id)
     {
-        // UNIÃO: cancela no banco sem apagar o histórico, conforme A.
         using (var cmd = new SqlCommand())
         {
-            // Associa o comando à conexão
             cmd.Connection = conn;
-            // Texto SQL que será executado
             cmd.CommandText = @"UPDATE reservas SET status = 2 WHERE numero = @Id;";
-            // Preenche o parâmetro @Id (evita SQL injection)
             cmd.Parameters.AddWithValue("@Id", id);
 
-            // Abre a conexão com o banco
             conn.Open();
-            // Tenta executar; erros são tratados abaixo
             try
             {
-                // Executa o comando (INSERT/UPDATE/DELETE)
                 cmd.ExecuteNonQuery();
             }
-            // Sempre executa, com ou sem erro
             finally
             {
-                // Fecha a conexão com o banco
                 conn.Close();
             }
         }

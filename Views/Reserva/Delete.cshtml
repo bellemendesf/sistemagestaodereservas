@@ -187,9 +187,9 @@
                     @* Bloco (classe reserva-excluir-dado) *@
                     <div class="reserva-excluir-dado">
                         @* Nome do dado *@
-                        <dt>Mesa</dt>
-                        @* Valor do dado *@
-                        <dd>@Model.MesaId</dd>
+                        <dt>@(Model.MesasDescricao.Count > 1 ? "Mesas" : "Mesa")</dt>
+                        @* N:N: todas as mesas da reserva *@
+                        <dd>@string.Join(", ", Model.MesasDescricao)</dd>
                     </div>
 
 

@@ -1,4 +1,6 @@
-﻿// Importa as classes do ASP.NET MVC (Controller, ActionResult...)
+﻿// Importa o [Authorize] (exigir login)
+using Microsoft.AspNetCore.Authorization;
+// Importa as classes do ASP.NET MVC (Controller, ActionResult...)
 using Microsoft.AspNetCore.Mvc;
 // Importa as classes de acesso ao SQL Server
 using Microsoft.Data.SqlClient;
@@ -6,6 +8,8 @@ using Microsoft.Data.SqlClient;
 using GestaoReservas.Models;
 
 // Controller responsável pelas telas de Ambiente
+// Gerenciar Ambientes é tarefa do restaurante: exige login de funcionário (mesmo padrão dos outros controllers do restaurante)
+[Authorize(AuthenticationSchemes = "FuncionarioScheme")]
 public class AmbienteController : Controller
 {
     // Dependência IAmbienteRepository recebida pelo construtor

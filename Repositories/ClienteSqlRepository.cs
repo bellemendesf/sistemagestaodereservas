@@ -24,12 +24,12 @@ public class ClienteSqlRepository : DataConnection, IClienteRepository
                 {
                     // CORREÇÃO: a senha não fica mais em pessoas (vai para clientes.senha_hash)
                     using (var cmdPessoa = new SqlCommand(
-                               @"INSERT INTO pessoas (nome, cpf, senha) VALUES (@Nome, @Cpf, @Senha);
+                               @"INSERT INTO pessoas (nome, cpf) VALUES (@Nome, @Cpf);
                                  SELECT CAST(SCOPE_IDENTITY() AS INT);", conn, tx))
                     {
                         cmdPessoa.Parameters.AddWithValue("@Nome", cliente.Nome);
                         cmdPessoa.Parameters.AddWithValue("@Cpf", cliente.Cpf);
-                        cmdPessoa.Parameters.AddWithValue("@Senha", ""); // senha em pessoas não é mais usada no login
+                        cmdPessoa.Parameters.AddWithValue("@Senha", ""); // script novo: pessoas não tem coluna senha (parâmetro sem uso)
                         pessoaId = (int)cmdPessoa.ExecuteScalar()!;
                     }
                 }
@@ -102,7 +102,7 @@ public class ClienteSqlRepository : DataConnection, IClienteRepository
             // Associa o comando à conexão
             cmd.Connection = conn;
             // Texto SQL que será executado
-            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, c.email_pessoal, p.senha, c.telefone FROM pessoas p INNER JOIN clientes c ON p.id = c.pessoa_id";
+            cmd.CommandText = @"SELECT Codigo, Nome, CPF, Email, '', Telefone FROM v_clientes"; // VIEW v_clientes do script (o hash da senha não sai do banco)
 
             // Abre a conexão com o banco
             conn.Open();
@@ -158,7 +158,7 @@ public class ClienteSqlRepository : DataConnection, IClienteRepository
             // Associa o comando à conexão
             cmd.Connection = conn;
             // Texto SQL que será executado
-            cmd.CommandText = @"SELECT p.id, p.nome, p.cpf, c.email_pessoal, p.senha, c.telefone FROM pessoas p INNER JOIN clientes c ON p.id = c.pessoa_id WHERE p.id = @Id";
+            cmd.CommandText = @"SELECT Codigo, Nome, CPF, Email, '', Telefone FROM v_clientes WHERE Codigo = @Id"; // VIEW v_clientes do script
             // Preenche o parâmetro @Id (evita SQL injection)
             cmd.Parameters.AddWithValue("@Id", id);
 

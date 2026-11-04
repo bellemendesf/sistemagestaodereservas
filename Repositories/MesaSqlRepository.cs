@@ -250,12 +250,13 @@ public List<Mesa> Read()
     try
     {
         // Verifica se existe alguma reserva NÃO cancelada
-        // vinculada à mesa.
+        // vinculada à mesa (N:N: pela tabela Reservas_Mesas).
         using (var verificar = new SqlCommand(@"
             SELECT COUNT(*)
-            FROM reservas
-            WHERE mesas_nr = @Id
-              AND status <> 2;", transactionConnection, transaction))
+            FROM Reservas_Mesas rm
+            INNER JOIN reservas r ON r.numero = rm.numero_reservas
+            WHERE rm.nr_mesas = @Id
+              AND ISNULL(r.status, 0) <> 2;", transactionConnection, transaction))
         {
             // Preenche o parâmetro @Id
             verificar.Parameters.AddWithValue("@Id", id);
@@ -288,19 +289,7 @@ public List<Mesa> Read()
             excluirVinculos.ExecuteNonQuery();
         }
 
-        // Remove as reservas canceladas da relação direta
-        // com a mesa, mas preserva os registros das reservas.
-        using (var desvincularReservas = new SqlCommand(@"
-            UPDATE reservas
-            SET mesas_nr = NULL
-            WHERE mesas_nr = @Id
-              AND status = 2;", transactionConnection, transaction))
-        {
-            // Preenche o parâmetro @Id
-            desvincularReservas.Parameters.AddWithValue("@Id", id);
-            // Executa o comando desvincularReservas
-            desvincularReservas.ExecuteNonQuery();
-        }
+        // N:N: a reserva não guarda mais a mesa direto (sem mesas_nr); basta remover os vínculos acima.
 
         // Exclui a mesa somente depois de tratar os vínculos.
         using (var excluirMesa = new SqlCommand(

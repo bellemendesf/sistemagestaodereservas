@@ -1,4 +1,6 @@
-﻿
+﻿// Importa o [Authorize] (exigir login)
+using Microsoft.AspNetCore.Authorization;
+
 // Importa os modelos do projeto
 using GestaoReservas.Models;
 // Importa as classes do ASP.NET MVC (Controller, ActionResult...)
@@ -9,6 +11,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 
 // Controller responsável pelas telas de Mesa
+// Gerenciar Mesas é tarefa do restaurante: exige login de funcionário (mesmo padrão dos outros controllers do restaurante)
+[Authorize(AuthenticationSchemes = "FuncionarioScheme")]
 public class MesaController : Controller
 {
     // Dependência IMesaRepository recebida pelo construtor

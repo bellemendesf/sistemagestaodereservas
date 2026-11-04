@@ -100,9 +100,9 @@ public class ReservaController : Controller
         return repository.Read()
             .Where(r => r.Id != ignorarReservaId
                 && r.Status != "Cancelada"
-                && r.MesaId != null
                 && ToDiaReserva(r.DataHora) == dia.Value)
-            .Select(r => r.MesaId!.Value)
+            // N:N: junta todas as mesas de cada reserva do dia (tabela Reservas_Mesas)
+            .SelectMany(r => r.MesaIds)
             .ToHashSet();
     }
 
@@ -153,15 +153,24 @@ public class ReservaController : Controller
         else if (DataReservaAnteriorAHoje(model.DataHora))
             ModelState.AddModelError(nameof(model.DataHora), "A data da reserva não pode ser anterior à data de hoje.");
 
-        // MAPA DE MESAS: confere no servidor se a mesa escolhida está livre
-        // (status da mesa e reservas ativas no mesmo dia). Mesa não cadastrada segue o tratamento já existente do banco.
-        if (ModelState.IsValid && model.MesaId != null)
+        // N:N: o cliente pode escolher uma ou mais mesas (repetidas são ignoradas)
+        model.MesaIds = (model.MesaIds ?? new List<int>()).Where(id => id > 0).Distinct().ToList();
+        if (model.MesaIds.Count == 0)
+            ModelState.AddModelError(nameof(model.MesaIds), "Escolha ao menos uma mesa no mapa.");
+
+        // MAPA DE MESAS: confere no servidor se TODAS as mesas escolhidas existem e estão livres
+        // (status da mesa e reservas ativas no mesmo dia).
+        if (ModelState.IsValid)
         {
-            // Variável mesa
-            var mesa = mesaRepository.Read(model.MesaId.Value);
-            // Condição
-            if (mesa != null && !MesaLivreParaReservaNaData(mesa, MesasReservadasNoDia(ToDiaReserva(model.DataHora))))
-                ModelState.AddModelError(nameof(model.MesaId), "Não foi possível cadastrar. A mesa escolhida não está livre nesta data.");
+            var reservadasNoDia = MesasReservadasNoDia(ToDiaReserva(model.DataHora));
+            foreach (var mesaId in model.MesaIds)
+            {
+                var mesa = mesaRepository.Read(mesaId);
+                if (mesa == null)
+                    ModelState.AddModelError(nameof(model.MesaIds), $"Não foi possível cadastrar. A mesa {mesaId} não está cadastrada.");
+                else if (!MesaLivreParaReservaNaData(mesa, reservadasNoDia))
+                    ModelState.AddModelError(nameof(model.MesaIds), $"Não foi possível cadastrar. A mesa {mesa.Numero} ({mesa.AmbienteNome}) não está livre nesta data.");
+            }
         }
         if (!ModelState.IsValid)
         {
@@ -183,6 +192,13 @@ public class ReservaController : Controller
                 : "Verifique CPF, telefone, e mesa cadastrados e a conexão com o banco.";
             // Registra a mensagem de erro para a tela
             ModelState.AddModelError("", "Não foi possível cadastrar. " + motivo);
+            ViewBag.MapaAmbienteIds = IdsAmbientesMapa();
+            return View(model);
+        }
+        // Mesa reservada por outra pessoa no mesmo instante (conferido de novo na gravação)
+        catch (InvalidOperationException ex)
+        {
+            ModelState.AddModelError(nameof(model.MesaIds), "Não foi possível cadastrar. " + ex.Message);
             ViewBag.MapaAmbienteIds = IdsAmbientesMapa();
             return View(model);
         }
@@ -215,8 +231,9 @@ public class ReservaController : Controller
         model.ClienteId = original.ClienteId;
         // Ajusta Status do modelo
         model.Status = original.Status;
-        // CORREÇÃO: o cliente não troca de mesa; mantém sempre a mesa original da reserva.
-        model.MesaId = original.MesaId;
+        // CORREÇÃO: o cliente não troca de mesa; mantém sempre as mesas originais da reserva (N:N).
+        model.MesaIds = original.MesaIds;
+        model.MesasDescricao = original.MesasDescricao;
         // RESERVA POR DIA: na edição também guarda só a data (sem horário).
         if (model.DataHora != default) model.DataHora = model.DataHora.Date;
         // Esses dados não fazem parte da edição pelo cliente.
@@ -224,7 +241,7 @@ public class ReservaController : Controller
             // Atribui k
             k == "Id" || k == "Cliente" || k.StartsWith("Cliente.") ||
             // Atribui k
-            k == "ClienteId" || k == "Status").ToList())
+            k == "ClienteId" || k == "Status" || k.StartsWith("MesaIds")).ToList())
             // Ignora a validação deste campo
             ModelState.Remove(key);
         // Condição
@@ -233,14 +250,18 @@ public class ReservaController : Controller
         else if (DataReservaAnteriorAHoje(model.DataHora))
             ModelState.AddModelError(nameof(model.DataHora), "A data da reserva não pode ser anterior à data de hoje.");
 
-        // CORREÇÃO: na edição também confere se a mesa está livre no dia (ignorando esta própria reserva).
-        if (ModelState.IsValid && model.MesaId != null)
+        // CORREÇÃO: na edição também confere se TODAS as mesas estão livres no novo dia (ignorando esta própria reserva).
+        if (ModelState.IsValid)
         {
-            // Busca a mesa da reserva no banco
-            var mesa = mesaRepository.Read(model.MesaId.Value);
-            // Mesa ocupada/reservada por outra reserva no mesmo dia: mostra o erro
-            if (mesa != null && !MesaLivreParaReservaNaData(mesa, MesasReservadasNoDia(ToDiaReserva(model.DataHora), id)))
-                ModelState.AddModelError(nameof(model.MesaId), "Não foi possível salvar. A mesa não está livre nesta data.");
+            var reservadasNoDia = MesasReservadasNoDia(ToDiaReserva(model.DataHora), id);
+            foreach (var mesaId in model.MesaIds)
+            {
+                // Busca a mesa da reserva no banco
+                var mesa = mesaRepository.Read(mesaId);
+                // Mesa ocupada/reservada por outra reserva no mesmo dia: mostra o erro
+                if (mesa != null && !MesaLivreParaReservaNaData(mesa, reservadasNoDia))
+                    ModelState.AddModelError(nameof(model.MesaIds), $"Não foi possível salvar. A mesa {mesa.Numero} ({mesa.AmbienteNome}) não está livre nesta data.");
+            }
         }
         // Se houver erro de validação, volta para o formulário
         if (!ModelState.IsValid) return View(model);

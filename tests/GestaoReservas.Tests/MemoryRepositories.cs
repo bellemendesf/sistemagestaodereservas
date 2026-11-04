@@ -94,7 +94,7 @@ public class ReservaMemoryRepository : IReservaRepository
     {
         var atual = Read(r.Id);
         if (atual == null || atual.Status == "Cancelada") return;
-        atual.MesaId = r.MesaId; atual.QtdPessoas = r.QtdPessoas; atual.DataHora = r.DataHora;
+        atual.MesaIds = r.MesaIds; atual.QtdPessoas = r.QtdPessoas; atual.DataHora = r.DataHora;
     }
     public void UpdateStatus(int id, string status)
     {

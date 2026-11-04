@@ -111,7 +111,7 @@
                             <th>Cliente</th>
                         }
                         @* Título da coluna *@
-                        <th>Mesa</th>
+                        <th>Mesas</th>
                         @* Título da coluna *@
                         <th>Data</th>
                         @* Título da coluna *@
@@ -150,7 +150,11 @@
 
                             @* Célula *@
                             <td data-label="Mesa">
-                                @reserva.MesaId
+                                @* N:N: lista todas as mesas da reserva *@
+                                @foreach (var mesa in reserva.MesasDescricao)
+                                {
+                                    <div>@mesa</div>
+                                }
                             </td>
 
                             @* Célula *@

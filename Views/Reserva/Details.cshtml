@@ -79,9 +79,14 @@
                     @* Bloco (classe detalhes-edicao-item) *@
                     <div class="detalhes-edicao-item">
                         @* Texto destacado *@
-                        <span>Mesa</span>
-                        @* Texto em negrito *@
-                        <strong>@Model.MesaId</strong>
+                        <span>@(Model.MesasDescricao.Count > 1 ? "Mesas" : "Mesa")</span>
+                        @* N:N: uma linha para cada mesa da reserva *@
+                        <strong>
+                            @foreach (var mesa in Model.MesasDescricao)
+                            {
+                                @mesa<br />
+                            }
+                        </strong>
                     </div>
 
                     @* Bloco (classe detalhes-edicao-item) *@

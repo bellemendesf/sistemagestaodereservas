@@ -72,7 +72,12 @@ public class AuthController : Controller
         return RedirectToAction("Index", "AreaRestaurante");
     }
 
+    // CORREÇÃO do botão Sair do header: o token do formulário é gerado na página já logada
+    // (usuário = funcionário/cliente), mas esta ação é anônima, então a validação do token
+    // comparava com um usuário vazio e devolvia erro 400. Sair só apaga o cookie, por isso
+    // o token não é exigido aqui.
     [AllowAnonymous]
+    [IgnoreAntiforgeryToken]
     [HttpPost]
     public async Task<IActionResult> Logout()
     {
@@ -80,7 +85,9 @@ public class AuthController : Controller
         return RedirectToAction("Index", "Home");
     }
 
+    // CORREÇÃO do botão Sair do header (mesma causa do Logout acima)
     [AllowAnonymous]
+    [IgnoreAntiforgeryToken]
     [HttpPost]
     public async Task<IActionResult> LogoutCliente()
     {

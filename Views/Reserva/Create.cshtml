@@ -35,12 +35,17 @@
             <div class="form-grid">
                 @* Bloco (classe field) *@
                 <div class="field">
-                    @* Rótulo do campo (asp-for MesaId) *@
-                    <label asp-for="MesaId">Número da mesa</label>
-                    @* MAPA DE MESAS: o campo continua sendo o mesmo; ele é preenchido ao clicar numa mesa livre abaixo. *@
-                    <input asp-for="MesaId" type="number" min="1" readonly placeholder="Escolha no mapa abaixo" />
+                    @* N:N: o cliente pode escolher MAIS DE UMA mesa; cada mesa vira um campo escondido "MesaIds". *@
+                    <label for="mesas-resumo">Mesas escolhidas</label>
+                    <input id="mesas-resumo" type="text" readonly placeholder="Escolha no mapa abaixo (uma ou mais)" />
+                    <div id="mesas-escolhidas">
+                        @foreach (var mesaId in Model.MesaIds)
+                        {
+                            <input type="hidden" name="MesaIds" value="@mesaId" />
+                        }
+                    </div>
                     @* Texto destacado *@
-                    <span asp-validation-for="MesaId" class="text-danger"></span>
+                    <span asp-validation-for="MesaIds" class="text-danger"></span>
                 </div>
         
                 @* Bloco (classe field) *@
@@ -69,7 +74,7 @@
             @* Subtítulo *@
             <h2>Mapa de mesas</h2>
             @* Parágrafo de texto *@
-            <p>Escolha o dia acima, depois a área do restaurante e uma mesa livre.</p>
+            <p>Escolha o dia acima, depois a área do restaurante e uma ou mais mesas livres (clique de novo para desmarcar).</p>
 
             <div class="field">
                 <label for="area-mapa">Ambiente</label>
@@ -202,7 +207,10 @@
 
 <script>
     (function () {
-        const campoMesa = document.getElementById("MesaId");
+        // N:N: mesas selecionadas (pode ter mesas de ambientes diferentes)
+        const caixaMesas = document.getElementById("mesas-escolhidas");
+        const resumoMesas = document.getElementById("mesas-resumo");
+        const selecionadas = new Set([...caixaMesas.querySelectorAll("input")].map(i => i.value));
         const campoData = document.getElementById("DataHora");
         const campoArea = document.getElementById("area-mapa");
         const aviso = document.getElementById("mapa-aviso");
@@ -294,18 +302,15 @@
                 cel.dataset.mesaId = idMesa(m);
                 if (sitMesa(m).toLowerCase() === "livre") cel.classList.add("livre");
                 else cel.classList.add("reservada");
-                if (String(idMesa(m)) === campoMesa.value) cel.classList.add("selecionada");
+                if (selecionadas.has(String(idMesa(m)))) cel.classList.add("selecionada");
             });
 
             pintarListagem(salao, mesas);
 
-            const escolhida = mesas.find(m => String(idMesa(m)) === campoMesa.value);
-            if (!escolhida || sitMesa(escolhida).toLowerCase() !== "livre")
-                campoMesa.value = "";
 
             aviso.textContent = mesas.length === 0
                 ? "Nenhuma mesa cadastrada neste ambiente. Cadastre em Mesas e vincule ao ambiente " + chaveAmbiente() + "."
-                : "Disponibilidade para " + campoData.value + ". Clique em uma mesa verde (livre).";
+                : "Disponibilidade para " + campoData.value + ". Clique nas mesas verdes (livres) para marcar ou desmarcar.";
         }
 
         function pintarListagem(salao, mesas) {
@@ -320,16 +325,46 @@
                 botao.type = "button";
                 const livre = sitMesa(m).toLowerCase() === "livre";
                 botao.className = "mesa-opcao " + (livre ? "livre" : "reservada");
-                if (String(idMesa(m)) === campoMesa.value) botao.classList.add("selecionada");
+                if (selecionadas.has(String(idMesa(m)))) botao.classList.add("selecionada");
                 botao.disabled = !livre;
                 botao.innerHTML = "<strong>Mesa " + numMesa(m) + "</strong><small>" +
                     lugaresMesa(m) + " lugares · " + nomeAmbMesa(m) + "</small><small>" + sitMesa(m) + "</small>";
-                botao.addEventListener("click", () => {
-                    campoMesa.value = idMesa(m);
-                    pintarMapa();
-                });
+                botao.addEventListener("click", () => alternarMesa(String(idMesa(m))));
                 listagem.appendChild(botao);
             });
+        }
+
+        // Marca ou desmarca uma mesa e atualiza os campos escondidos enviados no formulário
+        function alternarMesa(id) {
+            if (selecionadas.has(id)) selecionadas.delete(id);
+            else selecionadas.add(id);
+            pintarMapa();
+            atualizarCampos();
+        }
+
+        // Remove do envio as mesas que não estão livres no dia escolhido
+        function descartarIndisponiveis() {
+            if (mesasDoDia.length === 0) return;
+            [...selecionadas].forEach(id => {
+                const m = mesasDoDia.find(x => String(idMesa(x)) === id);
+                if (!m || sitMesa(m).toLowerCase() !== "livre") selecionadas.delete(id);
+            });
+        }
+
+        // Recria os campos escondidos "MesaIds" e o resumo em texto
+        function atualizarCampos() {
+            caixaMesas.innerHTML = "";
+            const nomes = [];
+            selecionadas.forEach(id => {
+                const input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "MesaIds";
+                input.value = id;
+                caixaMesas.appendChild(input);
+                const m = mesasDoDia.find(x => String(idMesa(x)) === id);
+                nomes.push(m ? "Mesa " + numMesa(m) + " (" + nomeAmbMesa(m) + ")" : "Mesa " + id);
+            });
+            resumoMesas.value = nomes.join(", ");
         }
 
         async function carregarMesas() {
@@ -340,15 +375,16 @@
             }
             const params = new URLSearchParams();
             params.set("dataHora", campoData.value);
-            const id = ambienteId();
-            if (id > 0) params.set("ambienteId", String(id));
+            // Busca as mesas de todos os ambientes do dia (a seleção pode misturar ambientes)
 
             try {
                 const resposta = await fetch(root.dataset.url + "?" + params.toString());
                 if (!resposta.ok) throw new Error("HTTP " + resposta.status);
                 const data = await resposta.json();
                 mesasDoDia = Array.isArray(data) ? data : [];
+                descartarIndisponiveis();
                 pintarMapa();
+                atualizarCampos();
             } catch {
                 mesasDoDia = [];
                 aviso.textContent = "Não foi possível carregar as mesas. Verifique a conexão com o banco.";
@@ -358,15 +394,13 @@
 
         root.addEventListener("click", e => {
             const cel = e.target.closest(".mapa-mesa.livre");
-            if (cel && cel.dataset.mesaId) {
-                campoMesa.value = cel.dataset.mesaId;
-                pintarMapa();
-            }
+            if (cel && cel.dataset.mesaId) alternarMesa(cel.dataset.mesaId);
         });
 
         campoData.addEventListener("change", carregarMesas);
         campoData.addEventListener("input", carregarMesas);
-        campoArea.addEventListener("change", () => { mostrarSalao(); carregarMesas(); });
-        pintarMapa();
+        campoArea.addEventListener("change", () => { mostrarSalao(); pintarMapa(); });
+        // Ao voltar com erro, recarrega o dia para mostrar as mesas já marcadas
+        if (campoData.value) carregarMesas(); else { pintarMapa(); atualizarCampos(); }
     })();
 </script>

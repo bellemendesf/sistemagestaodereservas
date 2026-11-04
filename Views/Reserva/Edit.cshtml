@@ -63,8 +63,7 @@
                 <form asp-action="Edit" asp-route-id="@Model.Id" method="post" class="detalhes-edicao-form">
                     @* Campo de entrada (asp-for Id) *@
                     <input type="hidden" asp-for="Id" />
-                    @* CORREÇÃO: envia a mesa atual junto com o formulário (antes chegava vazia e o banco recusava). *@
-                    <input type="hidden" asp-for="MesaId" />
+                    @* N:N: as mesas não são enviadas; o servidor mantém as mesas originais da reserva. *@
 
                     @* Resumo dos erros de validação *@
                     <div asp-validation-summary="All" class="detalhes-edicao-erros"></div>
@@ -72,12 +71,12 @@
                     @* Bloco (classe detalhes-edicao-campo) *@
                     <div class="detalhes-edicao-campo">
                         @* Rótulo do campo *@
-                        <label>Número da mesa</label>
-                        @* Campo de entrada *@
-                        <input type="text" value="Mesa @Model.MesaId" readonly />
+                        <label>Mesas</label>
+                        @* N:N: mostra todas as mesas da reserva *@
+                        <input type="text" value="@string.Join(", ", Model.MesasDescricao)" readonly />
                         @* Texto de ajuda *@
                         <small class="detalhes-edicao-ajuda">
-                            O número da mesa não pode ser alterado.
+                            As mesas não podem ser alteradas.
                         </small>
                     </div>
 

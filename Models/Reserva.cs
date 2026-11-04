@@ -13,10 +13,10 @@ public class Reserva
     public Cliente Cliente { get; set; } = new Cliente();
     // Propriedade ClienteId
     public int ClienteId { get; set; }
-    // Validação: valor mínimo/máximo permitido
-    [Range(1, int.MaxValue, ErrorMessage = "Informe uma mesa cadastrada.")]
-    // Propriedade MesaId
-    public int? MesaId { get; set; }
+    // N:N: mesas escolhidas na reserva (tabela Reservas_Mesas). O cliente pode escolher mais de uma.
+    public List<int> MesaIds { get; set; } = new();
+    // Texto de cada mesa para as telas (ex.: "Mesa 3 · Interno · 4 lugares")
+    public List<string> MesasDescricao { get; set; } = new();
     // Propriedade DataHora
     public DateTime DataHora { get; set; }
     // Validação: valor mínimo/máximo permitido

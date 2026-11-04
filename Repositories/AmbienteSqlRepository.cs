@@ -58,7 +58,7 @@ public class AmbienteSqlRepository : DataConnection, IAmbienteRepository
             // Associa o comando à conexão
             cmd.Connection = conn;
             // Texto SQL que será executado
-            cmd.CommandText = @"SELECT codigo, nome, COALESCE(status, ''), capacidade FROM ambientes";
+            cmd.CommandText = @"SELECT Codigo, Nome, COALESCE(Status, ''), Capacidade FROM v_ambientes"; // VIEW v_ambientes do script
 
             // Abre a conexão com o banco
             conn.Open();
@@ -110,7 +110,7 @@ public class AmbienteSqlRepository : DataConnection, IAmbienteRepository
             // Associa o comando à conexão
             cmd.Connection = conn;
             // Texto SQL que será executado
-            cmd.CommandText = @"SELECT codigo, nome, COALESCE(status, ''), capacidade FROM ambientes WHERE codigo = @Id";
+            cmd.CommandText = @"SELECT Codigo, Nome, COALESCE(Status, ''), Capacidade FROM v_ambientes WHERE Codigo = @Id"; // VIEW v_ambientes do script
             // Preenche o parâmetro @Id (evita SQL injection)
             cmd.Parameters.AddWithValue("@Id", id);
 
