@@ -1,41 +1,32 @@
-﻿/* =====================================================================
-   SANTA MASSA - GESTÃO DE RESERVAS
-   Script de criação do banco gestaoReserva (SQL Server).
-   ATENÇÃO: apaga e recria o banco gestaoReserva (todos os dados são perdidos).
-   ===================================================================== */
-
-use master;
+﻿use master;
 go
 
 -- Se o banco já existir, desconecta os usuários e apaga
 if db_id('gestaoReserva') is not null
 begin
-    alter database gestaoReserva set single_user with rollback immediate;
-    drop database gestaoReserva;
+    alter database gestaoReserva set single_user with rollback immediate
+    drop database gestaoReserva
 end
 go
 
--- Cria o banco vazio
-create database gestaoReserva;
+
+create database gestaoReserva
 go
 
-use gestaoReserva;
+use gestaoReserva
 go
 
 /* ---------------------------------------------------------------------
    PESSOAS: dados comuns de clientes e funcionários.
-   A coluna senha não é mais usada no login (fica vazia nos novos cadastros);
-   cada papel tem sua própria senha_hash em clientes/funcionarios.
    --------------------------------------------------------------------- */
 create table pessoas
 (
-    id    int          not null identity(1,1),  -- código gerado automaticamente
-    nome  varchar(50)  not null,                 -- nome completo
-    cpf   varchar(20)  not null,                 -- CPF (único)
-    senha varchar(256) not null,                 -- legado: não usada no login
+    id    int          not null identity(1,1),  
+    nome  varchar(50)  not null,                
+    cpf   varchar(20)  not null,                 
     constraint pk_pessoas     primary key (id),
     constraint uq_pessoas_cpf unique (cpf)
-);
+)
 go
 
 /* ---------------------------------------------------------------------
@@ -43,15 +34,15 @@ go
    --------------------------------------------------------------------- */
 create table clientes
 (
-    pessoa_id     int          not null,         -- mesma chave da pessoa
-    email_pessoal varchar(100) not null,         -- e-mail (único)
-    telefone      varchar(20)  not null,         -- telefone (único)
-    senha_hash    varchar(256) null,             -- senha do cliente (hash)
+    pessoa_id     int          not null,         
+    email_pessoal varchar(100) not null,         
+    telefone      varchar(20)  not null,         
+    senha_hash    varchar(256) null,             
     constraint pk_clientes          primary key (pessoa_id),
     constraint uq_clientes_email    unique (email_pessoal),
     constraint uq_clientes_telefone unique (telefone),
-    constraint fk_cliente_id        foreign key (pessoa_id) references pessoas(id)
-);
+  constraint fk_cliente_id        foreign key (pessoa_id) references pessoas(id)
+)
 go
 
 /* ---------------------------------------------------------------------
@@ -59,13 +50,13 @@ go
    --------------------------------------------------------------------- */
 create table funcionarios
 (
-    pessoa_id           int          not null,   -- mesma chave da pessoa
-    email_institucional varchar(50)  not null,   -- e-mail institucional (único)
-    senha_hash          varchar(256) null,       -- senha do funcionário (hash)
+    pessoa_id           int          not null,   
+    email_institucional varchar(50)  not null,   
+    senha_hash          varchar(256) null,       
     constraint pk_funcionarios       primary key (pessoa_id),
     constraint uq_funcionarios_email unique (email_institucional),
-    constraint fk_funcionario_id     foreign key (pessoa_id) references pessoas(id)
-);
+  constraint fk_funcionario_id     foreign key (pessoa_id) references pessoas(id)
+)
 go
 
 /* ---------------------------------------------------------------------
@@ -74,116 +65,577 @@ go
    --------------------------------------------------------------------- */
 create table ambientes
 (
-    codigo     int         not null,             -- código do ambiente
-    nome       varchar(50) not null,             -- nome exibido no mapa
-    status     varchar(20) null,                 -- situação do ambiente
-    capacidade int         not null,             -- capacidade de pessoas
+    codigo     int         not null,             
+    nome       varchar(50) not null,             
+    status     varchar(20) null,                 
+    capacidade int         not null,             
     constraint pk_ambientes primary key (codigo)
-);
+)
 go
 
 /* ---------------------------------------------------------------------
-   MESAS: nr é a chave (igual ao número na criação); status 'Disponivel'
-   no banco aparece como 'Livre' nas telas.
+   MESAS: nr é a chave (igual ao número na criação); status 'Disponivel', 'Ocupada', 'Reservada'.
+ 
    --------------------------------------------------------------------- */
 create table mesas
 (
-    nr               int         not null,       -- chave da mesa
-    numero           int         not null,       -- número exibido
-    status           varchar(20) not null,       -- Disponivel / Ocupada / Reservada
-    qtd_lugares      int         not null constraint df_mesas_qtd_lugares default 0, -- lugares
-    codigo_ambientes int         not null,       -- ambiente da mesa
+    nr               int         not null,       
+    numero           int         not null,      
+    status           varchar(20) not null,       
+   qtd_lugares      int         not null constraint df_mesas_qtd_lugares default 0, -- lugares
+    codigo_ambientes int         not null,       
     constraint pk_mesas            primary key (nr),
-    constraint ck_mesas_status     check (status in ('Disponivel', 'Ocupada', 'Reservada')),
+   constraint ck_mesas_status     check (status in ('Disponivel', 'Ocupada', 'Reservada')),
     constraint fk_codigo_ambientes foreign key (codigo_ambientes) references ambientes(codigo)
-);
+)
 go
 
-/* ---------------------------------------------------------------------
-   RESERVAS: status 0 = Pendente, 1 = Confirmada, 2 = Cancelada.
-   mesas_nr aceita nulo (mesa excluída em reserva cancelada).
-   data_hora guarda só o dia (meia-noite).
-   --------------------------------------------------------------------- */
+/* --RESERVAS:--------------------------------------------------------------
+status 0 = Pendente, 1 = Confirmada, 2 = Cancelada.
+As mesas são associadas pela tabela Reservas_Mesas.
+data_hora guarda somente a data da reserva.
+*/----------------------------------------------------------------------------
+
 create table reservas
 (
-    numero      int      not null identity(1,1), -- número da reserva
-    qtd_pessoas int      not null,               -- quantidade de pessoas
-    data_hora   datetime not null constraint df_reservas_data_hora default getdate(), -- dia da reserva
-    status      int      null,                   -- 0, 1 ou 2
-    mesas_nr    int      null,                   -- mesa reservada
-    cliente_id  int      not null,               -- cliente da reserva
+    numero      int      not null identity(1,1), 
+    qtd_pessoas int      not null,               
+    data_hora   datetime not null constraint df_reservas_data_hora default getdate(), 
+    status      int      null,                   
+    cliente_id  int      not null,               
     constraint pk_reservas             primary key (numero),
     constraint ck_reservas_qtd_pessoas check (qtd_pessoas > 0),
     constraint ck_reservas_status      check (status in (0, 1, 2)),
-    constraint fk_reservas_cliente_id  foreign key (cliente_id) references clientes(pessoa_id),
-    constraint fk_mesas_nr             foreign key (mesas_nr)   references mesas(nr)
-);
+    constraint fk_reservas_cliente_id  foreign key (cliente_id) references clientes(pessoa_id)
+)
 go
 
 /* ---------------------------------------------------------------------
-   RESERVAS_MESAS: ligação entre reserva e mesa (mantida pela aplicação).
+   RESERVAS_MESAS: ligação entre reserva e mesa .
    --------------------------------------------------------------------- */
 create table Reservas_Mesas
 (
-    numero_reservas int not null,                -- reserva
-    nr_mesas        int not null,                -- mesa
+    numero_reservas int not null,                
+    nr_mesas        int not null,              
     constraint pk_reservas_mesas  primary key (numero_reservas, nr_mesas),
     constraint fk_numero_reservas foreign key (numero_reservas) references reservas(numero),
     constraint fk_nr_mesas        foreign key (nr_mesas)        references mesas(nr)
-);
+)
 go
+--Pessoas --
+INSERT INTO pessoas (nome, cpf)
+VALUES
+(N'João Mendes', '999.888.777-66'),
+(N'Maria Oliveira', '888.777.666-55'),
+(N'Pedro Santos', '777.666.555-44'),
+(N'Ana Cristina', '111.222.333-44'),
+(N'Carlos Souza', '222.333.444-55'),
+(N'Juliana Costa', '333.444.555-66')
+GO
 
-/* =====================================================================
-   DADOS INICIAIS
-   Senhas de teste: funcionária Func@123 / cliente Cliente@123
-   (hashes gerados com o PasswordHasher do ASP.NET Core)
-   ===================================================================== */
+-- Clientes --
+INSERT INTO clientes
+(pessoa_id, email_pessoal, telefone, senha_hash)
+VALUES
+(1, 'joao@email.com', '(17) 99999-0001', NULL),
+(2, 'maria@email.com', '(17) 99999-0002', NULL),
+(3, 'pedro@email.com', '(17) 99999-0003', NULL)
+GO
 
--- Funcionária de exemplo (id 1)
-insert into pessoas (nome, cpf, senha)
-values (N'Ana Cristina', N'111.222.333-44', N'');
+-- Funcionarios --
+INSERT INTO funcionarios
+(pessoa_id, email_institucional, senha_hash)
+VALUES
+(4, 'ana@santamassa.com.br', NULL),
+(5, 'carlos@santamassa.com.br', NULL),
+(6, 'juliana@santamassa.com.br', NULL)
+GO
 
-insert into funcionarios (pessoa_id, email_institucional, senha_hash)
-values (1, N'ana@santamassa.com.br',
-        N'AQAAAAIAAYagAAAAEKp7euPr5/KXP4GuDfFACefG4UDZTTiJVKnlvjbzuknMXz7tlW8ez1lw1HlDUXe4Eg==');
-go
 
--- Cliente de exemplo (id 2)
-insert into pessoas (nome, cpf, senha)
-values (N'Joao Mendes', N'999.888.777-66', N'');
-
-insert into clientes (pessoa_id, email_pessoal, telefone, senha_hash)
-values (2, N'joao@email.com', N'(17) 99999-0000',
-        N'AQAAAAIAAYagAAAAECaBvHCmvwXt77eqfe2VkO8lgn7MJNVQNVwcdjCrAnnO9TQQzo92HEJpKLCU6i+4jw==');
-go
-
--- Ambientes usados no mapa de mesas
+--  Ambientes --
 insert into ambientes (codigo, nome, status, capacidade)
 values (1, N'Interno', N'Disponivel', 80),
        (2, N'Externo', N'Disponivel', 48),
-       (3, N'Sacada',  N'Disponivel', 32);
+       (3, N'Sacada',  N'Disponivel', 32)
 go
 
--- Interno: 20 mesas (nr 1 a 20)
+-- Interno: 20 mesas (nr 1 a 20)--
 ;with nums as (select 1 as n union all select n + 1 from nums where n < 20)
 insert into mesas (nr, numero, status, qtd_lugares, codigo_ambientes)
 select n, n, N'Disponivel', case when n % 2 = 0 then 2 else 4 end, 1
 from nums
-option (maxrecursion 20);
+option (maxrecursion 20)
 go
 
--- Externo: 12 mesas (nr 21 a 32, numeradas 1 a 12)
+-- Externo: 12 mesas (nr 21 a 32, numeradas 1 a 12)--
 ;with nums as (select 1 as n union all select n + 1 from nums where n < 12)
 insert into mesas (nr, numero, status, qtd_lugares, codigo_ambientes)
 select n + 20, n, N'Disponivel', 4, 2
 from nums
-option (maxrecursion 12);
+option (maxrecursion 12)
 go
 
--- Sacada: 8 mesas (nr 33 a 40, numeradas 1 a 8)
+-- Sacada: 8 mesas (nr 33 a 40, numeradas 1 a 8)--
 ;with nums as (select 1 as n union all select n + 1 from nums where n < 8)
 insert into mesas (nr, numero, status, qtd_lugares, codigo_ambientes)
 select n + 32, n, N'Disponivel', 2, 3
 from nums
-option (maxrecursion 8);
+option (maxrecursion 8)
 go
+-- Reservas --
+INSERT INTO reservas
+(qtd_pessoas, data_hora, status, cliente_id)
+VALUES
+(6, '20261105', 1, 1),
+(4, '20261106', 0, 2),
+(8, '20261107', 1, 3)
+GO
+
+-- Reservas_Mesas --
+INSERT INTO Reservas_Mesas
+(numero_reservas, nr_mesas)
+VALUES
+(1, 1),
+(1, 2),
+(2, 21),
+(2, 22),
+(3, 3),
+(3, 4)
+GO
+-- Testes --
+SELECT * FROM pessoas
+SELECT * FROM clientes
+SELECT * FROM funcionarios
+SELECT * FROM ambientes
+SELECT * FROM mesas
+SELECT * FROM reservas
+SELECT * FROM Reservas_Mesas
+GO
+1. Visualização dos funcionários com seus dados pessoais
+CREATE VIEW v_funcionarios
+AS
+SELECT
+    f.pessoa_id AS Codigo,
+    p.nome AS Nome,
+    p.cpf AS CPF,
+    f.email_institucional AS Email,
+    f.senha_hash AS Senha
+FROM funcionarios f, pessoas p
+WHERE f.pessoa_id = p.id
+GO
+
+-- Teste de execução
+SELECT * FROM v_funcionarios
+GO
+
+2. Visualização dos clientes com seus dados pessoais
+CREATE VIEW v_clientes
+AS
+SELECT
+    c.pessoa_id AS Codigo,
+    p.nome AS Nome,
+    p.cpf AS CPF,
+    c.email_pessoal AS Email,
+    c.telefone AS Telefone,
+    c.senha_hash AS Senha
+FROM clientes c, pessoas p
+WHERE c.pessoa_id = p.id
+GO
+
+-- Teste de execução --
+SELECT * FROM v_clientes
+GO
+3. Visualização dos ambientes
+CREATE VIEW v_ambientes
+AS
+SELECT
+    codigo AS Codigo,
+    nome AS Nome,
+    status AS Status,
+    capacidade AS Capacidade
+FROM ambientes
+GO
+
+-- Teste de execução --
+SELECT * FROM v_ambientes
+GO
+4. Visualização das mesas com seus respectivos ambientes
+CREATE VIEW v_mesas
+AS
+SELECT
+    m.nr AS Codigo,
+    m.numero AS Numero,
+    m.status AS Status,
+    m.qtd_lugares AS Quantidade_Lugares,
+    a.nome AS Ambiente
+FROM mesas m, ambientes a
+WHERE m.codigo_ambientes = a.codigo
+GO
+
+-- Teste de execução --
+SELECT * FROM v_mesas
+GO
+5. Visualização das reservas com os dados dos clientes
+CREATE VIEW v_reservas
+AS
+SELECT
+    r.numero AS Codigo_Reserva,
+    p.nome AS Cliente,
+    p.cpf AS CPF,
+    r.qtd_pessoas AS Quantidade_Pessoas,
+    r.data_hora AS Data_Reserva,
+    CASE r.status
+        WHEN 0 THEN 'Pendente'
+        WHEN 1 THEN 'Confirmada'
+        WHEN 2 THEN 'Cancelada'
+    END AS Status
+FROM reservas r, clientes c, pessoas p
+WHERE r.cliente_id = c.pessoa_id
+AND c.pessoa_id = p.id
+GO
+
+-- Teste de execução --
+SELECT * FROM v_reservas
+GO
+6. Visualização das associações entre reservas e mesas
+CREATE VIEW v_reservas_mesas
+AS
+SELECT
+    r.numero AS Codigo_Reserva,
+    m.nr AS Codigo_Mesa,
+    m.numero AS Numero_Mesa,
+    r.data_hora AS Data_Reserva,
+    r.status AS Status_Reserva
+FROM reservas r, Reservas_Mesas rm, mesas m
+WHERE r.numero = rm.numero_reservas
+AND rm.nr_mesas = m.nr
+GO
+
+-- Teste de execução --
+SELECT * FROM v_reservas_mesas
+GO
+7. Visualização detalhada das reservas com clientes, mesas e ambientes
+CREATE VIEW v_reservas_detalhadas
+AS
+SELECT
+    r.numero AS Codigo_Reserva,
+    p.nome AS Cliente,
+    r.qtd_pessoas AS Quantidade_Pessoas,
+    r.data_hora AS Data_Reserva,
+    m.numero AS Numero_Mesa,
+    a.nome AS Ambiente,
+    m.qtd_lugares AS Lugares_Mesa,
+    CASE r.status
+        WHEN 0 THEN 'Pendente'
+        WHEN 1 THEN 'Confirmada'
+        WHEN 2 THEN 'Cancelada'
+    END AS Status
+FROM reservas r, clientes c, pessoas p,
+     Reservas_Mesas rm, mesas m, ambientes a
+WHERE r.cliente_id = c.pessoa_id
+AND c.pessoa_id = p.id
+AND r.numero = rm.numero_reservas
+AND rm.nr_mesas = m.nr
+AND m.codigo_ambientes = a.codigo
+GO
+
+-- Teste de execução --
+SELECT * FROM v_reservas_detalhadas
+GO
+
+1. Procedure para cadastrar um cliente
+CREATE PROCEDURE buscCli
+    @nome VARCHAR(100),
+    @cpf VARCHAR(14),
+    @email_pessoal VARCHAR(100),
+    @telefone VARCHAR(20),
+    @senha_hash VARCHAR(255)
+AS
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pessoas WHERE cpf = @cpf)
+    BEGIN
+        INSERT INTO pessoas (nome, cpf)
+        VALUES (@nome, @cpf)
+
+        DECLARE @id INT = SCOPE_IDENTITY()
+
+        INSERT INTO clientes
+            (pessoa_id, email_pessoal, telefone, senha_hash)
+        VALUES
+            (@id, @email_pessoal, @telefone, @senha_hash)
+    END
+END
+GO
+
+-- Teste de execução --
+EXEC buscCli
+    @nome = 'Maria Oliveira',
+    @cpf = '12345678900',
+    @email_pessoal = 'maria@email.com',
+    @telefone = '17999999999',
+    @senha_hash = 'hash_teste'
+GO
+
+2. Procedure para atualizar os dados de um cliente na tabela Clientes.
+CREATE OR ALTER PROCEDURE AtualizaCli
+    @pessoa_id INT,
+    @nome VARCHAR(100),
+    @cpf VARCHAR(14),
+    @email_pessoal VARCHAR(100),
+    @telefone VARCHAR(20),
+    @senha_hash VARCHAR(255)
+AS
+BEGIN
+    UPDATE pessoas
+    SET nome = @nome,
+        cpf = @cpf
+    WHERE id = @pessoa_id
+
+    UPDATE clientes
+    SET email_pessoal = @email_pessoal,
+        telefone = @telefone,
+        senha_hash = @senha_hash
+    WHERE pessoa_id = @pessoa_id
+END
+GO
+
+-- Teste de execução--
+EXEC AtualizaCli
+    1, 'Maria Oliveira', '12345678900',
+    'maria@email.com', '17999999999', 'hash_teste'
+GO
+3. Procedure para inserir um funcionário na tabela Funcionarios.
+CREATE OR ALTER PROCEDURE InsereFunc
+    @nome VARCHAR(100),
+    @cpf VARCHAR(14),
+    @email_institucional VARCHAR(100),
+    @senha_hash VARCHAR(255)
+AS
+BEGIN
+    INSERT INTO pessoas (nome, cpf)
+    VALUES (@nome, @cpf)
+
+    DECLARE @id INT = SCOPE_IDENTITY()
+
+    INSERT INTO funcionarios
+        (pessoa_id, email_institucional, senha_hash)
+    VALUES
+        (@id, @email_institucional, @senha_hash)
+END;
+GO
+
+-- Teste de execução --
+EXEC InsereFunc
+    'João Santos', '98765432100',
+    'joao@santamassa.com', 'hash_teste'
+GO
+4. Procedure para atualizar os dados de um funcionário na tabela Funcionarios.
+CREATE OR ALTER PROCEDURE AtualizaFunc
+    @pessoa_id INT,
+    @nome VARCHAR(100),
+    @cpf VARCHAR(14),
+    @email_institucional VARCHAR(100),
+    @senha_hash VARCHAR(255)
+AS
+BEGIN
+    UPDATE pessoas
+    SET nome = @nome,
+        cpf = @cpf
+    WHERE id = @pessoa_id
+
+    UPDATE funcionarios
+    SET email_institucional = @email_institucional,
+        senha_hash = @senha_hash
+    WHERE pessoa_id = @pessoa_id
+END
+GO
+
+-- Teste de execução --
+EXEC AtualizaFunc
+    4, 'João Santos', '98765432100',
+    'joao@santamassa.com', 'hash_teste'
+GO
+5. Procedure para inserir um ambiente na tabela Ambientes.
+CREATE OR ALTER PROCEDURE InsereAmb
+    @nome VARCHAR(100),
+    @status VARCHAR(20),
+    @capacidade INT
+AS
+BEGIN
+    INSERT INTO ambientes (nome, status, capacidade)
+    VALUES (@nome, @status, @capacidade)
+END
+GO
+
+-- Teste de execução --
+EXEC InsereAmb 'Terraço', 'Ativo', 30
+GO
+
+6. Procedure para atualizar os dados de um ambiente na tabela Ambientes.
+CREATE OR ALTER PROCEDURE AtualizaAmb
+    @codigo INT,
+    @nome VARCHAR(100),
+    @status VARCHAR(20),
+    @capacidade INT
+AS
+BEGIN
+    UPDATE ambientes
+    SET nome = @nome,
+        status = @status,
+        capacidade = @capacidade
+    WHERE codigo = @codigo
+END
+GO
+
+-- Teste de execução --
+EXEC AtualizaAmb 1, 'Salão Interno', 'Ativo', 80
+GO
+7. Procedure para inserir uma mesa na tabela Mesas.
+CREATE OR ALTER PROCEDURE InsereMesa
+    @nr INT,
+    @numero INT,
+    @status VARCHAR(20),
+    @qtd_lugares INT,
+    @codigo_ambientes INT
+AS
+BEGIN
+    INSERT INTO mesas
+        (nr, numero, status, qtd_lugares, codigo_ambientes)
+    VALUES
+        (@nr, @numero, @status, @qtd_lugares, @codigo_ambientes)
+END
+GO
+
+-- Teste de execução --
+EXEC InsereMesa 41, 21, 'Disponivel', 4, 1
+GO
+8. Procedure para atualizar os dados de uma mesa na tabela Mesas.
+CREATE OR ALTER PROCEDURE AtualizaMesa
+    @nr INT,
+    @numero INT,
+    @status VARCHAR(20),
+    @qtd_lugares INT,
+    @codigo_ambientes INT
+AS
+BEGIN
+    UPDATE mesas
+    SET numero = @numero,
+        status = @status,
+        qtd_lugares = @qtd_lugares,
+        codigo_ambientes = @codigo_ambientes
+    WHERE nr = @nr
+END;
+GO
+
+-- Teste de execução --
+EXEC AtualizaMesa 1, 1, 'Disponivel', 4, 1
+GO
+9. Procedure para inserir uma reserva na tabela Reservas.
+CREATE OR ALTER PROCEDURE InsereReserva
+    @qtd_pessoas INT,
+    @data_hora DATETIME,
+    @cliente_id INT
+AS
+BEGIN
+    INSERT INTO reservas
+        (qtd_pessoas, data_hora, status, cliente_id)
+    VALUES
+        (@qtd_pessoas, @data_hora, 0, @cliente_id)
+END
+GO
+
+-- Teste de execução --
+EXEC InsereReserva 4, '2026-11-10', 1
+GO
+10. Procedure para atualizar os dados de uma reserva na tabela Reservas.
+CREATE OR ALTER PROCEDURE AtualizaReserva
+    @numero INT,
+    @qtd_pessoas INT,
+    @data_hora DATETIME,
+    @status INT,
+    @cliente_id INT
+AS
+BEGIN
+    UPDATE reservas
+    SET qtd_pessoas = @qtd_pessoas,
+        data_hora = @data_hora,
+        status = @status,
+        cliente_id = @cliente_id
+    WHERE numero = @numero
+END
+GO
+
+-- Teste de execução --
+EXEC AtualizaReserva 1, 5, '2026-11-10', 1, 1
+GO
+11. Procedure para inserir uma associação entre reserva e mesa na tabela Reservas_Mesas.
+CREATE OR ALTER PROCEDURE InsereReservaMesa
+    @numero_reservas INT,
+    @nr_mesas INT
+AS
+BEGIN
+    INSERT INTO Reservas_Mesas
+        (numero_reservas, nr_mesas)
+    VALUES
+        (@numero_reservas, @nr_mesas)
+END
+GO
+ 
+-- Teste de execução --
+EXEC InsereReservaMesa 1, 2
+GO
+12. Procedure para atualizar uma associação entre reserva e mesa na tabela Reservas_Mesas.
+CREATE OR ALTER PROCEDURE AtualizaReservaMesa
+    @numero_reservas INT,
+    @nr_mesa_antiga INT,
+    @nr_mesa_nova INT
+AS
+BEGIN
+    UPDATE Reservas_Mesas
+    SET nr_mesas = @nr_mesa_nova
+    WHERE numero_reservas = @numero_reservas
+      AND nr_mesas = @nr_mesa_antiga
+END
+GO
+
+-- Teste de execução --
+EXEC AtualizaReservaMesa 1, 2, 3
+GO
+13.Procedure adicional para listar as mesas disponíveis de um ambiente.
+CREATE OR ALTER PROCEDURE ListDisp
+    @codigo_ambientes INT
+AS
+BEGIN
+    SELECT
+        m.nr,
+        m.numero,
+        m.qtd_lugares,
+        m.status,
+        a.nome AS NomeAmbiente
+    FROM mesas m, ambientes a
+    WHERE m.codigo_ambientes = a.codigo
+      AND m.codigo_ambientes = @codigo_ambientes
+      AND m.status = 'Disponivel'
+END
+GO
+
+-- Teste de execução --
+EXEC ListDisp @codigo_ambientes = 1
+GO
+14.Procedure adicional para atualizar o status de uma mesa.
+CREATE OR ALTER PROCEDURE AtualizaStatus
+    @nr INT,
+    @NovoStatus VARCHAR(20),
+    @codigo_ambientes INT
+AS
+BEGIN
+    UPDATE mesas
+    SET status = @NovoStatus
+    WHERE nr = @nr
+      AND codigo_ambientes = @codigo_ambientes
+END
+GO
+
+-- Teste de execução --
+EXEC AtualizaStatus 1, 'Ocupada', 1
+GO
